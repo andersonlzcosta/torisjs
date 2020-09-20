@@ -1,0 +1,21 @@
+version: '3'
+services:
+  server:
+    build: server/.
+    ports:
+      - 2000:2000
+  front:
+    build: front/.
+    ports:
+      - 3000:3000
+  db:
+    image: "postgres"
+    environment:
+      PG_USER: vertix
+      PG_PASS: vertix_pass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+volumes:
+  db-data:
