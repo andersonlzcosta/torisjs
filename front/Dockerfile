@@ -1,11 +1,15 @@
 FROM node:12
 
-WORKDIR /var/www/server
+WORKDIR /var/www/front
 
 COPY package*.json ./
 
 RUN npm install
 
+RUN npm build
+
 COPY . .
 
-ENV PORT=6000
+ENV PORT=3000
+
+CMD ["npm", "start"]
