@@ -1,12 +1,10 @@
-FROM node:12
+FROM node:13-alpine
 
 WORKDIR /var/www/front
 
 COPY package*.json ./
 
 RUN npm install
-
-RUN npm build
 
 COPY . .
 
