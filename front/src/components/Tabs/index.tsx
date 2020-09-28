@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { Container } from './styles';
 
 interface ITabsProps {
   options: ITabElement[];
-  onTabChange: (tabName: Omit<ITabElement, 'text'>) => void;
 }
 
 interface ITabElement {
-  name: '/estatisticas' | '/todos' | '/novo';
+  path: string;
   text: string;
 }
 
-const Tabs: React.FC<ITabsProps> = ({ options, onTabChange }) => {
+const Tabs: React.FC<ITabsProps> = ({ options }) => {
   const [tabList, setTabList] = useState<ITabElement[]>();
+
+  let { url } = useRouteMatch();
 
   useEffect(() => {
     setTabList(options);
@@ -21,9 +23,9 @@ const Tabs: React.FC<ITabsProps> = ({ options, onTabChange }) => {
   return (
     <Container>
       {tabList && tabList.map(tab => (
-        <button key={tab.name} onClick={() => onTabChange({ name: tab.name })}>
+        <Link key={tab.path} to={url + tab.path}>
           {tab.text}
-        </button>
+        </Link>
       ))}
     </Container>
   );

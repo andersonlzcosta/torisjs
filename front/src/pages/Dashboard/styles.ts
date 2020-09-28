@@ -1,28 +1,31 @@
 import styled from 'styled-components';
-import { DefaultContainer } from '../../styles/defaultContainer';
+import { DefaultBackground } from '../../styles/DefaultBackground';
+import { DefaultContainer } from '../../styles/DefaultContainer';
 
 export const Container = styled.div`
-  width: 100%;
-  min-height: 100%;
-
+  ${DefaultContainer}
 `;
 
-export const Profissionais = styled.div`
+export const UserList = styled.div`
   width: 90%;
   max-width: 500px;
 
-  > div{
-    ${DefaultContainer}
-    padding: 10px 0px 10px 10px;
-    width: 100%;
-    flex-direction: row;
-    justify-content: flex-start;
-    position: relative;
+  div + div{
+    margin-top: 15px;
+  }
+`;
 
-    div{
-      align-items: flex-start;
-      margin-left: 20px;
-    }
+export const User = styled.div`
+  ${DefaultBackground}
+  padding: 10px 0px 10px 10px;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+
+  div{
+    align-items: flex-start;
+    margin-left: 20px;
   }
 
   img{
@@ -59,9 +62,5 @@ export const Profissionais = styled.div`
     img{
       width: 23px;
     }
-  }
-
-  div + div{
-    margin-top: 15px;
   }
 `;

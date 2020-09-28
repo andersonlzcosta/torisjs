@@ -1,10 +1,9 @@
 import { lighten } from 'polished';
 import styled from 'styled-components';
-import { DefaultContainer } from '../../styles/defaultContainer';
-
+import { DefaultBackground } from '../../styles/DefaultBackground';
 
 export const Container = styled.div`
-  ${DefaultContainer}
+  ${DefaultBackground}
 
   img{
     margin-bottom: 20px;

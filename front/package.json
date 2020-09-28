@@ -11,6 +11,8 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.20.0",
+    "json-server": "^0.16.1",
     "polished": "^3.6.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -42,6 +44,8 @@
     ]
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/json-server": "^0.14.2",
     "@types/styled-components": "^5.1.3"
   }
 }

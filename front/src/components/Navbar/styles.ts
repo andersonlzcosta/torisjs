@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { DefaultContainer } from '../../styles/defaultContainer';
-import { AlternativeShadow } from '../../styles/alternativeShadow';
+import { DefaultBackground } from '../../styles/DefaultBackground';
+import { AlternativeShadow } from '../../styles/AlternativeShadow';
 
 export const Container = styled.div`
   border-radius: 53px;
@@ -8,12 +8,13 @@ export const Container = styled.div`
   align-items: flex-end;
   justify-content: center;
 
-  ${DefaultContainer}
+  ${DefaultBackground}
   ${AlternativeShadow}
   padding: 10px 30px;
   width: auto;
 
   position: fixed;
+  z-index: 11;
   bottom: 40px;
 
 

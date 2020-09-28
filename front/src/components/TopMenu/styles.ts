@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import { DefaultContainer } from '../../styles/defaultContainer';
+import { DefaultBackground } from '../../styles/DefaultBackground';
 
 export const Container = styled.div`
-  ${DefaultContainer}
+  ${DefaultBackground}
   padding: 9px 0;
   position: fixed;
+  z-index: 10;
   top: 40px;
 
   flex-direction: row;
