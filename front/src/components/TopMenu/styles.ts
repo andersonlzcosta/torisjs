@@ -3,6 +3,8 @@ import { DefaultBackground } from '../../styles/DefaultBackground';
 
 export const Container = styled.div`
   ${DefaultBackground}
+  width: 90%;
+  max-width: 500px;
   padding: 9px 0;
   position: fixed;
   z-index: 10;

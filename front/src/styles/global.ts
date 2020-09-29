@@ -84,7 +84,7 @@ export default createGlobalStyle`
   }
 
   
-  h2{
+  h1, h2{
     text-align: left;
     width: 100%;
     font-size: 30px;

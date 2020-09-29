@@ -13,7 +13,7 @@ const TopMenu: React.FC = () => {
     <Container>
       <img src={Arrow} onClick={goBack} alt="seta para voltar" />
       <Link to="/mensagens">mensagens<img src={Sino} alt="sino" /></Link>
-      <Link to="/perfil">meu perfil<img src={Perfil} alt="perfil" /></Link>
+      <Link to="/user/1">meu perfil<img src={Perfil} alt="perfil" /></Link>
     </Container>
   );
 }
