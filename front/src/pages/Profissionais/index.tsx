@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
 import Tabs from '../../components/Tabs';
 import Search from '../../components/Search';
+import ProfileForm from '../../components/ProfileForm';
 
 import Perfil from '../../images/perfil.jpg'
 import Plus from '../../images/plus.svg'
@@ -27,8 +28,6 @@ const Profissionais: React.FC = () => {
     const response = await api.get(`/users?nome_like=${query}`);
     setProfissionais(response.data);
   }, []);
-
-
 
   useEffect(() => {
     let searchFor = query.get('search');
@@ -88,7 +87,7 @@ const Profissionais: React.FC = () => {
                   <h3>{profissional.nome}</h3>
                   <strong>{profissional.idade} anos - {profissional.profissao}</strong>
                 </div>
-                <a href="#"><img src={Plus} alt="sinal de +" /></a>
+                <a href={`/user/${profissional.id}`}><img src={Plus} alt="sinal de +" /></a>
               </User>
             ))}
 
@@ -97,7 +96,7 @@ const Profissionais: React.FC = () => {
       )}
 
       {location.pathname === '/profissionais/novo' && (
-        <p>novo</p>
+        <ProfileForm />
       )}
 
 

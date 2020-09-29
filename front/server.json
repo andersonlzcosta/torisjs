@@ -1,22 +1,22 @@
 {
   "users": [
     {
-      "id": 1,
       "nome": "Pedro Feliciano da Silva",
-      "idade": 35,
-      "profissao": "Psicólogo"
+      "idade": "35",
+      "profissao": "Psicólogo",
+      "id": 1
     },
     {
-      "id": 2,
       "nome": "João Carvalho Feitosa",
-      "idade": 27,
-      "profissao": "Enfermeiro"
+      "idade": "27",
+      "profissao": "Enfermeiro",
+      "id": 2
     },
     {
-      "id": 3,
       "nome": "Luisa Vasconcelos",
-      "idade": 28,
-      "profissao": "Advogada"
+      "idade": "28",
+      "profissao": "Advogada",
+      "id": 3
     },
     {
       "id": 4,

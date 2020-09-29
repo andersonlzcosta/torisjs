@@ -13,7 +13,7 @@ const appearFromBottom = keyframes`
 
 export const DefaultBackground = css`
   animation: ${appearFromBottom} .7s;
-  width: 90%;
+  width: 100%;
   border-radius: 53px;
   padding: 40px 30px;
   position: relative;
