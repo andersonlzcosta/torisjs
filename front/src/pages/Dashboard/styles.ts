@@ -17,7 +17,7 @@ export const UserList = styled.div`
 
 export const User = styled.div`
   ${DefaultBackground}
-  padding: 10px 0px 10px 10px;
+  padding: 10px 60px 10px 10px;
   width: 100%;
   flex-direction: row;
   justify-content: flex-start;
@@ -61,6 +61,26 @@ export const User = styled.div`
 
     img{
       width: 23px;
+    }
+  }
+  
+  @media(max-width: 600px){
+    padding-right: 50px;
+
+    div{
+      margin-left: 10px;
+    }
+
+    h3{
+      margin-bottom: 0px;
+    }
+
+    img {
+      width: 50px;
+    }
+
+    a{
+      min-width: 45px;
     }
   }
 `;

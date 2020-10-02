@@ -6,6 +6,7 @@ import TopMenu from '../../components/TopMenu';
 
 import { Container } from './styles';
 import ProfileForm from '../../components/ProfileForm';
+import NavbarDesktop from '../../components/NavbarDesktop';
 
 interface IRouteParams {
   id: string;
@@ -21,6 +22,7 @@ const Profile: React.FC = () => {
       <ProfileForm id={id} headingText="editar perfil" />
 
       <Navbar />
+      <NavbarDesktop />
     </Container>
   );
 }

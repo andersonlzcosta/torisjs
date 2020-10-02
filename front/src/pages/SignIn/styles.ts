@@ -4,6 +4,8 @@ import { DefaultBackground } from '../../styles/DefaultBackground';
 
 export const Container = styled.div`
   ${DefaultBackground}
+  width: 90%;
+  max-width: 450px;
 
   img{
     margin-bottom: 20px;
@@ -27,6 +29,10 @@ export const Container = styled.div`
     &:hover{
       background: #bcdfff;
     }
+  }
+
+  form{
+    width: 100%;
   }
 
   form a{

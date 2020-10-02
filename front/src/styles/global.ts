@@ -92,4 +92,17 @@ export default createGlobalStyle`
     align-self: flex-start;
     padding-left: 40px;
   }
+
+  @media(max-width: 600px){
+    input{
+      padding: 9px 22px;
+      font-size: 16px;
+    }
+
+    button{
+      font-size: 16px;
+      letter-spacing: 2px;
+      padding: 8px 15px;
+    }
+  }
 `;
