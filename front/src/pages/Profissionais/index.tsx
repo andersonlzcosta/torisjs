@@ -11,6 +11,7 @@ import ProfileForm from '../../components/ProfileForm';
 import Perfil from '../../images/perfil.jpg'
 import Plus from '../../images/plus.svg'
 import api from '../../services/api';
+import NavbarDesktop from '../../components/NavbarDesktop';
 
 interface IProfissionaisData {
   id: number;
@@ -99,7 +100,7 @@ const Profissionais: React.FC = () => {
         <ProfileForm />
       )}
 
-
+      <NavbarDesktop />
       <Navbar />
     </Container>
   );

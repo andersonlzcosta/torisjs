@@ -11,11 +11,14 @@ export const Container = styled.div`
   ${DefaultBackground}
   ${AlternativeShadow}
   padding: 10px 30px;
-  width: auto;
+  width: 96%;
+  max-width: 520px;
 
   position: fixed;
   z-index: 11;
   bottom: 40px;
+
+  display: none;
 
 
   > img{
@@ -39,5 +42,26 @@ export const Container = styled.div`
 
   a + a{
     margin-left: 20px;
+  }
+
+  @media(max-width: 950px){
+    display: flex;
+  }
+
+  @media(max-width: 600px){
+    padding: 8px 10px 7px;
+    bottom: 10px;
+
+    > img{
+      display: none;
+    }
+
+    a{
+      width: 44px;
+      font-size: 9px;
+      
+      img{
+      }
+    }
   }
 `;

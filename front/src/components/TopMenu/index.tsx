@@ -7,10 +7,14 @@ import Arrow from '../../images/arrow.svg';
 import Sino from '../../images/sino.svg';
 import Perfil from '../../images/perfil.svg';
 
-const TopMenu: React.FC = () => {
+interface TopMenuProps {
+  isDesktop?: boolean;
+}
+
+const TopMenu: React.FC<TopMenuProps> = ({ isDesktop }) => {
   const { goBack } = useHistory()
   return (
-    <Container>
+    <Container isDesktop={isDesktop}>
       <img src={Arrow} onClick={goBack} alt="seta para voltar" />
       <Link to="/mensagens">mensagens<img src={Sino} alt="sino" /></Link>
       <Link to="/user/1">meu perfil<img src={Perfil} alt="perfil" /></Link>

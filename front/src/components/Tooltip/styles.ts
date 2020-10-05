@@ -37,4 +37,17 @@ export const Container = styled.div`
     opacity: 1;
     visibility: visible;
   }
+
+  @media(max-width: 600px){
+    span{
+      right: 0;
+      left: auto;
+      transform: none;
+
+      &::before{
+        left: auto;
+        right: 0;
+      }
+    }
+  }
 `;

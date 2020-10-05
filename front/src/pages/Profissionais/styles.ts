@@ -40,6 +40,14 @@ export const Content = styled.div`
       font-weight: 200;
     }
   }
+
+  @media(max-width: 600px){
+    > div p{
+      font-size: 16px;
+      line-height: 1.2em;
+      font-weight: 400;
+    }
+  }
 `;
 
 export const UserList = styled.div`
@@ -97,6 +105,26 @@ export const User = styled.div`
 
     img{
       width: 23px;
+    }
+  }
+
+  @media(max-width: 600px){
+    padding-right: 50px;
+
+    div{
+      margin-left: 10px;
+    }
+
+    h3{
+      margin-bottom: 0px;
+    }
+
+    img {
+      width: 50px;
+    }
+
+    a{
+      min-width: 45px;
     }
   }
 `;

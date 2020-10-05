@@ -7,6 +7,7 @@ import { Container, UserList, User } from './styles';
 import Perfil from '../../images/perfil.jpg'
 import Plus from '../../images/plus.svg'
 import api from '../../services/api';
+import NavbarDesktop from '../../components/NavbarDesktop';
 
 interface IProfissionaisData {
   id: number;
@@ -46,6 +47,7 @@ const Dashboard: React.FC = () => {
 
       </UserList>
       <Navbar />
+      <NavbarDesktop />
     </Container>
   );
 }

@@ -11,6 +11,7 @@ export const Container = styled.div<inputProps>`
   position: relative;
   border-radius: 30px;
   border: 2px solid #0B4385;
+  width: 100%;
 
   ${(props) => props.isFocused && css`
   `}
@@ -30,13 +31,12 @@ export const Container = styled.div<inputProps>`
 export const Error = styled(Tooltip)`
   position: absolute;
   top: 17px;
-  right: -30px;
+  right: 20px;
   height: 20px;
-  margin-left: 16px;
 
   svg{
     margin-right: 0;
-    stroke: #c53030;
+    stroke: #fff;
   }
 
   span{
@@ -46,5 +46,10 @@ export const Error = styled(Tooltip)`
     &::before{
       border-color: #c53030 transparent;
     }
+  }
+
+  @media(max-width: 600px){
+    top: 10px;
+    right: 11px;
   }
 `;

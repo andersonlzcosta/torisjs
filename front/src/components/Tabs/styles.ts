@@ -21,4 +21,19 @@ export const Container = styled.div`
       background: #f1f7ff;
     }
   }
+
+  @media(max-width: 600px){
+    top: 60px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 0px 0 5px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    a{
+      padding: 8px 20px;
+      box-shadow: none;
+    }
+  }
 `;
