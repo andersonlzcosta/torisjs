@@ -78,7 +78,7 @@ const Profissionais: React.FC = () => {
 
       {location.pathname === '/profissionais/todos' && (
         <>
-          <Search searchTitle="usuários cadastrados" loadProfissionais={loadProfissionais} />
+          <Search searchTitle="usuários cadastrados" loadList={loadProfissionais} />
           <UserList>
             {profissionais && profissionais.map(profissional => (
 

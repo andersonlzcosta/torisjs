@@ -5,10 +5,10 @@ import Lupa from '../../images/lupa.svg';
 
 interface ISearchProps {
   searchTitle: string;
-  loadProfissionais: (query: string | undefined) => void;
+  loadList: (query: string | undefined) => void;
 }
 
-const Search: React.FC<ISearchProps> = ({ searchTitle, loadProfissionais }) => {
+const Search: React.FC<ISearchProps> = ({ searchTitle, loadList }) => {
   const [inputValue, setInputValue] = useState<string>();
 
   const handleChange = useCallback((event) => {
@@ -17,12 +17,12 @@ const Search: React.FC<ISearchProps> = ({ searchTitle, loadProfissionais }) => {
 
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
-    loadProfissionais(inputValue);
-  }, [loadProfissionais, inputValue]);
+    loadList(inputValue);
+  }, [loadList, inputValue]);
 
   const handleClearInput = useCallback(() => {
     setInputValue('');
-    loadProfissionais('');
+    loadList('');
   }, []);
 
   return (
