@@ -10,24 +10,19 @@ import api from '../../services/api';
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { IUserData } from '../../pages/Profile';
 
-interface IUserData {
-  id: number;
-  nome: string;
-  idade: string;
-  profissao: string;
-}
 
 interface IProfileFormProps {
   id?: string;
+  user?: IUserData;
   headingText?: string;
 }
 
-const ProfileForm: React.FC<IProfileFormProps> = ({ id, headingText }) => {
+const ProfileForm: React.FC<IProfileFormProps> = ({ id, user, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [userId, setUserId] = useState<string>();
-  const [user, setUser] = useState<IUserData>();
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
@@ -59,6 +54,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ id, headingText }) => {
       history.push('/profissionais/todos');
     } catch (err) {
       console.log('erro ao deletar');
+      setIsLoading(false);
     }
   }, [userId, setIsLoading, history]);
 
@@ -67,11 +63,8 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ id, headingText }) => {
 
     if (id) {
       setUserId(id);
-      api.get(`/users/${id}`).then(response => {
-        setUser(response.data);
-      });
     }
-  }, [setUserId, setUser, setHeading]);
+  }, [setUserId, setHeading]);
 
   return (
     <Container>
