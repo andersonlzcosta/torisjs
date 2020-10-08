@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useAbrigo } from '../../hooks/AbrigoHook';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -11,14 +12,15 @@ import { Container, Content, AbrigoUser } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-import Perfil from '../../images/perfil.jpg'
+import Perfil from '../../images/perfil.jpg';
+import { FiMinusCircle } from 'react-icons/fi';
 
 interface IAbrigoUsers {
   id: number;
   nome: string;
 }
 
-interface IAbrigosData {
+export interface IAbrigosData {
   id: number;
   nome: string;
   endereco: string;
@@ -40,6 +42,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const [abrigo, setAbrigo] = useState<IAbrigosData>();
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+  const { setHookAbrigo } = useAbrigo();
 
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
     try {
@@ -68,6 +71,21 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     }
   }, [abrigoId, setIsLoading, history]);
 
+  const handleRemoveProfissional = (profissionalId: number) => {
+    if (abrigo) {
+      const profissionais = abrigo.profissionais.filter(
+        profissional => profissional.id !== profissionalId
+      );
+
+      try {
+        api.put(`/abrigos/${abrigo.id}`, { ...abrigo, profissionais });
+        setAbrigo({ ...abrigo, profissionais });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar novo abrigo')
 
@@ -76,9 +94,11 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       api.get(`/abrigos/${id}`)
         .then(response => {
           setAbrigo(response.data);
+          setHookAbrigo(response.data);
         });
+
     }
-  }, [setAbrigoId, setAbrigo, setHeading]);
+  }, [setAbrigoId, setAbrigo, setHeading, setHookAbrigo]);
 
   return (
     <Container>
@@ -86,10 +106,14 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       <Content>
 
         <label>profissionais</label>
-        {abrigo && abrigo.profissionais.map(profissional => (
+        {/* {adicionar botão para add profissional a este abrigo} */}
+        {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
           <AbrigoUser key={profissional.id}>
-            <img src={Perfil} />
-            <h3>{profissional.nome}</h3>
+            <div>
+              <img src={Perfil} />
+              <h3>{profissional.nome}</h3>
+            </div>
+            <button onClick={() => handleRemoveProfissional(profissional.id)}><FiMinusCircle size={24} /></button>
           </AbrigoUser>
         ))}
 

@@ -67,9 +67,13 @@ export const Content = styled.div`
 
 export const AbrigoUser = styled.aside`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
+
+  div{
+    flex-direction: row;
+  }
 
   img{
     width: 50px;
@@ -82,4 +86,18 @@ export const AbrigoUser = styled.aside`
     margin: 0;
   }
 
+  button{
+    background: none;
+    box-shadow: none;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    &:hover{
+      background: none;
+    }
+
+    svg{
+    }
+  }
 `;
