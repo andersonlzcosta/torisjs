@@ -56,7 +56,13 @@
       "classificacao": "Municipal",
       "capacidade": "4/5",
       "faixaEtaria": "5 a 15 anos",
-      "id": 443
+      "id": 443,
+      "profissionais": [
+        {
+          "id": 4,
+          "nome": "Raquel Dusseldorf"
+        }
+      ]
     },
     {
       "id": 512,
@@ -69,6 +75,10 @@
         {
           "id": 5,
           "nome": "Rubens Vaz"
+        },
+        {
+          "id": 6,
+          "nome": "Natália Nathanael"
         },
         {
           "id": 6,
