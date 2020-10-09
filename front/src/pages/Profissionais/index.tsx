@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Container, Content, Estatisticas, UserList, User } from './styles';
 
 import Navbar from '../../components/Navbar';
@@ -78,7 +78,7 @@ const Profissionais: React.FC = () => {
 
       {location.pathname === '/profissionais/todos' && (
         <>
-          <Search searchTitle="usuários cadastrados" loadProfissionais={loadProfissionais} />
+          <Search searchTitle="usuários cadastrados" loadList={loadProfissionais} />
           <UserList>
             {profissionais && profissionais.map(profissional => (
 
@@ -88,7 +88,7 @@ const Profissionais: React.FC = () => {
                   <h3>{profissional.nome}</h3>
                   <strong>{profissional.idade} anos - {profissional.profissao}</strong>
                 </div>
-                <a href={`/user/${profissional.id}`}><img src={Plus} alt="sinal de +" /></a>
+                <Link to={`/user/${profissional.id}`}><img src={Plus} alt="sinal de +" /></Link>
               </User>
             ))}
 

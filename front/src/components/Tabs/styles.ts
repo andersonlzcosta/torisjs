@@ -6,6 +6,7 @@ export const Container = styled.div`
   z-index: 12;
   top: 100px;
   flex-direction: row;
+  display: none;
 
   a{
     ${DefaultBackground}
@@ -22,8 +23,12 @@ export const Container = styled.div`
     }
   }
 
+  @media(max-width: 950px){
+    display: flex;
+  }
+
   @media(max-width: 600px){
-    top: 60px;
+    top: 60px;  
     justify-content: flex-start;
     overflow-x: auto;
     padding: 0px 0 5px;

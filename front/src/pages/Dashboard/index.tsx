@@ -8,6 +8,7 @@ import Perfil from '../../images/perfil.jpg'
 import Plus from '../../images/plus.svg'
 import api from '../../services/api';
 import NavbarDesktop from '../../components/NavbarDesktop';
+import { Link } from 'react-router-dom';
 
 interface IProfissionaisData {
   id: number;
@@ -41,7 +42,7 @@ const Dashboard: React.FC = () => {
               <h3>{profissional.nome}</h3>
               <strong>{profissional.idade} anos - {profissional.profissao}</strong>
             </div>
-            <a href="#"><img src={Plus} alt="sinal de +" /></a>
+            <Link to={`/user/${profissional.id}`}><img src={Plus} alt="sinal de +" /></Link>
           </User>
         ))}
 
