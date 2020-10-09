@@ -41,12 +41,12 @@
       "faixaEtaria": "8 a 16 anos",
       "profissionais": [
         {
-          "id": 1,
-          "nome": "Pedro Feliciano da Silva"
-        },
-        {
           "id": 2,
           "nome": "João Carvalho Feitosa"
+        },
+        {
+          "id": 1,
+          "nome": "Pedro Feliciano da Silva"
         }
       ]
     },
@@ -72,14 +72,6 @@
       "capacidade": "10/10",
       "faixaEtaria": "10 a 12 anos",
       "profissionais": [
-        {
-          "id": 5,
-          "nome": "Rubens Vaz"
-        },
-        {
-          "id": 6,
-          "nome": "Natália Nathanael"
-        },
         {
           "id": 6,
           "nome": "Natália Nathanael"
