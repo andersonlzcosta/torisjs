@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import api from '../../services/api';
 
 import { Container, Estatisticas, Content, AbrigosList, Abrigo } from './styles';
@@ -81,11 +81,10 @@ const Abrigos: React.FC = () => {
           <AbrigosList>
             {abrigos && abrigos.map(abrigo => (
               <Abrigo key={abrigo.id}>
-                <div>
+                <Link to={`/abrigo/${abrigo.id}`}>
                   <h3>{abrigo.nome}</h3>
                   <strong>{abrigo.endereco}</strong>
-                </div>
-                <a href={`/abrigo/${abrigo.id}`}><img src={Plus} alt="sinal de +" /></a>
+                </Link>
               </Abrigo>
             ))}
           </AbrigosList>
