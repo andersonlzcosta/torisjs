@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DefaultContent } from '../../styles/DefaultContent';
 import { DefaultBackground } from '../../styles/DefaultBackground';
+import { darken } from 'polished';
 
 export const Container = styled.div`
   ${DefaultContent}
@@ -14,6 +15,36 @@ export const Content = styled.div`
     font-size: 13px;
     width: 100%;
     margin-bottom: 5px;
+  }
+
+  button.alt{
+    width: auto;
+    text-align: center;
+    font-weight: 200;
+    font-size: 14px;
+    background: #D6E9FA;
+    color: #002F67;
+    border-radius: 30px;
+    padding: 8px 15px;
+    margin: 0px auto 15px 0px;
+    transition: background .4s;
+    box-shadow: none;
+    letter-spacing: 1px;
+
+    &:hover{
+      background: #bcdfff;
+    }
+  }
+
+  button.delete{
+    background: #dd4c37;
+    max-width: 300px;
+    padding: 6px 12px;
+    font-size: 16px;
+
+    &:hover{
+      background: ${darken(0.1, '#dd4c37')};
+    }
   }
 
   form{
@@ -98,6 +129,7 @@ export const AbrigoUser = styled.aside`
     }
 
     svg{
+      stroke: #dd4c37;
     }
   }
 `;

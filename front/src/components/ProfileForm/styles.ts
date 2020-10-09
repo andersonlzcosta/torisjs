@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DefaultContent } from '../../styles/DefaultContent';
 import { DefaultBackground } from '../../styles/DefaultBackground';
+import { darken } from 'polished';
 
 export const Container = styled.div`
   ${DefaultContent}
@@ -8,6 +9,17 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   ${DefaultBackground}
+
+  button.delete{
+    background: #dd4c37;
+    max-width: 300px;
+    padding: 6px 12px;
+    font-size: 16px;
+
+    &:hover{
+      background: ${darken(0.1, '#dd4c37')};
+    }
+  }
 
   form{
     flex-direction: row;
