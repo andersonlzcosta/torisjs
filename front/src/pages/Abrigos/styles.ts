@@ -60,7 +60,7 @@ export const AbrigosList = styled.div`
 
 export const Abrigo = styled.div`
   ${DefaultBackground}
-  padding: 10px 90px 10px 30px;
+  padding: 10px 30px 10px 30px;
   width: 100%;
   flex-direction: row;
   justify-content: flex-start;
@@ -82,17 +82,28 @@ export const Abrigo = styled.div`
   }
 
   a{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-decoration: none;
+  }
+
+  button.plus-lateral{
     background: #67A4DD;
     position: absolute;
+    padding: 0;
     top: 0;
     right: 0; 
     bottom: 0;
     left: auto;
+    border-radius: 0;
     border-top-right-radius: 53px;
     border-bottom-right-radius: 53px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: auto;
     min-width: 60px;
     box-shadow: -22px 0px 38px 0px #426fa35e;
 

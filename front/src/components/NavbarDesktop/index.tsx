@@ -8,6 +8,9 @@ const NavbarDesktop: React.FC = () => {
     <Container>
       <TopMenu isDesktop={true} />
       <Menu>
+        <label>dashboard</label>
+        <Link to="/dashboard">dashboard</Link>
+
         <label>abrigos</label>
         <Link to="/abrigos/estatisticas">estatísticas</Link>
         <Link to="/abrigos/todos">ver todos</Link>

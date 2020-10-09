@@ -2,29 +2,30 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
+import { useAbrigo } from '../../hooks/AbrigoHook';
+import api from '../../services/api';
+
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import api from '../../services/api';
 
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { IUserData } from '../../pages/Profile';
 
-
 interface IProfileFormProps {
-  id?: string;
   user?: IUserData;
   headingText?: string;
 }
 
-const ProfileForm: React.FC<IProfileFormProps> = ({ id, user, headingText }) => {
+const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [userId, setUserId] = useState<string>();
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+  const { hookAbrigo } = useAbrigo();
 
   const handleSubmit = useCallback(async (data: IUserData) => {
     try {
@@ -59,12 +60,12 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ id, user, headingText }) => 
   }, [userId, setIsLoading, history]);
 
   useEffect(() => {
-    headingText ? setHeading(headingText) : setHeading('criar novo usuário')
+    hookAbrigo.id ? setHeading('visualizar perfil') : setHeading(headingText)
 
-    if (id) {
-      setUserId(id);
+    if (user) {
+      setUserId(user.id.toString());
     }
-  }, [setUserId, setHeading]);
+  }, [setUserId, setHeading, user]);
 
   return (
     <Container>
@@ -86,11 +87,13 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ id, user, headingText }) => 
             <Input className="bigger" name="profissao" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
           </div>
 
-          <Button type="submit" loading={isLoading}>salvar</Button>
+          {!hookAbrigo.id && (
+            <Button type="submit" loading={isLoading}>salvar</Button>
+          )}
         </Form>
 
-        {userId && (
-          <Button onClick={handleDelete} loading={isLoading}>deletar usuário</Button>
+        {userId && !hookAbrigo.id && (
+          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar usuário</Button>
         )}
       </Content>
     </Container>

@@ -45,17 +45,28 @@ export const User = styled.div`
   }
 
   a{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-decoration: none;
+  }
+
+  button.plus-lateral{
     background: #67A4DD;
     position: absolute;
+    padding: 0;
     top: 0;
     right: 0; 
     bottom: 0;
     left: auto;
+    border-radius: 0;
     border-top-right-radius: 53px;
     border-bottom-right-radius: 53px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: auto;
     min-width: 60px;
     box-shadow: -22px 0px 38px 0px #426fa35e;
 
@@ -84,3 +95,84 @@ export const User = styled.div`
     }
   }
 `;
+
+export const AbrigosList = styled.div`
+  width: 100%;
+  max-width: 500px;
+
+  div + div{
+    margin-top: 15px;
+  }
+`;
+
+export const Abrigo = styled.div`
+  ${DefaultBackground}
+  padding: 10px 30px 10px 30px;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+
+  div{
+    align-items: flex-start;
+  }
+
+  h3{
+    margin: 0 0 5px;
+    font-weight: 400;
+    font-size: 17px;
+  }
+
+  strong{
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  a{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-decoration: none;
+  }
+
+  button.plus-lateral{
+    background: #67A4DD;
+    position: absolute;
+    padding: 0;
+    top: 0;
+    right: 0; 
+    bottom: 0;
+    left: auto;
+    border-radius: 0;
+    border-top-right-radius: 53px;
+    border-bottom-right-radius: 53px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 60px;
+    box-shadow: -22px 0px 38px 0px #426fa35e;
+
+    img{
+      width: 23px;
+    }
+  }
+
+  @media(max-width: 600px){
+    padding-right: 50px;
+
+    div{
+      margin-left: 10px;
+    }
+
+    h3{
+      margin-bottom: 0px;
+    }
+
+    a{
+      min-width: 45px;
+    }
+  }
+`;
+
