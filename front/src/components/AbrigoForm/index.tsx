@@ -3,6 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useAbrigo } from '../../hooks/AbrigoHook';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
+import { useToast } from '../../hooks/toast';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -43,6 +44,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { setHookAbrigo } = useAbrigo();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
     try {
@@ -55,8 +57,18 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         setAbrigoId(response.data.id);
       }
       setIsLoading(false);
+      addToast({
+        type: 'success',
+        title: 'Abrigo Cadastrado!',
+        message: 'este abrigo já está visível na lista.',
+      });
     } catch (err) {
       setIsLoading(false);
+      addToast({
+        type: 'error',
+        title: 'Erro ao cadastrar!',
+        message: 'tente novamente ou entre em contato com suporte.',
+      });
     }
   }, [abrigoId, setIsLoading, setAbrigoId]);
 
@@ -65,9 +77,19 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       setIsLoading(true);
       await api.delete(`/abrigos/${abrigoId}`);
       setIsLoading(false);
+      addToast({
+        type: 'success',
+        title: 'Abrigo Deletado!',
+        message: 'você será redirecionado para a listagem.',
+      });
       history.push('/abrigos/todos');
     } catch (err) {
-      console.log('erro ao deletar');
+      console.log(err);
+      addToast({
+        type: 'error',
+        title: 'Erro ao deletar',
+        message: 'tente novamente ou entre em contato com suporte.',
+      });
     }
   }, [abrigoId, setIsLoading, history]);
 
@@ -80,9 +102,26 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       try {
         api.put(`/abrigos/${abrigo.id}`, { ...abrigo, profissionais });
         setAbrigo({ ...abrigo, profissionais });
+        addToast({
+          type: 'success',
+          title: 'Profissional Removido!',
+          message: 'informações do abrigo foram atualizadas',
+        });
       } catch (err) {
         console.log(err);
+        addToast({
+          type: 'error',
+          title: 'Erro ao remover!',
+          message: 'tente novamente ou entre em contato com suporte.',
+        });
       }
+    }
+  }
+
+  const handleAddProfissional = () => {
+    if (abrigo) {
+      setHookAbrigo(abrigo);
+      history.push('/profissionais/todos');
     }
   }
 
@@ -94,11 +133,10 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       api.get(`/abrigos/${id}`)
         .then(response => {
           setAbrigo(response.data);
-          setHookAbrigo(response.data);
         });
 
     }
-  }, [setAbrigoId, setAbrigo, setHeading, setHookAbrigo]);
+  }, [setAbrigoId, setAbrigo, setHeading]);
 
   return (
     <Container>
@@ -106,7 +144,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       <Content>
 
         <label>profissionais</label>
-        {/* {adicionar botão para add profissional a este abrigo} */}
+        <button className="alt" onClick={handleAddProfissional}>adicionar profissional</button>
         {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
           <AbrigoUser key={profissional.id}>
             <div>
@@ -147,7 +185,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         </Form>
 
         {abrigoId && (
-          <Button onClick={handleDelete} loading={isLoading}>deletar usuário</Button>
+          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar abrigo</Button>
         )}
       </Content>
     </Container>
