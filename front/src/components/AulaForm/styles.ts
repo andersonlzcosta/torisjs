@@ -4,22 +4,16 @@ import { DefaultBackground } from '../../styles/DefaultBackground';
 import { darken } from 'polished';
 
 export const Container = styled.div`
-  ${DefaultContent}
+  ${DefaultBackground}
+  background-color: #fad552;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  right: 0;
 `;
 
 export const Content = styled.div`
-  ${DefaultBackground}
-
-  button.delete{
-    background: #dd4c37;
-    max-width: 300px;
-    padding: 6px 12px;
-    font-size: 16px;
-
-    &:hover{
-      background: ${darken(0.1, '#dd4c37')};
-    }
-  }
 
   form{
     flex-direction: row;
@@ -31,13 +25,10 @@ export const Content = styled.div`
     input{
       background: none;
       padding: 0px;
-      /* border: none;
-      border-bottom: 1px solid #0B4385; */
-      color: #0B4385;
+      color: #002F67;
       border-radius: 0;
       letter-spacing: 0px;
       width: 100%;
-      font-weight: 300;
       font-size: 17px;
       margin: 4px 0 0;
     }
@@ -60,9 +51,10 @@ export const Content = styled.div`
       font-size: 13px;
     }
 
-    .bigger{
-      font-weight: 300;
-      font-size: 27px;
+    button{
+      max-width: 250px;
+      font-size: 14px;
+      box-shadow: none;
     }
   }
 `;

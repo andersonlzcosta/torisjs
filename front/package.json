@@ -31,6 +31,7 @@
     "react-spring": "^8.0.27",
     "styled-components": "^5.2.0",
     "typescript": "^4.0.3",
+    "uuidv4": "^6.2.4",
     "yup": "^0.29.3"
   },
   "scripts": {
@@ -58,6 +59,7 @@
     "@types/axios": "^0.14.0",
     "@types/json-server": "^0.14.2",
     "@types/styled-components": "^5.1.3",
+    "@types/uuidv4": "^5.0.0",
     "@types/yup": "^0.29.7",
     "eslint-import-resolver-typescript": "^2.3.0"
   }

@@ -10,6 +10,32 @@ export const Container = styled.div`
 export const Content = styled.div`
   ${DefaultBackground}
 
+  label{
+    font-weight: 900;
+    font-size: 13px;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  button.alt{
+    width: auto;
+    text-align: center;
+    font-weight: 200;
+    font-size: 14px;
+    background: #D6E9FA;
+    color: #002F67;
+    border-radius: 30px;
+    padding: 8px 15px;
+    margin: 0px auto 15px 0px;
+    transition: background .4s;
+    box-shadow: none;
+    letter-spacing: 1px;
+
+    &:hover{
+      background: #bcdfff;
+    }
+  }
+
   button.delete{
     background: #dd4c37;
     max-width: 300px;
@@ -56,13 +82,54 @@ export const Content = styled.div`
     }
 
     label{
-      font-weight: 900;
-      font-size: 13px;
+      margin: 0;
     }
 
     .bigger{
       font-weight: 300;
       font-size: 27px;
+    }
+  }
+
+  aside + aside{
+    margin-top: 10px;
+  }
+`;
+
+export const AbrigoUser = styled.aside`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  div{
+    flex-direction: row;
+  }
+
+  img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+
+  h3{
+    margin: 0;
+  }
+
+  button{
+    background: none;
+    box-shadow: none;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    &:hover{
+      background: none;
+    }
+
+    svg{
+      stroke: #dd4c37;
     }
   }
 `;
