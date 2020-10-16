@@ -7,6 +7,7 @@ import Profissionais from '../pages/Profissionais';
 import Abrigos from '../pages/Abrigos';
 import Profile from '../pages/Profile';
 import Abrigo from '../pages/Abrigo';
+import Cursos from '../pages/Cursos';
 
 const Routes: React.FC = () => {
 
@@ -20,6 +21,9 @@ const Routes: React.FC = () => {
 
       <Route path="/abrigos" component={Abrigos} />
       <Route path="/abrigo/:id" component={Abrigo} />
+
+      <Route path="/cursos" component={Cursos} />
+      {/* <Route path="/curso/:id" component={Curso} /> */}
     </Switch>
   );
 }

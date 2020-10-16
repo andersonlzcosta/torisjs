@@ -78,5 +78,48 @@
         }
       ]
     }
+  ],
+  "cursos": [
+    {
+      "id": 230,
+      "nome": "Guia prático de cuidados dentro do abrigo",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 933,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        },
+        {
+          "id": 310,
+          "nome": "Aula dois",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
+    },
+    {
+      "id": 237,
+      "nome": "Metodologias de cuidado",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 565,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
+    },
+    {
+      "id": 241,
+      "nome": "Curso rápido de férias",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 785,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
+    }
   ]
 }
