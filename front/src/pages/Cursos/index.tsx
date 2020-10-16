@@ -6,7 +6,7 @@ import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
 import Tabs from '../../components/Tabs';
 import Search from '../../components/Search';
-import ProfileForm from '../../components/ProfileForm';
+import CursoForm from '../../components/CursoForm';
 
 import api from '../../services/api';
 import NavbarDesktop from '../../components/NavbarDesktop';
@@ -86,7 +86,7 @@ const Cursos: React.FC = () => {
                 <Link to={`/curso/${curso.id}`}>
                   <div>
                     <h3>{curso.nome}</h3>
-                    <strong>{curso.descricao}</strong>
+                    <strong>{curso.descricao.substring(0, 100)}...</strong>
                   </div>
                 </Link>
               </Curso>
@@ -97,7 +97,7 @@ const Cursos: React.FC = () => {
       )}
 
       {location.pathname === '/cursos/novo' && (
-        <ProfileForm />
+        <CursoForm />
       )}
 
       <NavbarDesktop />
