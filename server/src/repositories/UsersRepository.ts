@@ -16,8 +16,8 @@ class UsersRepository {
         //return findUser || null;
     //}
 
-    public create(nome: string, profissao: string): User {
-        const user = new User(nome, profissao);
+    public create(nome: string, idade: string, profissao: string): User {
+        const user = new User(nome, idade, profissao);
 
         this.users.push(user);
 

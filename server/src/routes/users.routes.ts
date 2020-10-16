@@ -12,9 +12,9 @@ usersRouter.get('/', (request, response) => {
 });
 
 usersRouter.post('/', (request, response) => {
-    const { nome, idade, profissao, id } = request.body;
+    const { id, nome, idade, profissao } = request.body;
 
-    const user = usersRepository.create(nome, profissao);
+    const user = usersRepository.create(id, nome, idade, profissao);
     
     return response.json(user);
 });

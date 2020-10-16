@@ -9,10 +9,11 @@ class User {
 
     profissao: string;
 
-    constructor(nome: string, idade: string) {
+    constructor(nome: string, idade: string, profissao: string) {
         this.id = uuid();
         this.nome = nome;
         this.idade = idade;
+        this.profissao = profissao;
     }
 }
 
