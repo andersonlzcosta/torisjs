@@ -66,7 +66,12 @@ export const User = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   position: relative;
+  transition: background-color .3s;
 
+  &:hover{
+    background-color: #fff9e5;
+  }
+  
   div{
     align-items: flex-start;
     margin-left: 20px;

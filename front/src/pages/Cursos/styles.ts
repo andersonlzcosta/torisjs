@@ -60,11 +60,16 @@ export const CursoList = styled.div`
 
 export const Curso = styled.div`
   ${DefaultBackground}
-  padding: 10px 0px 10px 10px;
+  padding: 20px 0px 20px 10px;
   width: 100%;
   flex-direction: row;
   justify-content: flex-start;
   position: relative;
+  transition: background-color .3s;
+
+  &:hover{
+    background-color: #fff9e5;
+  }
 
   div{
     align-items: flex-start;
@@ -84,7 +89,8 @@ export const Curso = styled.div`
 
   strong{
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 700;
+    max-width: 400px;
   }
 
   a{
