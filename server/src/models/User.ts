@@ -9,7 +9,7 @@ class User {
 
     profissao: string;
 
-    constructor(nome: string, idade: string, profissao: string) {
+    constructor({ nome, idade, profissao }: Omit<User, 'id'>) {
         this.id = uuid();
         this.nome = nome;
         this.idade = idade;
