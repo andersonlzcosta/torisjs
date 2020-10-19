@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev:server": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts ",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "pg": "^8.4.1",
+    "typeorm": "^0.2.28",
     "uuidv4": "^6.2.3"
   }
 }
