@@ -16,14 +16,15 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
     try {
-        const { nome, idade, profissao } = request.body;
+        const { nome, idade, profissao, password } = request.body;
 
         const createUser = new CreateUserService();
         
         const user = await createUser.execute({
             nome,
             idade,
-            profissao
+            profissao,
+            password
         });
         
         return response.json(user);
