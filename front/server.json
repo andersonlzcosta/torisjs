@@ -13,12 +13,6 @@
       "id": 2
     },
     {
-      "nome": "Luisa Vasconcelos",
-      "idade": "28",
-      "profissao": "Advogada",
-      "id": 3
-    },
-    {
       "id": 4,
       "nome": "Raquel Dusseldorf",
       "idade": 38,
@@ -39,29 +33,88 @@
   ],
   "abrigos": [
     {
-      "id": 1,
-      "name": "Casa Abrigo da Criança e do Adolescente Roger Agnelli",
-      "address": "Areal - Angra dos Reis"
+      "id": 312,
+      "nome": "Casa Abrigo da Criança e do Adolescente Roger Agnelli",
+      "endereco": "Rua Franklin Moraes, Centro",
+      "classificacao": "Municipal",
+      "capacidade": "2/5",
+      "faixaEtaria": "8 a 16 anos",
+      "profissionais": [
+        {
+          "id": 2,
+          "nome": "João Carvalho Feitosa"
+        },
+        {
+          "id": 1,
+          "nome": "Pedro Feliciano da Silva"
+        }
+      ]
     },
     {
-      "id": 2,
-      "name": "Casa Lar Israel Duarte Eccard",
-      "address": "Faria Leite - Aperibé"
+      "nome": "Casa Lar Israel Duarte Eccard",
+      "endereco": "Faria Leite - Aperibé",
+      "classificacao": "Municipal",
+      "capacidade": "4/5",
+      "faixaEtaria": "5 a 15 anos",
+      "id": 443,
+      "profissionais": [
+        {
+          "id": 4,
+          "nome": "Raquel Dusseldorf"
+        }
+      ]
     },
     {
-      "id": 3,
-      "name": "Casa de Convivencia / Casa de Passagem",
-      "address": "Praça da Bandeira - Araruama"
+      "id": 512,
+      "nome": "Casa de Convivencia / Casa de Passagem",
+      "endereco": "Praça da Bandeira - Araruama",
+      "classificacao": "Estatual",
+      "capacidade": "10/10",
+      "faixaEtaria": "10 a 12 anos",
+      "profissionais": [
+        {
+          "id": 6,
+          "nome": "Natália Nathanael"
+        }
+      ]
+    }
+  ],
+  "cursos": [
+    {
+      "id": 230,
+      "nome": "Guia prático de cuidados dentro do abrigo",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 933,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
     },
     {
-      "id": 4,
-      "name": "Lar Fabiano de Cristo - Abrigo Provisório Amélia Lindo",
-      "address": "Pontinha - Araruama"
+      "id": 237,
+      "nome": "Metodologias de cuidado",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 565,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
     },
     {
-      "id": 5,
-      "name": "Serviço de Acolhimento em Família Acolhedora de Barra do Piraí",
-      "address": "Centro - Barra do Piraí"
+      "id": 241,
+      "nome": "Curso rápido de férias",
+      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
+      "aulas": [
+        {
+          "id": 785,
+          "nome": "Aula inaugural",
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+        }
+      ]
     }
   ]
 }

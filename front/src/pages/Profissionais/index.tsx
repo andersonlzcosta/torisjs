@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Container, Content, Estatisticas, UserList, User } from './styles';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Container, Content, Estatisticas, UserList, User, Warning } from './styles';
+import { useAbrigo } from '../../hooks/AbrigoHook';
+import { IAbrigosData } from '../../components/AbrigoForm';
 
 import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
@@ -8,9 +10,11 @@ import Tabs from '../../components/Tabs';
 import Search from '../../components/Search';
 import ProfileForm from '../../components/ProfileForm';
 
-import Perfil from '../../images/perfil.jpg'
-import Plus from '../../images/plus.svg'
+import Perfil from '../../images/perfil.jpg';
+import Plus from '../../images/plus.svg';
 import api from '../../services/api';
+import NavbarDesktop from '../../components/NavbarDesktop';
+import { useToast } from '../../hooks/toast';
 
 interface IProfissionaisData {
   id: number;
@@ -22,12 +26,38 @@ interface IProfissionaisData {
 const Profissionais: React.FC = () => {
   const [profissionais, setProfissionais] = useState<IProfissionaisData[]>();
   const location = useLocation();
+  const history = useHistory();
   let query = new URLSearchParams(useLocation().search);
+  const { hookAbrigo, setHookAbrigo } = useAbrigo();
+  const { addToast } = useToast();
 
   const loadProfissionais = useCallback(async (query) => {
     const response = await api.get(`/users?nome_like=${query}`);
     setProfissionais(response.data);
   }, []);
+
+  const handleAddProfissionalAbrigo = (id: number, nome: string) => {
+    try {
+      let abrigoId = hookAbrigo.id;
+      api.put(`/abrigos/${abrigoId}`, {
+        ...hookAbrigo, profissionais: [...hookAbrigo.profissionais, { id, nome }]
+      });
+      setHookAbrigo({} as IAbrigosData);
+      addToast({
+        type: 'success',
+        title: 'Profissional Adicionado!',
+        message: 'informações do abrigo atualizadas.'
+      });
+      history.push(`/abrigo/${abrigoId}`);
+    } catch (err) {
+      console.log(err);
+      addToast({
+        type: 'error',
+        title: 'Erro ao adicionar',
+        message: 'tente novamente ou entre em contato com suporte.',
+      });
+    }
+  }
 
   useEffect(() => {
     let searchFor = query.get('search');
@@ -77,17 +107,32 @@ const Profissionais: React.FC = () => {
 
       {location.pathname === '/profissionais/todos' && (
         <>
-          <Search searchTitle="usuários cadastrados" loadProfissionais={loadProfissionais} />
+          {hookAbrigo.id && (
+            <Warning>
+              <h3>selecione um profissional para adicionar ao abrigo</h3>
+              <p>clique no + para adicionar, ou no profissional para ver mais detalhes sobre ele</p>
+            </Warning>
+          )}
+          <Search searchTitle="usuários cadastrados" loadList={loadProfissionais} />
           <UserList>
             {profissionais && profissionais.map(profissional => (
 
               <User key={profissional.id}>
-                <img src={Perfil} alt="foto de perfil" />
-                <div>
-                  <h3>{profissional.nome}</h3>
-                  <strong>{profissional.idade} anos - {profissional.profissao}</strong>
-                </div>
-                <a href={`/user/${profissional.id}`}><img src={Plus} alt="sinal de +" /></a>
+                <Link to={`/user/${profissional.id}`}>
+                  <img src={Perfil} alt="foto de perfil" />
+                  <div>
+                    <h3>{profissional.nome}</h3>
+                    <strong>{profissional.idade} anos - {profissional.profissao}</strong>
+                  </div>
+                </Link>
+                {hookAbrigo.id && (
+                  <button
+                    className="plus-lateral"
+                    onClick={() => handleAddProfissionalAbrigo(profissional.id, profissional.nome)}
+                  >
+                    <img src={Plus} alt="sinal de +" />
+                  </button>
+                )}
               </User>
             ))}
 
@@ -99,7 +144,7 @@ const Profissionais: React.FC = () => {
         <ProfileForm />
       )}
 
-
+      <NavbarDesktop />
       <Navbar />
     </Container>
   );

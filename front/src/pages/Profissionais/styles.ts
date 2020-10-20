@@ -40,6 +40,14 @@ export const Content = styled.div`
       font-weight: 200;
     }
   }
+
+  @media(max-width: 600px){
+    > div p{
+      font-size: 16px;
+      line-height: 1.2em;
+      font-weight: 400;
+    }
+  }
 `;
 
 export const UserList = styled.div`
@@ -58,7 +66,12 @@ export const User = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   position: relative;
+  transition: background-color .3s;
 
+  &:hover{
+    background-color: #fff9e5;
+  }
+  
   div{
     align-items: flex-start;
     margin-left: 20px;
@@ -81,22 +94,73 @@ export const User = styled.div`
   }
 
   a{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-decoration: none;
+  }
+
+  button.plus-lateral{
     background: #67A4DD;
     position: absolute;
+    padding: 0;
     top: 0;
     right: 0; 
     bottom: 0;
     left: auto;
+    border-radius: 0;
     border-top-right-radius: 53px;
     border-bottom-right-radius: 53px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: auto;
     min-width: 60px;
     box-shadow: -22px 0px 38px 0px #426fa35e;
 
     img{
       width: 23px;
     }
+  }
+
+  @media(max-width: 600px){
+    padding-right: 50px;
+
+    div{
+      margin-left: 10px;
+    }
+
+    h3{
+      margin-bottom: 0px;
+    }
+
+    img {
+      width: 50px;
+    }
+
+    a{
+      min-width: 45px;
+    }
+  }
+`;
+
+export const Warning = styled.div`
+  ${DefaultBackground}
+  max-width: 500px;
+  width: 90%;
+  background: #dc7835;
+  align-items: flex-start;
+
+  h3{
+    color: #fff;
+    margin: 0px 0px 5px;
+    font-size: 22px;
+    max-width: 350px;
+  }
+
+  p{
+    color: #fff;
+    margin: 0px;
   }
 `;

@@ -49,4 +49,22 @@ export const SearchBox = styled.div`
   p{
     margin-bottom: 0px;
   }
+
+  @media(max-width: 600px){
+    padding: 20px;
+    border-radius: 40px;
+
+    p{
+      text-align: center;
+    }
+
+    input{
+      padding: 9px 22px;
+      font-size: 16px;
+    }
+
+    form button[type="submit"]{
+      padding: 8px 16px;
+    }
+  }
 `;

@@ -1,5 +1,6 @@
 import { createGlobalStyle, keyframes } from 'styled-components';
 import { lighten } from 'polished';
+import { Fonts } from '../fonts';
 
 
 const fadeIn = keyframes`
@@ -13,8 +14,10 @@ const fadeIn = keyframes`
 
 
 export default createGlobalStyle`
+  ${Fonts}
+
   * {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Proxima Nova', sans-serif;
     color: #002F67;
     box-sizing: border-box;
   }
@@ -91,5 +94,31 @@ export default createGlobalStyle`
     max-width: 400px;
     align-self: flex-start;
     padding-left: 40px;
+    position: relative;
+
+    &::before{
+      content: '';
+      width: 80px;
+      height: 80px;
+      background: #fad552;
+      border-radius: 50%;
+      position: absolute;
+      top: -40px;
+      left: 0px;
+      z-index: -1;
+    }
+  }
+
+  @media(max-width: 600px){
+    input{
+      padding: 9px 22px;
+      font-size: 16px;
+    }
+
+    button{
+      font-size: 16px;
+      letter-spacing: 2px;
+      padding: 8px 15px;
+    }
   }
 `;
