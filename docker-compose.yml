@@ -3,16 +3,17 @@ services:
   server:
     build: server/.
     ports:
-      - 2000:2000
+      - 2000:2222
   front:
     build: front/.
     ports:
       - 3000:3000
   db:
-    image: "postgres"
+    image: 'postgres'
     environment:
-      PG_USER: vertix
-      PG_PASS: vertix_pass
+      POSTGRES_DB: rede_abrigo
+      POSTGRES_USER: abrigando
+      POSTGRES_PASSWORD: osdesabrigados
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:

@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-ENV PORT=5000
+ENV PORT=2222
 
-CMD ["npm", "start"]
+CMD ["yarn", "dev:server"]
