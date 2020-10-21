@@ -9,6 +9,9 @@ import Profile from '../pages/Profile';
 import Abrigo from '../pages/Abrigo';
 import Cursos from '../pages/Cursos';
 import Curso from '../pages/Curso';
+import VerCursos from '../pages/Assistir/VerCursos';
+import CursoDetails from '../pages/Assistir/CursoDetails';
+import Aula from '../pages/Assistir/Aula';
 
 const Routes: React.FC = () => {
 
@@ -25,6 +28,10 @@ const Routes: React.FC = () => {
 
       <Route path="/cursos" component={Cursos} />
       <Route path="/curso/:id" component={Curso} />
+
+      <Route path="/assistir" component={VerCursos} />
+      <Route path="/detalhes/:id" component={CursoDetails} />
+      <Route path="/aula/:id" component={Aula} />
     </Switch>
   );
 }

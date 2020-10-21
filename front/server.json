@@ -88,7 +88,16 @@
         {
           "id": 933,
           "nome": "Aula inaugural",
-          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+          "assistida": true,
+          "duracao": "13 minutos"
+        },
+        {
+          "id": 721,
+          "nome": "Conhecendo métodos eficazes para criação",
+          "video_url": "url2",
+          "assistida": false,
+          "duracao": "17 minutos"
         }
       ]
     },
@@ -100,7 +109,9 @@
         {
           "id": 565,
           "nome": "Aula inaugural",
-          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+          "assistida": false,
+          "duracao": "22 minutos"
         }
       ]
     },
@@ -112,9 +123,41 @@
         {
           "id": 785,
           "nome": "Aula inaugural",
-          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY"
+          "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+          "assistida": false,
+          "duracao": "9 minutos"
         }
       ]
+    }
+  ],
+  "aulas": [
+    {
+      "id": 933,
+      "nome": "Aula inaugural",
+      "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+      "assistida": true,
+      "duracao": "13 minutos"
+    },
+    {
+      "id": 721,
+      "nome": "Conhecendo métodos eficazes para criação",
+      "video_url": "url2",
+      "assistida": false,
+      "duracao": "17 minutos"
+    },
+    {
+      "id": 565,
+      "nome": "Aula inaugural",
+      "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+      "assistida": false,
+      "duracao": "22 minutos"
+    },
+    {
+      "id": 785,
+      "nome": "Aula inaugural",
+      "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+      "assistida": false,
+      "duracao": "9 minutos"
     }
   ]
 }
