@@ -10,15 +10,14 @@ interface Request {
 }
 
 class CreateUserService {
-    private usersRepository: UsersRepository;
-    
-    public async execute({ nome, idade, profissao }: Request): Promise<User> {
+    public async execute({ nome, idade, profissao, password }: Request): Promise<User> {
         const usersRepository = getCustomRepository(UsersRepository);
 
-        const user = this.usersRepository.create({ 
+        const user = usersRepository.create({ 
             nome,
             idade,
-            profissao
+            profissao,
+            password
         });
 
         await usersRepository.save(user);
