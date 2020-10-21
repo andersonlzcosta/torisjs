@@ -159,5 +159,28 @@
       "assistida": false,
       "duracao": "9 minutos"
     }
+  ],
+  "perguntas": [
+    {
+      "id": 355,
+      "title": "título da pergunta",
+      "nomeUsuario": "Rodolfo",
+      "data": "10/10/2020",
+      "isResolved": false
+    },
+    {
+      "id": 652,
+      "title": "título da pergunta 2",
+      "nomeUsuario": "João Carlos",
+      "data": "20/10/2020",
+      "isResolved": true
+    },
+    {
+      "id": 874,
+      "title": "título da pergunta 3",
+      "nomeUsuario": "Felizberto",
+      "data": "22/09/2020",
+      "isResolved": true
+    }
   ]
 }
