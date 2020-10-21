@@ -23,8 +23,9 @@ const NavbarDesktop: React.FC = () => {
 
         <label>cursos</label>
         <Link to="/cursos/estatisticas">estatísticas</Link>
-        <Link to="/cursos/todos">ver todos</Link>
+        <Link to="/cursos/todos">editar todos</Link>
         <Link to="/cursos/novo">criar novo</Link>
+        <Link to="/assistir">assistir cursos</Link>
 
         <label>forum</label>
         <Link to="/forum/todos">ver todos</Link>
