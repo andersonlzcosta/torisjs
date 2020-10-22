@@ -12,6 +12,8 @@ import Curso from '../pages/Curso';
 import VerCursos from '../pages/Assistir/VerCursos';
 import CursoDetails from '../pages/Assistir/CursoDetails';
 import Aula from '../pages/Assistir/Aula';
+import Forum from '../pages/Forum';
+import Pergunta from '../pages/Pergunta';
 
 const Routes: React.FC = () => {
 
@@ -32,6 +34,9 @@ const Routes: React.FC = () => {
       <Route path="/assistir" component={VerCursos} />
       <Route path="/detalhes/:id" component={CursoDetails} />
       <Route path="/aula/:id" component={Aula} />
+
+      <Route path="/forum" component={Forum} />
+      <Route path="/pergunta" component={Pergunta} />
     </Switch>
   );
 }
