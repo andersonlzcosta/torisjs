@@ -9,7 +9,7 @@ import Search from '../../components/Search';
 import { Container, Content, PerguntasList, Pergunta, Status } from './styles';
 import { Link } from 'react-router-dom';
 
-interface IPerguntasData {
+interface IPerguntaData {
   id: number;
   title: string;
   nomeUsuario: string;
@@ -18,7 +18,7 @@ interface IPerguntasData {
 }
 
 const Forum: React.FC = () => {
-  const [perguntas, setPerguntas] = useState<IPerguntasData[]>();
+  const [perguntas, setPerguntas] = useState<IPerguntaData[]>();
 
   const loadPerguntas = useCallback(async (query) => {
     const response = await api.get(`/perguntas?title_like=${query}`);
