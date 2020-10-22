@@ -36,7 +36,7 @@ const Routes: React.FC = () => {
       <Route path="/aula/:id" component={Aula} />
 
       <Route path="/forum" component={Forum} />
-      <Route path="/pergunta" component={Pergunta} />
+      <Route path="/pergunta/:id" component={Pergunta} />
     </Switch>
   );
 }
