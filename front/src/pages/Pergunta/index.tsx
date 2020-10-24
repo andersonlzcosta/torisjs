@@ -142,7 +142,7 @@ const Pergunta: React.FC = () => {
             <button className="delete" onClick={() => handleDeletePergunta(pergunta.id)}>deletar pergunta<FiMinusCircle size={18} /></button>
           </PerguntaContainer>
 
-          {pergunta.respostas.length > 0 && <h2>Respostas</h2>}
+          {pergunta.respostas && pergunta.respostas.length > 0 && <h2>Respostas</h2>}
           {pergunta.respostas && pergunta.respostas.map(resposta => (
             <div key={resposta.id}>
               <h3>{resposta.nomeUsuario} no dia {resposta.data} respondeu:</h3>
