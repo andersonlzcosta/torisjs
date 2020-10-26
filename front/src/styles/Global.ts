@@ -99,11 +99,11 @@ export default createGlobalStyle`
     &::before{
       content: '';
       width: 80px;
-      height: 80px;
+      height: 20px;
       background: #fad552;
-      border-radius: 50%;
+      border-radius: 50px;
       position: absolute;
-      top: -40px;
+      top: 0px;
       left: 0px;
       z-index: -1;
     }

@@ -29,7 +29,7 @@ const NavbarDesktop: React.FC = () => {
 
         <label>fórum</label>
         <Link to="/forum">ver todos</Link>
-        <Link to="/forum/novo">criar novo</Link>
+        <Link to="/pergunta/nova">criar nova pergunta</Link>
       </Menu>
     </Container>
   );
