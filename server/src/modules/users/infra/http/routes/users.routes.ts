@@ -8,25 +8,26 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 const usersRouter = Router();
 
 usersRouter.get('/', async (request, response) => {
-        const usersRepository = getCustomRepository(UsersRepository);
-        const users = await usersRepository.find();
+    const usersRepository = getCustomRepository(UsersRepository);
+    const users = await usersRepository.findAll();
 
     return response.json(users);
 });
 
 usersRouter.post('/', async (request, response) => {
     try {
-        const { nome, idade, profissao, password } = request.body;
+        const { nome, email, idade, profissao, password } = request.body;
 
         const createUser = new CreateUserService();
-        
+
         const user = await createUser.execute({
             nome,
+            email,
             idade,
             profissao,
             password
         });
-        
+
         return response.json(user);
     } catch (error) {
         return response.status(400).json({ error: error.message });
