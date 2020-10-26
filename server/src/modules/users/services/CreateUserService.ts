@@ -1,6 +1,6 @@
 import { getCustomRepository } from "typeorm";
-import User from "../models/User";
-import UsersRepository from "../repositories/UsersRepository";
+import User from "../infra/typeorm/entities/User";
+import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
 
 interface Request {
     nome: string;
