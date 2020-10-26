@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import 'express-async-errors';
+
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import AppError from '@shared/errors/AppError'
@@ -31,7 +34,7 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
 
 
 app.get('/', (request, response) => {
-  return response.json({ message: 'Hellowtheeere2e'});
+  return response.json({ message: 'Hellowtheeere2e' });
 });
 
 app.listen(process.env.PORT || 2222, () => {
