@@ -29,7 +29,7 @@ const Forum: React.FC = () => {
   const [categories, setCategories] = useState<IForumCategory[]>();
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
-  const loadPerguntas = useCallback(async (query) => {
+  const searchPerguntas = useCallback(async (query) => {
     const response = await api.get(`/perguntas?title_like=${query}`);
     setPerguntas(response.data);
   }, []);
@@ -46,7 +46,7 @@ const Forum: React.FC = () => {
   }
 
   useEffect(() => {
-    api.get('/perguntas?_limit=2').then(response => {
+    api.get('/perguntas?_limit=10').then(response => {
       setPerguntas(response.data);
     });
 
@@ -65,7 +65,7 @@ const Forum: React.FC = () => {
     <Container>
       <TopMenu />
 
-      <Search searchTitle="pesquise no fórum" loadList={loadPerguntas} />
+      <Search searchTitle="pesquise no fórum" loadList={searchPerguntas} />
       <Filter>
         <button onClick={() => setShowFilters(true)}>filtro por categorias</button>
         <ActiveCategoriesList>
