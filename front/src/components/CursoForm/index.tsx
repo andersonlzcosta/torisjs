@@ -18,9 +18,10 @@ import { ICursoData } from '../../pages/Curso';
 interface ICursoFormProps {
   curso?: ICursoData;
   headingText?: string;
+  updateCursosList?: () => void;
 }
 
-const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
+const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursosList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [cursoId, setCursoId] = useState<string>();
@@ -47,6 +48,8 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
           title: "Curso criado!",
           type: "success"
         });
+        history.push('/cursos/todos');
+        updateCursosList && updateCursosList();
       }
       setIsLoading(false);
     } catch (err) {

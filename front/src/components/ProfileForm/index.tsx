@@ -14,13 +14,15 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { IUserData } from '../../pages/Profile';
 import Popup from '../Popup';
+import { useToast } from '../../hooks/toast';
 
 interface IProfileFormProps {
   user?: IUserData;
   headingText?: string;
+  updateProfissionaisList?: () => void;
 }
 
-const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
+const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updateProfissionaisList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [userId, setUserId] = useState<string>();
@@ -29,6 +31,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { hookAbrigo } = useAbrigo();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(async (data: IUserData) => {
     try {
@@ -38,20 +41,27 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
         response = await api.put(`/users/${userId}`, data);
       } else {
         response = await api.post(`/users`, data);
-        setUserId(response.data.id);
-        console.log(userId);
+        history.push('/profissionais/todos');
       }
-      console.log(response);
       setIsLoading(false);
+      addToast({
+        title: "Profissional criado com sucesso!",
+        message: "você será redirecionado para todos",
+        type: "success"
+      });
+      updateProfissionaisList && updateProfissionaisList();
     } catch (err) {
-      console.log(err);
+      addToast({
+        title: "Ocorreu um erro",
+        message: "tente novamente",
+        type: "error"
+      });
       setIsLoading(false);
     }
   }, [userId, setIsLoading, setUserId]);
 
   const handleDelete = useCallback(async () => {
     try {
-      console.log(userId);
       setIsLoading(true);
       await api.delete(`/users/${userId}`);
       setIsLoading(false);
