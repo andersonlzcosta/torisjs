@@ -98,8 +98,9 @@ const Pergunta: React.FC = () => {
       respostas: []
     }
     api.post('/perguntas', novaPergunta);
-    setPergunta(novaPergunta);
-    setNovaPergunta(false);
+    history.push('/forum');
+    // setPergunta(novaPergunta);
+    // setNovaPergunta(false);
     reset();
   }, []);
 
