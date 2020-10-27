@@ -96,6 +96,8 @@ export const Content = styled.div`
   }
 `;
 
+export const AbrigoUserContainer = styled.div``;
+
 export const AbrigoUser = styled.aside`
   display: flex;
   justify-content: space-between;
