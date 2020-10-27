@@ -25,6 +25,11 @@ const Cursos: React.FC = () => {
   const { addToast } = useToast();
   let query = new URLSearchParams(useLocation().search);
 
+  const updateCursosList = useCallback(async () => {
+    const response = await api.get('/cursos');
+    setCursos(response.data);
+  }, []);
+
   const loadCursos = useCallback(async (query) => {
     const response = await api.get(`/cursos?nome_like=${query}`);
     setCursos(response.data);
@@ -80,8 +85,8 @@ const Cursos: React.FC = () => {
         <>
           <Search searchTitle="cursos cadastrados" loadList={loadCursos} />
           <CursoList>
-            {cursos && cursos.map(curso => (
 
+            {cursos && cursos.map(curso => (
               <Curso key={curso.id}>
                 <Link to={`/curso/${curso.id}`}>
                   <div>
@@ -97,7 +102,7 @@ const Cursos: React.FC = () => {
       )}
 
       {location.pathname === '/cursos/novo' && (
-        <CursoForm />
+        <CursoForm updateCursosList={updateCursosList} />
       )}
 
       <NavbarDesktop />
