@@ -2,14 +2,26 @@ import 'reflect-metadata';
 import 'express-async-errors';
 
 import express, { Request, Response, NextFunction } from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { buildSchema } from 'type-graphql';
 import cors from 'cors';
 import AppError from '@shared/errors/AppError'
 
 import routes from './routes';
 import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
+import { HelloResolver } from "@modules/users/resolvers/Hello";
 
 const app = express();
+
+const apolloServer = new ApolloServer({
+  schema: buildSchema({
+    resolvers: [HelloResolver],
+    validate: false,
+  }),
+});
+
+apolloServer.applyMiddleware({app});
 
 app.use(cors());
 app.use(express.json());
@@ -33,7 +45,7 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
 });
 
 
-app.get('/', (request, response) => {
+app.get('/', (_, response) => {
   return response.json({ message: 'Hellowtheeere2e' });
 });
 
