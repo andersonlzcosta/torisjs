@@ -31,8 +31,13 @@ const Profissionais: React.FC = () => {
   const { hookAbrigo, setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
 
-  const loadProfissionais = useCallback(async (query) => {
+  const searchProfissionais = useCallback(async (query) => {
     const response = await api.get(`/users?nome_like=${query}`);
+    setProfissionais(response.data);
+  }, []);
+
+  const reloadProfissionais = useCallback(async () => {
+    const response = await api.get('/users');
     setProfissionais(response.data);
   }, []);
 
@@ -70,7 +75,7 @@ const Profissionais: React.FC = () => {
         setProfissionais(response.data);
       });
     }
-  }, [setProfissionais]);
+  }, []);
 
   return (
     <Container>
@@ -113,7 +118,7 @@ const Profissionais: React.FC = () => {
               <p>clique no + para adicionar, ou no profissional para ver mais detalhes sobre ele</p>
             </Warning>
           )}
-          <Search searchTitle="usuários cadastrados" loadList={loadProfissionais} />
+          <Search searchTitle="usuários cadastrados" loadList={searchProfissionais} />
           <UserList>
             {profissionais && profissionais.map(profissional => (
 
@@ -141,7 +146,7 @@ const Profissionais: React.FC = () => {
       )}
 
       {location.pathname === '/profissionais/novo' && (
-        <ProfileForm />
+        <ProfileForm headingText="criar novo profissional" updateProfissionaisList={reloadProfissionais} />
       )}
 
       <NavbarDesktop />

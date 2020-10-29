@@ -28,7 +28,6 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
 
   useEffect(() => {
     setChildAula(aula);
-    console.log(aula);
   }, [aula]);
 
   return (
