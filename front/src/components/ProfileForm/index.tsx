@@ -13,6 +13,7 @@ import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { IUserData } from '../../pages/Profile';
+import Popup from '../Popup';
 
 interface IProfileFormProps {
   user?: IUserData;
@@ -23,6 +24,8 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [userId, setUserId] = useState<string>();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { hookAbrigo } = useAbrigo();
@@ -52,10 +55,12 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
       setIsLoading(true);
       await api.delete(`/users/${userId}`);
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
       history.push('/profissionais/todos');
     } catch (err) {
       console.log('erro ao deletar');
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
     }
   }, [userId, setIsLoading, history]);
 
@@ -93,7 +98,12 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
         </Form>
 
         {userId && !hookAbrigo.id && (
-          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar usuário</Button>
+          <>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar perfil</Button>
+            <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
+              Tem certeza que deseja deletar este perfil?
+            </Popup>
+          </>
         )}
       </Content>
     </Container>

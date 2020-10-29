@@ -10,6 +10,7 @@ import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Form } from '@unform/web';
+import Popup from '../Popup';
 
 import { FormHandles } from '@unform/core';
 import { ICursoData } from '../../pages/Curso';
@@ -23,6 +24,8 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [cursoId, setCursoId] = useState<string>();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { addToast } = useToast();
@@ -66,6 +69,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         title: "Curso deletado",
         type: "success"
       });
+      setIsPopupOpen(!isPopupOpen);
       history.push('/cursos/todos');
     } catch (err) {
       addToast({
@@ -74,6 +78,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         type: "error"
       });
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
     }
   }, [cursoId, setIsLoading, history]);
 
@@ -104,7 +109,12 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         </Form>
 
         {cursoId && (
-          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar curso</Button>
+          <>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar curso</Button>
+            <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
+              Tem certeza que deseja deletar este curso?
+            </Popup>
+          </>
         )}
       </Content>
     </Container>

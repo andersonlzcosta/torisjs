@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAbrigo } from '../../hooks/AbrigoHook';
+import { useToast } from '../../hooks/toast';
+import api from '../../services/api';
+
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import { useToast } from '../../hooks/toast';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
-
-import api from '../../services/api';
 
 import { Container, Content, AbrigoUser } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Popup from '../../components/Popup';
 
 import Perfil from '../../images/perfil.jpg';
 import { FiMinusCircle } from 'react-icons/fi';
@@ -41,6 +42,9 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const [heading, setHeading] = useState<string>();
   const [abrigoId, setAbrigoId] = useState<string>();
   const [abrigo, setAbrigo] = useState<IAbrigosData>();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isProfissionalPopupOpen, setIsProfissionalPopupOpen] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { setHookAbrigo } = useAbrigo();
@@ -82,6 +86,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         title: 'Abrigo Deletado!',
         message: 'você será redirecionado para a listagem.',
       });
+      setIsPopupOpen(!isPopupOpen);
       history.push('/abrigos/todos');
     } catch (err) {
       console.log(err);
@@ -90,6 +95,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         title: 'Erro ao deletar',
         message: 'tente novamente ou entre em contato com suporte.',
       });
+      setIsPopupOpen(!isPopupOpen);
     }
   }, [abrigoId, setIsLoading, history]);
 
@@ -107,13 +113,14 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
           title: 'Profissional Removido!',
           message: 'informações do abrigo foram atualizadas',
         });
+        setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
       } catch (err) {
-        console.log(err);
         addToast({
           type: 'error',
           title: 'Erro ao remover!',
           message: 'tente novamente ou entre em contato com suporte.',
         });
+        setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
       }
     }
   }
@@ -134,7 +141,6 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         .then(response => {
           setAbrigo(response.data);
         });
-
     }
   }, [setAbrigoId, setAbrigo, setHeading]);
 
@@ -146,13 +152,18 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         <label>profissionais</label>
         <button className="alt" onClick={handleAddProfissional}>adicionar profissional</button>
         {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
-          <AbrigoUser key={profissional.id}>
-            <div>
-              <img src={Perfil} />
-              <h3>{profissional.nome}</h3>
-            </div>
-            <button onClick={() => handleRemoveProfissional(profissional.id)}><FiMinusCircle size={24} /></button>
-          </AbrigoUser>
+          <>
+            <AbrigoUser key={profissional.id}>
+              <div>
+                <img src={Perfil} />
+                <h3>{profissional.nome}</h3>
+              </div>
+              <button onClick={() => setIsProfissionalPopupOpen(!isProfissionalPopupOpen)}><FiMinusCircle size={24} /></button>
+            </AbrigoUser>
+            <Popup isVisible={isProfissionalPopupOpen} onCancel={() => setIsProfissionalPopupOpen(!isProfissionalPopupOpen)} onFulfill={() => handleRemoveProfissional(profissional.id)} >
+              Tem certeza que deseja remover este profissional?
+            </Popup>
+          </>
         ))}
 
         <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigo}>
@@ -185,7 +196,12 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         </Form>
 
         {abrigoId && (
-          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar abrigo</Button>
+          <>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar abrigo</Button>
+            <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
+              Tem certeza que deseja deletar este abrigo?
+            </Popup>
+          </>
         )}
       </Content>
     </Container>

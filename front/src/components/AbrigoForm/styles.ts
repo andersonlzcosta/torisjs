@@ -91,7 +91,7 @@ export const Content = styled.div`
     }
   }
 
-  aside + aside{
+  div + aside{
     margin-top: 10px;
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -11,6 +11,7 @@ import logo from '../../images/logo.svg';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import api from '../../services/api';
 
 interface credentialsData {
   email: string;
@@ -48,6 +49,13 @@ const SignIn: React.FC = () => {
         return
       }
     }
+  }, []);
+
+  useEffect(() => {
+    api.get('/users').then(response => {
+      console.log(response.data);
+    });
+
   }, []);
 
   return (
