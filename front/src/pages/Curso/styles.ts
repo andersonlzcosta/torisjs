@@ -2,10 +2,6 @@ import styled, { css } from 'styled-components';
 import { DefaultBackground } from '../../styles/DefaultBackground';
 import { DefaultContainer } from '../../styles/DefaultContainer';
 
-interface IAulaContainerProps {
-  isEditingAula: boolean;
-}
-
 export const Container = styled.div`
   ${DefaultContainer}
   flex-direction: row;
@@ -19,26 +15,12 @@ export const Container = styled.div`
   }
 `;
 
-export const AulasContainer = styled.div<IAulaContainerProps>`
-  ${DefaultBackground}
+export const CursoContent = styled.div`
   max-width: 500px;
+  width: 90%;
   margin: 75px 0 0 50px;
   position: relative;
   min-height: 300px;
-
-  > div:last-child{
-    display: none;
-  }
-
-  ${props => props.isEditingAula && css`
-    > label, > button, > div{
-      display:none;
-    }
-
-    div:last-child{
-      display: flex;
-    }
-  `}
 
   label{
     width: 100%;
@@ -71,34 +53,101 @@ export const AulasContainer = styled.div<IAulaContainerProps>`
   }
 `;
 
-export const ListaAulas = styled.div`
+export const ListaModulos = styled.div`
   width: 100%;
+  
+  > div + div{
+    margin-top: 60px;
+  }
 `;
 
-export const Aula = styled.div`
-  flex-direction: row;
-  justify-content: center;
+export const Modulo = styled.div`
+  width: 100%;
+  align-items: flex-start;
+
+  h3{
+    position: relative;
+    cursor: pointer;
+
+    &:after{
+      opacity: 0;
+      content: 'atualizar nome';
+      background: #fad552;
+      font-size: 12px;
+      position: absolute;
+      font-weight: 400;
+      padding: 2px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      transition: all .4s;
+    }
+
+    &:hover:after{
+      opacity: 1;
+      top: -20px;
+    }
+  }
+
+  > div{
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+
+    > button.alt{
+      margin: 0;
+    }
+
+    > button.delete{
+      white-space: nowrap;
+      background: #dd4c37;
+      font-size: 12px;
+      letter-spacing: 0px;
+      padding: 4px 15px;
+      width: auto;
+      display: flex;
+      align-items: center;
+      svg{
+        stroke: #fff;
+        margin-left: 10px;
+      }
+    }
+  }
+`;
+
+export const AulasContainer = styled.aside`
+  display: flex;
+  flex-direction: column;
   width: 100%;
 
+  > div{
+    ${DefaultBackground}
+    padding: 10px 30px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  div + div{
+    margin-top: 10px;
+  }
+
   button{
+    width: auto;
+    height: 24px;
     background: none;
-    border-radius: 0px;
-    text-align: left;
     padding: 0;
-    font-size: 17px;
-    width: 100%;
+    color: #002F67;
     box-shadow: none;
-    letter-spacing: 1px;
 
     &:hover{
       background: none;
-    }
-
-    &:last-child{
-      width:24px;
-      svg{
-        stroke: #dd4c37;
-      }
     }
   }
 `;
