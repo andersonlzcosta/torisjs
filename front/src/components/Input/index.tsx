@@ -7,9 +7,10 @@ import { useField } from '@unform/core';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   containerStyle?: object;
+  className?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, containerStyle, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, containerStyle, className, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { fieldName, registerField, error, defaultValue } = useField(name);
 
@@ -36,7 +37,7 @@ const Input: React.FC<InputProps> = ({ name, containerStyle, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container style={containerStyle} isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
+    <Container style={containerStyle} className={className} isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
       <input
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}

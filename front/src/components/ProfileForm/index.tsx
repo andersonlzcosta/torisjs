@@ -13,19 +13,25 @@ import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { IUserData } from '../../pages/Profile';
+import Popup from '../Popup';
+import { useToast } from '../../hooks/toast';
 
 interface IProfileFormProps {
   user?: IUserData;
   headingText?: string;
+  updateProfissionaisList?: () => void;
 }
 
-const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
+const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updateProfissionaisList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [userId, setUserId] = useState<string>();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { hookAbrigo } = useAbrigo();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(async (data: IUserData) => {
     try {
@@ -35,27 +41,36 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
         response = await api.put(`/users/${userId}`, data);
       } else {
         response = await api.post(`/users`, data);
-        setUserId(response.data.id);
-        console.log(userId);
+        history.push('/profissionais/todos');
       }
-      console.log(response);
       setIsLoading(false);
+      addToast({
+        title: "Profissional criado com sucesso!",
+        message: "você será redirecionado para todos",
+        type: "success"
+      });
+      updateProfissionaisList && updateProfissionaisList();
     } catch (err) {
-      console.log(err);
+      addToast({
+        title: "Ocorreu um erro",
+        message: "tente novamente",
+        type: "error"
+      });
       setIsLoading(false);
     }
   }, [userId, setIsLoading, setUserId]);
 
   const handleDelete = useCallback(async () => {
     try {
-      console.log(userId);
       setIsLoading(true);
       await api.delete(`/users/${userId}`);
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
       history.push('/profissionais/todos');
     } catch (err) {
       console.log('erro ao deletar');
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
     }
   }, [userId, setIsLoading, history]);
 
@@ -93,7 +108,12 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText }) => {
         </Form>
 
         {userId && !hookAbrigo.id && (
-          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar usuário</Button>
+          <>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar perfil</Button>
+            <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
+              Tem certeza que deseja deletar este perfil?
+            </Popup>
+          </>
         )}
       </Content>
     </Container>

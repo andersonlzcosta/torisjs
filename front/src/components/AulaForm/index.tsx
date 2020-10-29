@@ -6,30 +6,31 @@ import Button from '../../components/Button';
 import { Form } from '@unform/web';
 
 import { FormHandles } from '@unform/core';
-
-export interface IAulasData {
-  id: number;
-  nome: string;
-  video_url: string;
-}
+import { IAulasData } from '../../pages/Curso';
 
 interface IAulaFormProps {
   aula?: IAulasData;
   updateAula: (aula: IAulasData) => void;
 }
 
+interface ISubmittedData {
+  id: string;
+  nome: string;
+  video_url: string;
+  duracao: number;
+}
+
 const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
-  const [childAula, setChildAula] = useState<IAulasData>();
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = (data: IAulasData) => {
-    updateAula(data);
+  const handleSubmit = (data: ISubmittedData) => {
+    updateAula({
+      id: parseInt(data.id),
+      nome: data.nome,
+      video_url: data.video_url,
+      duracao: data.duracao
+    });
   }
-
-  useEffect(() => {
-    setChildAula(aula);
-    console.log(aula);
-  }, [aula]);
 
   return (
     <Container>
@@ -37,13 +38,20 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
         <Form ref={formRef} onSubmit={handleSubmit} initialData={aula}>
           <div className="full-width">
             <label>nome da aula</label>
-            <Input name="nome" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="nome" className="alt" />
           </div>
 
           <div className="full-width">
             <label>url do vídeo no youtube</label>
-            <Input name="video_url" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="video_url" className="alt" />
           </div>
+
+          <div className="full-width">
+            <label>duração em minutos</label>
+            <Input name="duracao" type="number" className="alt" />
+          </div>
+
+          <Input name="id" type="hidden" />
 
           <Button type="submit">salvar aula</Button>
         </Form>

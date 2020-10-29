@@ -10,24 +10,33 @@ import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Form } from '@unform/web';
+import Popup from '../Popup';
 
 import { FormHandles } from '@unform/core';
 import { ICursoData } from '../../pages/Curso';
 
+interface ICursoSubmittedData {
+  nome: string;
+  descricao: string;
+}
+
 interface ICursoFormProps {
   curso?: ICursoData;
   headingText?: string;
+  updateCursosList?: () => void;
 }
 
-const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
+const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursosList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [cursoId, setCursoId] = useState<string>();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { addToast } = useToast();
 
-  const handleSubmit = useCallback(async (data: ICursoData) => {
+  const handleSubmit = useCallback(async (data: ICursoSubmittedData) => {
     try {
       setIsLoading(true);
       let response;
@@ -38,12 +47,18 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
           type: "success"
         });
       } else {
-        response = await api.post(`/cursos`, data);
-        setCursoId(response.data.id);
+        response = await api.post(`/cursos`, {
+          id: Math.floor(Math.random() * Math.floor(1000)),
+          nome: data.nome,
+          descricao: data.descricao,
+          modulos: []
+        });
         addToast({
           title: "Curso criado!",
           type: "success"
         });
+        history.push('/cursos/todos');
+        updateCursosList && updateCursosList();
       }
       setIsLoading(false);
     } catch (err) {
@@ -66,6 +81,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         title: "Curso deletado",
         type: "success"
       });
+      setIsPopupOpen(!isPopupOpen);
       history.push('/cursos/todos');
     } catch (err) {
       addToast({
@@ -74,6 +90,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         type: "error"
       });
       setIsLoading(false);
+      setIsPopupOpen(!isPopupOpen);
     }
   }, [cursoId, setIsLoading, history]);
 
@@ -104,7 +121,12 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText }) => {
         </Form>
 
         {cursoId && (
-          <Button className="delete" onClick={handleDelete} loading={isLoading}>deletar curso</Button>
+          <>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar curso</Button>
+            <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
+              Tem certeza que deseja deletar este curso?
+            </Popup>
+          </>
         )}
       </Content>
     </Container>

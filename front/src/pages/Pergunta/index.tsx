@@ -13,6 +13,7 @@ import Button from '../../components/Button';
 import { Container, ContentContainer, Content, PerguntaContainer } from './styles';
 import { FiMinusCircle } from 'react-icons/fi';
 import Input from '../../components/Input';
+import Popup from '../../components/Popup';
 
 interface IRouteParams {
   id: string;
@@ -40,6 +41,8 @@ const Pergunta: React.FC = () => {
   const [pergunta, setPergunta] = useState<IPerguntaData>();
   const [isLoading, setIsLoading] = useState(false);
   const [novaPergunta, setNovaPergunta] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const history = useHistory();
 
   const handleSubmitResposta = useCallback((data, { reset }) => {
@@ -80,6 +83,7 @@ const Pergunta: React.FC = () => {
 
       api.put(`/perguntas/${pergunta.id}`, updatedPergunta);
       setPergunta(updatedPergunta);
+      setIsPopupOpen(!isPopupOpen);
     }
   }
 
@@ -94,8 +98,9 @@ const Pergunta: React.FC = () => {
       respostas: []
     }
     api.post('/perguntas', novaPergunta);
-    setPergunta(novaPergunta);
-    setNovaPergunta(false);
+    history.push('/forum');
+    // setPergunta(novaPergunta);
+    // setNovaPergunta(false);
     reset();
   }, []);
 
@@ -148,7 +153,13 @@ const Pergunta: React.FC = () => {
               <h3>{resposta.nomeUsuario} no dia {resposta.data} respondeu:</h3>
               <Content key={resposta.id}>
                 {resposta.body}
-                <button className="delete" onClick={() => handleDeleteResposta(resposta.id)}><FiMinusCircle size={24} /></button>
+                {/* <button className="delete" onClick={() => handleDeleteResposta(resposta.id)}><FiMinusCircle size={24} /></button> */}
+                <>
+                  <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}><FiMinusCircle size={24} /></Button>
+                  <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={() => handleDeleteResposta(resposta.id)} >
+                    Tem certeza que deseja deletar este abrigo?
+                  </Popup>
+                </>
               </Content>
             </div>
           ))}

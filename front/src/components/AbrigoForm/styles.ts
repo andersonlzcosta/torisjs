@@ -91,10 +91,12 @@ export const Content = styled.div`
     }
   }
 
-  aside + aside{
+  div + aside{
     margin-top: 10px;
   }
 `;
+
+export const AbrigoUserContainer = styled.div``;
 
 export const AbrigoUser = styled.aside`
   display: flex;

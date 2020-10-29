@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from './styles';
+import { Container, Content } from './styles';
 
 interface IPopupProps {
   isVisible: boolean;
@@ -11,9 +11,15 @@ const Popup: React.FC<IPopupProps> = ({ isVisible, onCancel, onFulfill, children
 
   return (
     <Container isVisible={!!isVisible}>
-      {children}
-      <button onClick={onCancel}>cancelar</button>
-      <button onClick={onFulfill}>continuar</button>
+      <Content>
+        <p>
+          {children}
+        </p>
+        <div>
+          <button onClick={onCancel}>cancelar</button>
+          <button onClick={onFulfill}>continuar</button>
+        </div>
+      </Content>
     </Container>
   );
 }

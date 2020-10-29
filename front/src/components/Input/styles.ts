@@ -26,6 +26,12 @@ export const Container = styled.div<inputProps>`
   & + div{
     margin-top: 8px;
   }
+
+  &.alt{
+    border: none;
+    border-radius: 0;
+    width: 100%;
+  }
 `;
 
 export const Error = styled(Tooltip)`
