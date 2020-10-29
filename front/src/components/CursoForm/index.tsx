@@ -15,6 +15,11 @@ import Popup from '../Popup';
 import { FormHandles } from '@unform/core';
 import { ICursoData } from '../../pages/Curso';
 
+interface ICursoSubmittedData {
+  nome: string;
+  descricao: string;
+}
+
 interface ICursoFormProps {
   curso?: ICursoData;
   headingText?: string;
@@ -31,7 +36,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
   const history = useHistory();
   const { addToast } = useToast();
 
-  const handleSubmit = useCallback(async (data: ICursoData) => {
+  const handleSubmit = useCallback(async (data: ICursoSubmittedData) => {
     try {
       setIsLoading(true);
       let response;
@@ -42,8 +47,12 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
           type: "success"
         });
       } else {
-        response = await api.post(`/cursos`, data);
-        setCursoId(response.data.id);
+        response = await api.post(`/cursos`, {
+          id: Math.floor(Math.random() * Math.floor(1000)),
+          nome: data.nome,
+          descricao: data.descricao,
+          modulos: []
+        });
         addToast({
           title: "Curso criado!",
           type: "success"
