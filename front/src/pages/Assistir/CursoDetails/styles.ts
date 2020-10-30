@@ -14,16 +14,49 @@ export const Container = styled.div`
 export const CursoContent = styled.div`
   ${DefaultBackground}
   max-width: 500px;
-  h3, p{
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  > h3, > p, > span{
     width: 100%;
+    margin: 0;
   }
 
-  span{
-    margin-bottom: 10px;
+  > p, > span{
+    margin-top: 10px;
   }
 
-  button{
+  > h3{
+    font-size: 30px;
+  }
+
+  > p{
+    font-size: 17px;
+  }
+
+  > span{
+    width: auto;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin: 20px 5px 0;
+    padding: 3px 10px;
+    background: #fad552;
+    border-radius: 30px;
+  }
+
+  > button{
     margin-top: 30px;
+  }
+`;
+
+export const Modulo = styled.div`
+  width: 100%;
+  align-items: flex-start;
+  margin-top: 50px;
+
+  > h4{
+    margin: 0 0 0 20px;
   }
 `;
 
@@ -55,7 +88,7 @@ export const Aula = styled.div<IAulaProps>`
       color: #fff;
     }
 
-    h3, span{
+    h4, span{
       color: #fff;
     }
   `}
@@ -75,7 +108,7 @@ export const Aula = styled.div<IAulaProps>`
     font-size: 13px;
   }
 
-  h3{
+  h4{
     font-weight: 400;
     margin: 0px;
   }
