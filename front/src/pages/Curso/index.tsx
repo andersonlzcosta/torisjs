@@ -12,6 +12,7 @@ import { Container, CursoContent, ListaModulos, Modulo, AulasContainer } from '.
 import { FiMinusCircle } from 'react-icons/fi';
 import { useToast } from '../../hooks/toast';
 import ModuleForm from '../../components/ModuleForm';
+import Popup from '../../components/Popup';
 
 interface IRouteParams {
   id: string;
@@ -41,6 +42,7 @@ const Curso: React.FC = () => {
   const { id } = useParams<IRouteParams>();
   const [isModuleFormVisible, setIsModuleFormVisible] = useState(false);
   const [isAulaFormVisible, setIsAulaFormVisible] = useState(false);
+  const [isModuloPopupOpen, setIsModuloPopupOpen] = useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<number>();
 
   const [curso, setCurso] = useState<ICursoData>();
@@ -146,6 +148,11 @@ const Curso: React.FC = () => {
     setIsModuleFormVisible(true);
   }
 
+  const handleCreateNewModulo = () => {
+    setSelectedModulo({} as IModuloData);
+    setIsModuleFormVisible(true);
+  }
+
   const handleCreateModule = useCallback(async (moduleName: string) => {
     let modulos: IModuloData[] = [];
     if (curso) {
@@ -186,6 +193,7 @@ const Curso: React.FC = () => {
       setCurso(updatedCurso);
 
       await api.put(`/cursos/${id}`, updatedCurso);
+      setIsModuloPopupOpen(false)
     }
   }, [curso]);
 
@@ -203,7 +211,7 @@ const Curso: React.FC = () => {
 
       <CursoContent>
         <h2>módulos, aulas e perguntas</h2>
-        <button className="alt" onClick={() => setIsModuleFormVisible(true)} >criar novo módulo</button>
+        <button className="alt" onClick={handleCreateNewModulo} >criar novo módulo</button>
 
         <ListaModulos>
           {curso && curso.modulos && curso.modulos.map(modulo => (
@@ -211,7 +219,10 @@ const Curso: React.FC = () => {
               <h3 onClick={() => handleEditModulo(modulo)}>{modulo.nome}</h3>
               <div>
                 <button className="alt" onClick={() => handleAddNewAula(modulo.id)}>criar nova aula neste módulo</button>
-                <button className="delete" onClick={() => handleDeleteModule(modulo.id)}>deletar módulo<FiMinusCircle size={16} /></button>
+                <button className="delete" onClick={() => setIsModuloPopupOpen(true)}>deletar módulo<FiMinusCircle size={16} /></button>
+                <Popup isVisible={isModuloPopupOpen} onCancel={() => setIsModuloPopupOpen(false)} onFulfill={() => handleDeleteModule(modulo.id)} >
+                  Tem certeza que deseja remover este módulo?
+                </Popup>
               </div>
               <AulasContainer>
                 {modulo.aulas.map(aula => (
