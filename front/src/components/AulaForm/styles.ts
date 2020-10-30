@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { DefaultContent } from '../../styles/DefaultContent';
 import { DefaultBackground } from '../../styles/DefaultBackground';
-import { darken } from 'polished';
 
 export const Container = styled.div`
   ${DefaultBackground}
   background-color: #fad552;
+  border-radius: 13px;
   position: absolute;
   top: 0;
   right: 0;
