@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
@@ -17,7 +17,7 @@ interface ISubmittedData {
   id: string;
   nome: string;
   video_url: string;
-  duracao: number;
+  duracao: string;
 }
 
 const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
@@ -28,7 +28,7 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
       id: parseInt(data.id),
       nome: data.nome,
       video_url: data.video_url,
-      duracao: data.duracao
+      duracao: parseInt(data.duracao)
     });
   }
 
@@ -38,20 +38,20 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
         <Form ref={formRef} onSubmit={handleSubmit} initialData={aula}>
           <div className="full-width">
             <label>nome da aula</label>
-            <Input name="nome" className="alt" />
+            <Input name="nome" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>url do vídeo no youtube</label>
-            <Input name="video_url" className="alt" />
+            <Input name="video_url" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>duração em minutos</label>
-            <Input name="duracao" type="number" className="alt" />
+            <Input name="duracao" type="number" className="alt line-bottom" />
           </div>
 
-          <Input name="id" type="hidden" />
+          <Input name="id" type="hidden" className="alt" />
 
           <Button type="submit">salvar aula</Button>
         </Form>
