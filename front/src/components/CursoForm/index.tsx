@@ -39,15 +39,20 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
   const handleSubmit = useCallback(async (data: ICursoSubmittedData) => {
     try {
       setIsLoading(true);
-      let response;
-      if (cursoId) {
-        response = await api.put(`/cursos/${cursoId}`, data);
+      if (curso) {
+        const updatedCurso = {
+          id: curso.id,
+          nome: data.nome,
+          descricao: data.descricao,
+          modulos: curso.modulos
+        }
+        await api.put(`/cursos/${cursoId}`, updatedCurso);
         addToast({
           title: "Curso atualizado!",
           type: "success"
         });
       } else {
-        response = await api.post(`/cursos`, {
+        await api.post(`/cursos`, {
           id: Math.floor(Math.random() * Math.floor(1000)),
           nome: data.nome,
           descricao: data.descricao,
@@ -70,7 +75,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
       });
       setIsLoading(false);
     }
-  }, [cursoId, setIsLoading, setCursoId]);
+  }, [cursoId, setIsLoading, setCursoId, curso]);
 
   const handleDelete = useCallback(async () => {
     try {

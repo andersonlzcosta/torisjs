@@ -41,10 +41,10 @@ const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, addModuleToCurso, upda
         <Form ref={formRef} onSubmit={handleSubmit} initialData={modulo}>
           <div className="full-width">
             <label>nome do módulo</label>
-            <Input name="nome" className="alt" />
+            <Input name="nome" className="alt line-bottom" />
           </div>
 
-          <Input name="id" type="hidden" />
+          <Input name="id" type="hidden" className="alt" />
 
           <Button type="submit">salvar módulo</Button>
         </Form>

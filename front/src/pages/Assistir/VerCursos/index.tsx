@@ -34,7 +34,7 @@ const VerCursos: React.FC = () => {
             <Link to={`/detalhes/${curso.id}`}>
               <div>
                 <h3>{curso.nome}</h3>
-                <strong>{curso.descricao.substring(0, 100)}...</strong>
+                <strong>{curso.descricao.substring(0, 100)}</strong>
               </div>
             </Link>
           </Curso>

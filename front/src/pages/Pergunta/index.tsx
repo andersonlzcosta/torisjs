@@ -42,10 +42,12 @@ const Pergunta: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [novaPergunta, setNovaPergunta] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPerguntaPopupOpen, setIsPerguntaPopupOpen] = useState(false);
 
   const history = useHistory();
 
   const handleSubmitResposta = useCallback((data, { reset }) => {
+    console.log(pergunta);
     setIsLoading(true);
     if (pergunta) {
 
@@ -144,7 +146,10 @@ const Pergunta: React.FC = () => {
               {pergunta.body}
             </Content>
 
-            <button className="delete" onClick={() => handleDeletePergunta(pergunta.id)}>deletar pergunta<FiMinusCircle size={18} /></button>
+            <button className="delete" onClick={() => setIsPerguntaPopupOpen(true)}>deletar pergunta<FiMinusCircle size={18} /></button>
+            <Popup isVisible={isPerguntaPopupOpen} onCancel={() => setIsPerguntaPopupOpen(false)} onFulfill={() => handleDeletePergunta(pergunta.id)} >
+              Tem certeza que deseja deletar esta pergunta?
+            </Popup>
           </PerguntaContainer>
 
           {pergunta.respostas && pergunta.respostas.length > 0 && <h2>Respostas</h2>}
@@ -153,11 +158,10 @@ const Pergunta: React.FC = () => {
               <h3>{resposta.nomeUsuario} no dia {resposta.data} respondeu:</h3>
               <Content key={resposta.id}>
                 {resposta.body}
-                {/* <button className="delete" onClick={() => handleDeleteResposta(resposta.id)}><FiMinusCircle size={24} /></button> */}
                 <>
-                  <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}><FiMinusCircle size={24} /></Button>
-                  <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={() => handleDeleteResposta(resposta.id)} >
-                    Tem certeza que deseja deletar este abrigo?
+                  <Button className="delete" onClick={() => setIsPopupOpen(true)} loading={isLoading}><FiMinusCircle size={24} /></Button>
+                  <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(false)} onFulfill={() => handleDeleteResposta(resposta.id)} >
+                    Tem certeza que deseja deletar esta resposta?
                   </Popup>
                 </>
               </Content>

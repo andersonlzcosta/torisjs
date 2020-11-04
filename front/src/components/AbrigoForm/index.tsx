@@ -176,27 +176,27 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
         <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigo}>
           <div className="full-width">
             <label>nome</label>
-            <Input name="nome" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="nome" className="alt" />
           </div>
 
           <div className="full-width">
             <label>endereço</label>
-            <Input name="endereco" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="endereco" className="alt" />
           </div>
 
           <div className="full-width">
             <label>classificação</label>
-            <Input name="classificacao" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="classificacao" className="alt" />
           </div>
 
           <div className="half-width">
             <label>capacidade</label>
-            <Input className="bigger" name="capacidade" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input className="bigger alt" name="capacidade" />
           </div>
 
           <div className="half-width">
             <label>faixa etária</label>
-            <Input className="bigger" name="faixaEtaria" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input className="bigger alt" name="faixaEtaria" />
           </div>
 
           <Button type="submit" loading={isLoading}>salvar</Button>

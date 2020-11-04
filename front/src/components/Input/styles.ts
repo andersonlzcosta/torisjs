@@ -32,6 +32,10 @@ export const Container = styled.div<inputProps>`
     border-radius: 0;
     width: 100%;
   }
+
+  &.line-bottom input{
+    border-bottom: 1px solid #0B4385;
+  }
 `;
 
 export const Error = styled(Tooltip)`
