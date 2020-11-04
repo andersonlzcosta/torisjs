@@ -10,18 +10,9 @@ import AppError from '@shared/errors/AppError'
 import routes from './routes';
 import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
-import { HelloResolver } from "@modules/users/resolvers/Hello";
+import { UserResolver } from "@modules/users/resolvers/User";
 
 const app = express();
-
-const apolloServer = new ApolloServer({
-  schema: buildSchema({
-    resolvers: [HelloResolver],
-    validate: false,
-  }),
-});
-
-apolloServer.applyMiddleware({app});
 
 app.use(cors());
 app.use(express.json());
@@ -42,6 +33,19 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
     status: 'error',
     message: 'Internal Server Error',
   });
+});
+
+const apolloServer = new ApolloServer({
+  schema: buildSchema({
+    resolvers: [UserResolver],
+    validate: false,
+  }),
+  context: ({req, res }) => ({ req, res }),
+});
+
+apolloServer.applyMiddleware({
+  app,
+  cors: false,
 });
 
 
