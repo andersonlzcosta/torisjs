@@ -1,1 +1,0 @@
-//"id" "nome" "endereco" "classificacao" "capacidade" "faixaEtaria" "profissionais"
