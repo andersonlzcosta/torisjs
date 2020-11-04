@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType, Ctx } from "type-graphql";
+import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
 import User from '../infra/typeorm/entities/User';
 import CreateUserService from '../services/CreateUserService';
 import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
@@ -51,20 +51,31 @@ export class UserResolver {
 
         return { user };
       }
-    
-    // @Mutation(() => UserResponse)
-    // async login() {}
-
-
-    @Query(() => [User])
-    async users(): Promise<User[]> {
+ 
+    @Mutation(() => UserResponse)
+    async login(
+        @Arg("email") email: string
+    ): Promise<UserResponse> {
+        // AuthenticateUserService.ts
         const usersRepository = getCustomRepository(UsersRepository);
-        const users = await usersRepository.findAll();
-        return users;
+        const user = await usersRepository.findByEmail(email);;
+        return { user };
     }
+    // ShowProfileService.ts
+
+
+    // @Query(() => [User])
+    // async users(): Promise<User[]> {
+    //     const usersRepository = getCustomRepository(UsersRepository);
+    //     const users = await usersRepository.findAll();
+    //     return users;
+    // }
 
     // @Mutation(() => [User])
     // async updateUser()
+    // ResetPasswordService.ts
+    // UpdateUserAvatarService.ts
+    // UpdateProfileService.ts
 
     // @Mutation(() => Boolean)
     // async deleteUser()

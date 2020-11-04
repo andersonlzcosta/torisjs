@@ -39,8 +39,7 @@ const apolloServer = new ApolloServer({
   schema: buildSchema({
     resolvers: [UserResolver],
     validate: false,
-  }),
-  context: ({req, res }) => ({ req, res }),
+  })
 });
 
 apolloServer.applyMiddleware({

@@ -8,11 +8,11 @@ class User {
     @PrimaryGeneratedColumn()
     id!: string;
 
-    @Field(() => String)
+    @Field()
     @Column()
     password: string;
 
-    @Field(() => String)
+    @Field()
     @Column()
     nome: string;
 
@@ -20,19 +20,19 @@ class User {
     @Column({ unique: true })
     email!: string;
 
-    @Field(() => String)
+    @Field()
     @Column()
     idade: string;
 
-    @Field(() => String)
+    @Field()
     @Column()
     profissao: string;
 
-    @Field()
+    @Field(() => String)
     @CreateDateColumn()
     createdAt: Date;
 
-    @Field()
+    @Field(() => String)
     @UpdateDateColumn()
     updatedAt: Date;
 }
