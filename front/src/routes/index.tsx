@@ -14,6 +14,7 @@ import CursoDetails from '../pages/Assistir/CursoDetails';
 import Aula from '../pages/Assistir/Aula';
 import Forum from '../pages/Forum';
 import Pergunta from '../pages/Pergunta';
+import CursoPergunta from '../pages/Assistir/CursoPergunta';
 
 const Routes: React.FC = () => {
 
@@ -34,6 +35,7 @@ const Routes: React.FC = () => {
       <Route path="/assistir" component={VerCursos} />
       <Route path="/detalhes/:id" component={CursoDetails} />
       <Route path="/aula/:id" component={Aula} />
+      <Route path="/curso-pergunta/:id" component={CursoPergunta} />
 
       <Route path="/forum" component={Forum} />
       <Route path="/pergunta/:id" component={Pergunta} />

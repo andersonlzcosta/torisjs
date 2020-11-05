@@ -8,30 +8,10 @@ import Navbar from '../../../components/Navbar';
 
 import { Container, CursoContent, Modulo, Aula, Popup } from './styles';
 import { useToast } from '../../../hooks/toast';
+import { IAulasData, ICursoData, IPerguntasData } from '../../Curso';
 
 interface IRouteParams {
   id: string;
-}
-
-export interface IAulasData {
-  id: number;
-  nome: string;
-  video_url: string;
-  assistida: boolean;
-  duracao: number;
-}
-
-interface IModuloData {
-  id: number;
-  nome: string;
-  aulas: IAulasData[];
-}
-
-export interface ICursoData {
-  id: number;
-  nome: string;
-  descricao: string;
-  modulos: IModuloData[];
 }
 
 const CursoDetails: React.FC = () => {
@@ -52,19 +32,25 @@ const CursoDetails: React.FC = () => {
     });
   }
 
-  const aulasTotal = useMemo(() => {
+  const conteudoTotal = useMemo(() => {
     if (curso) {
-      const aulasPorModulo = curso.modulos.map(modulo => modulo.aulas.length);
+      const aulasPorModulo = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
       return aulasPorModulo.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
   }, [curso]);
 
   const duracaoTotal = useMemo(() => {
     if (curso) {
-      const todasAulasArray = curso.modulos.map(modulo => {
-        return modulo.aulas.reduce((accumulator, currentValue) => accumulator + currentValue.duracao, 0);
-      });
-      return todasAulasArray.reduce((accumulator, currentValue) => accumulator + currentValue);
+      const allModules = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula'));
+
+      const eachModuleDuration = allModules.map(module =>
+        module.reduce((accumulator, currentValue) => {
+          const aula = currentValue.content_data as IAulasData;
+          return accumulator + aula.duracao;
+        }, 0)
+      );
+
+      return eachModuleDuration.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
   }, [curso]);
 
@@ -83,7 +69,7 @@ const CursoDetails: React.FC = () => {
           <h3>{curso.nome}</h3>
           <p>{curso.descricao}</p>
           <span>{curso.modulos.length} módulo(s)</span>
-          <span>{aulasTotal} aula(s)</span>
+          <span>{conteudoTotal} aula(s)</span>
           <span>duração total de {duracaoTotal} minutos</span>
 
           <button onClick={() => setIsPopupVisible(true)}>quero me inscrever</button>
@@ -95,20 +81,37 @@ const CursoDetails: React.FC = () => {
           <h3>{curso.nome}</h3>
           <p>{curso.descricao}</p>
           <span>{curso.modulos.length} módulo(s)</span>
-          <span>{aulasTotal} aula(s)</span>
+          <span>{conteudoTotal} aula(s)</span>
           <span>duração total de {duracaoTotal} minutos</span>
           {curso.modulos.map(modulo => (
             <Modulo key={modulo.id}>
               <h4>{modulo.nome}</h4>
-              {modulo.aulas.map(aula => (
-                <Aula hasBeenWatched={aula.assistida}>
-                  {/* <Link to={`/aula/${aula.id}`} key={aula.id}> */}
-                  <Link to={`/aula/933`} key={aula.id}>
-                    <h4>{aula.nome}</h4>
-                  </Link>
-                  <span>{aula.duracao} minutos</span>
-                </Aula>
-              ))}
+              {modulo.content.map(content => {
+                if (content.content_is === 'aula') {
+                  let contentData: IAulasData = content.content_data as IAulasData;
+                  return (
+                    <Aula hasBeenWatched={false} key={contentData.id}>
+                      {/* <Link to={`/aula/${aula.id}`}> */}
+                      <Link to={`/aula/933`}>
+                        <h4>{contentData.nome}</h4>
+                      </Link>
+                      <span>{contentData.duracao} minutos</span>
+                    </Aula>
+                  )
+                }
+
+                if (content.content_is === 'pergunta') {
+                  let contentData: IPerguntasData = content.content_data as IPerguntasData;
+                  return (
+                    <Aula hasBeenWatched={false} key={contentData.id}>
+                      {/* <Link to={`/aula/${aula.id}`}> */}
+                      <Link to={`/curso-pergunta/${contentData.id}`}>
+                        <h4>{contentData.enunciado.substring(0, 50)}...</h4>
+                      </Link>
+                    </Aula>
+                  )
+                }
+              })}
             </Modulo>
           ))}
         </CursoContent>

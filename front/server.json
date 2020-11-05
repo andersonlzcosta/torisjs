@@ -52,105 +52,56 @@
         {
           "id": 552,
           "nome": "Módulo Introdutório",
-          "aulas": [
+          "content": [
             {
-              "id": 939,
-              "nome": "Aula inaugural",
-              "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
-              "duracao": 7
+              "content_is": "aula",
+              "content_data": {
+                "id": 939,
+                "nome": "Aula inaugural",
+                "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+                "duracao": 7
+              }
             },
             {
-              "id": 206,
-              "nome": "Aula 2",
-              "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
-              "duracao": 15
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 235,
-      "nome": "Curso rápido de férias",
-      "descricao": "Este curso é destinado a todos os profissionais de abrigo que desejam entender melhor e conhecer as melhores maneiras de se ter cuidado dentro de um abrigo.",
-      "modulos": [
-        {
-          "id": 480,
-          "nome": "Módulo Introdutório",
-          "aulas": [
-            {
-              "id": 557,
-              "nome": "Aula Inaugural",
-              "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
-              "duracao": 13
-            },
-            {
-              "id": 326,
-              "nome": "Aula 2",
-              "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
-              "duracao": 8
+              "content_is": "aula",
+              "content_data": {
+                "id": 206,
+                "nome": "Aula 2",
+                "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
+                "duracao": 15
+              }
             }
           ]
         },
         {
-          "id": 324,
-          "nome": "Módulo 2",
-          "aulas": [
+          "id": 498,
+          "nome": "mod 2",
+          "content": [
             {
-              "id": 917,
-              "nome": "Aula 3",
-              "video_url": "https://www.youtube.com/watch?time_continue=153&v=85SUbecZamY",
-              "duracao": 17
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 364,
-      "nome": "Novo Curso",
-      "descricao": "descricao",
-      "modulos": [
-        {
-          "id": 773,
-          "nome": "Módulo 1",
-          "aulas": [
-            {
-              "id": 990,
-              "nome": "aula 1 ",
-              "video_url": "url",
-              "duracao": 12
+              "content_is": "pergunta",
+              "content_data": {
+                "id": 522,
+                "enunciado": "enun",
+                "escolha_1": "1",
+                "escolha_2": "2",
+                "escolha_3": "3",
+                "escolha_4": "4",
+                "resposta_certa": "3",
+                "justificativa": "just"
+              }
             },
             {
-              "id": 412,
-              "nome": "aula 2 ",
-              "video_url": "url",
-              "duracao": 12
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 273,
-      "nome": "Novo curso 2",
-      "descricao": "descricao",
-      "modulos": [
-        {
-          "id": 590,
-          "nome": "modulo",
-          "aulas": [
-            {
-              "id": 683,
-              "nome": "aula ",
-              "video_url": "url",
-              "duracao": 2
-            },
-            {
-              "id": 517,
-              "nome": "pergunta",
-              "video_url": "url",
-              "duracao": 1234
+              "content_is": "pergunta",
+              "content_data": {
+                "id": 305,
+                "enunciado": "1",
+                "escolha_1": "1",
+                "escolha_2": "1321",
+                "escolha_3": "LKHlkH",
+                "escolha_4": "hh",
+                "resposta_certa": "4",
+                "justificativa": "asdf"
+              }
             }
           ]
         }
@@ -260,6 +211,28 @@
       "data": "20/10/2020",
       "isResolved": true,
       "respostas": []
+    }
+  ],
+  "cursoperguntas": [
+    {
+      "id": 522,
+      "enunciado": "Enunciado da pergunta sopbre a aula 2 do curso",
+      "escolha_1": "resposta um",
+      "escolha_2": "segunda escolha",
+      "escolha_3": "resposta certa",
+      "escolha_4": "resposta quatro",
+      "resposta_certa": "3",
+      "justificativa": "justificativa da resposta"
+    },
+    {
+      "id": 305,
+      "enunciado": "Enunciado da pergunta sopbre a aula 2 do curso",
+      "escolha_1": "resposta um",
+      "escolha_2": "segunda escolha",
+      "escolha_3": "resposta certa",
+      "escolha_4": "resposta quatro",
+      "resposta_certa": "3",
+      "justificativa": "justificativa da resposta"
     }
   ],
   "categories": [
