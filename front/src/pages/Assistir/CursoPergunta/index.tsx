@@ -62,10 +62,10 @@ const CursoPergunta: React.FC = () => {
       {pergunta && (
         <PerguntaContainer>
           <button className="voltar" onClick={goBack}>Voltar</button>
-          <h1>pergunta</h1>
+          <h1>Pergunta</h1>
           <p>{pergunta.enunciado}</p>
 
-          <h2>selecione uma opção</h2>
+          <h2>Selecione uma opção</h2>
           <Form onSubmit={handleSubmit} onChange={handleSelectAnswer}>
             <div>
               <Input type="radio" name="escolha_1" inputName="resposta" value="1" />

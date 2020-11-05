@@ -331,6 +331,7 @@ const Curso: React.FC = () => {
                     let contentData: IAulasData = content.content_data as IAulasData;
                     return (
                       <div key={contentData.id}>
+                        <aside>aula</aside>
                         <button onClick={() => handleEditAula(contentData, modulo.id)}>{contentData.nome}</button>
                         <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
                       </div>
@@ -341,6 +342,7 @@ const Curso: React.FC = () => {
                     let contentData: IPerguntasData = content.content_data as IPerguntasData;
                     return (
                       <div key={contentData.id}>
+                        <aside>pergunta</aside>
                         <button onClick={() => handleEditPergunta(contentData, modulo.id)}>{contentData.enunciado}</button>
                         <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
                       </div>

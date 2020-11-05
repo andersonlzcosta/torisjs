@@ -97,12 +97,15 @@ export const Modulo = styled.div`
     width: 100%;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-bottom: 20px;
-
 
     > button.alt{
       margin: 0;
+    }
+
+    button + button{
+      margin-left: 10px!important;
     }
 
     > button.delete{
@@ -129,13 +132,13 @@ export const AulasContainer = styled.aside`
 
   > div{
     ${DefaultBackground}
-    padding: 10px 30px;
+    padding: 15px 30px;
     flex-direction: row;
     justify-content: space-between;
   }
 
   div + div{
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
   button{
@@ -149,5 +152,17 @@ export const AulasContainer = styled.aside`
     &:hover{
       background: none;
     }
+  }
+
+  aside{
+    position: absolute;
+    top: 0;
+    letter-spacing:2px;
+    font-size: 12px;
+    background: #d5e8fa;
+    border-radius: 15px;
+    padding: 0 10px;
+
+    transform: translateY(-50%);
   }
 `;

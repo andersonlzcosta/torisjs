@@ -4,7 +4,7 @@ import { DefaultContainer } from '../../../styles/DefaultContainer';
 
 export const Container = styled.div`
   ${DefaultContainer}
-  background-color: #fad552;
+  background-color: #002F67;
   min-height: 100vh;
   justify-content:center;
   padding-top: 100px;
@@ -20,10 +20,11 @@ export const AulaContainer = styled.div`
     z-index: 1;
     margin-bottom: 5px;
     max-width: 100%;
+    color: #fff;
   }
 
   h1::before, h2::before{
-    background: #9fc1e0;
+    background: #864296;
   }
 
   h2{
@@ -43,21 +44,24 @@ export const AulaContainer = styled.div`
   }
 
   button.voltar{
-    box-shadow: 0px 10px 28px 0px #847a36;
-    letter-spacing: 1px;
     font-size: 12px;
     padding: 5px 15px;
-    width: auto;
-    align-self: flex-start;
   }
 
-  button.proxima{
-    box-shadow: 0px 10px 28px 0px #847a36;
+  button{
+    box-shadow: 0px 10px 28px 0px #00234c;
     letter-spacing: 1px;
     font-size: 15px;
     padding: 10px 20px;
     width: auto;
     align-self: flex-start;
+    
+    background: #D6E9FA;
+    color: #002F67;
+
+    &:hover{
+      background: #bcdfff;
+    }
   }
 `;
 
@@ -67,11 +71,9 @@ export const AulaArquivos = styled.div`
   width: 100%;
 
   button{
-    box-shadow: 0px 10px 28px 0px #847a36;
-    letter-spacing: 1px;
+    box-shadow: 0px 10px 28px 0px #00234c;
     font-size: 13px;
     padding: 9px 20px;
-    width: auto;
   }
 
   button + button{
