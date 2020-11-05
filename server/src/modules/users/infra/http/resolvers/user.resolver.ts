@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
-import User from '../infra/typeorm/entities/User';
-import CreateUserService from '../services/CreateUserService';
-import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
+import User from '../../typeorm/entities/User';
+import CreateUserService from '../../../services/CreateUserService';
+import UsersRepository from "../../typeorm/repositories/UsersRepository";
 import { getCustomRepository } from "typeorm";
 
 // Tlvz um DTO
@@ -20,20 +20,10 @@ export class UsernamePasswordInput {
 }
 
 // Importar as classes de Erros do Rocket
-@ObjectType()
-class FieldError {
-    @Field()
-    field: string;
-    @Field()
-    message: string;
-}
 
 // Não identifiquei um similar desse user response
 @ObjectType()
-class UserResponse {
-    @Field(() => [FieldError], { nullable: true })
-    errors?: FieldError[];
-  
+class UserResponse {  
     @Field(() => User, { nullable: true })
     user?: User;
 }
@@ -81,7 +71,7 @@ export class UserResolver {
     // async deleteUser()
 
     @Query(() => String)
-    hello() {
+    helloUser() {
         return "I say goodbye... Hello Hello!";
     }
 }

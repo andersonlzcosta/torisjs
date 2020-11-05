@@ -10,7 +10,8 @@ import AppError from '@shared/errors/AppError'
 import routes from './routes';
 import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
-import { UserResolver } from "@modules/users/resolvers/User";
+import { UserResolver } from "@modules/users/infra/http/resolvers/user.resolver";
+import { AbrigoResolver } from "@modules/abrigos/infra/http/resolvers/abrigo.resolver";
 
 const app = express();
 
@@ -37,9 +38,9 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
 
 const apolloServer = new ApolloServer({
   schema: buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, AbrigoResolver],
     validate: false,
-  })
+  }),
 });
 
 apolloServer.applyMiddleware({
