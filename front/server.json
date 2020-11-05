@@ -248,5 +248,32 @@
       "id": 412,
       "name": "categoria 3"
     }
+  ],
+  "notifications": [
+    {
+      "id": 358,
+      "type": "warning",
+      "message": "asdfasdf"
+    },
+    {
+      "id": 684,
+      "type": "warning",
+      "message": "asdfasdf"
+    },
+    {
+      "id": 478,
+      "type": "warning",
+      "message": "asdfasdf"
+    },
+    {
+      "id": 201,
+      "type": "warning",
+      "message": "asdfqrwerqwer"
+    },
+    {
+      "id": 827,
+      "type": "news",
+      "message": "vzxcvzxcvzxcv"
+    }
   ]
 }
