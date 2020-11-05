@@ -16,7 +16,7 @@ const TopMenu: React.FC<TopMenuProps> = ({ isDesktop }) => {
   return (
     <Container isDesktop={isDesktop}>
       <img src={Arrow} onClick={goBack} alt="seta para voltar" />
-      <Link to="/mensagens">mensagens<img src={Sino} alt="sino" /></Link>
+      <Link to="/notifications/all">mensagens<img src={Sino} alt="sino" /></Link>
       <Link to="/user/1">meu perfil<img src={Perfil} alt="perfil" /></Link>
     </Container>
   );
