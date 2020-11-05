@@ -15,6 +15,7 @@ import Aula from '../pages/Assistir/Aula';
 import Forum from '../pages/Forum';
 import Pergunta from '../pages/Pergunta';
 import CursoPergunta from '../pages/Assistir/CursoPergunta';
+import Notification from '../pages/Notification';
 
 const Routes: React.FC = () => {
 
@@ -39,6 +40,8 @@ const Routes: React.FC = () => {
 
       <Route path="/forum" component={Forum} />
       <Route path="/pergunta/:id" component={Pergunta} />
+
+      <Route path="/notifications" component={Notification} />
     </Switch>
   );
 }
