@@ -78,6 +78,7 @@ const Curso: React.FC = () => {
       });
       try {
         api.put(`/cursos/${id}`, updatedCurso);
+        api.delete(`/cursoperguntas/${idToRemove}`);
         setCurso(updatedCurso);
         addToast({
           title: 'curso atualizado',
