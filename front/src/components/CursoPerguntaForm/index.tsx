@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import api from '../../services/api';
 
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
@@ -29,7 +30,7 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({ pergunta, updatePergu
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = (data: ISubmittedData) => {
-    updatePergunta({
+    const pergunta = {
       id: parseInt(data.id),
       enunciado: data.enunciado,
       escolha_1: data.escolha_1,
@@ -38,7 +39,11 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({ pergunta, updatePergu
       escolha_4: data.escolha_4,
       resposta_certa: data.resposta_certa,
       justificativa: data.justificativa
-    });
+    }
+
+    updatePergunta(pergunta);
+
+    api.post('/cursoperguntas', pergunta);
   }
 
   return (

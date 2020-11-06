@@ -106,7 +106,7 @@ const CursoDetails: React.FC = () => {
                     <Aula hasBeenWatched={false} key={contentData.id}>
                       {/* <Link to={`/aula/${aula.id}`}> */}
                       <Link to={`/curso-pergunta/${contentData.id}`}>
-                        <h4>{contentData.enunciado.substring(0, 50)}...</h4>
+                        <h4>{contentData.enunciado.substring(0, 50)}</h4>
                       </Link>
                     </Aula>
                   )

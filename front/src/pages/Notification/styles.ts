@@ -68,14 +68,29 @@ export const ViewNotifications = styled.div`
 export const SingleNotification = styled.div<ISingleNotification>`
   ${DefaultBackground}
   padding: 0 20px;
-  justify-content: flex-start;
+  justify-content: space-between;
   flex-direction: row;
+
+  button{
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    width: auto;
+    display: flex;
+
+    svg{
+      stroke: #dd4c37;
+    }
+  }
 
   ${props => props.type === "warning" && css`
     background: #DC7835;
 
     p{
       color: #fff;
+    }
+    button svg{
+      stroke: #fff;
     }
   `}
 `;
