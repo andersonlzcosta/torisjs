@@ -5,8 +5,8 @@ export const Container = styled.div`
   ${DefaultBackground}
   background-color: #fad552;
   border-radius: 13px;
-  position: absolute;
-  top: 0;
+  position: relative;
+  top: -64px;
   right: 0;
   bottom: 0;
   right: 0;
