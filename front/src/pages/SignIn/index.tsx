@@ -51,13 +51,6 @@ const SignIn: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    api.get('/users').then(response => {
-      console.log(response.data);
-    });
-
-  }, []);
-
   return (
     <Container style={{ maxWidth: 400 }}>
       <img src={logo} alt="logo da Rede Abrigo" />
