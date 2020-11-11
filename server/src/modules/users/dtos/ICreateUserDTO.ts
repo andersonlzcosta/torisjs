@@ -4,4 +4,5 @@ export default interface ICreateUserDTO {
     idade: string;
     profissao: string;
     password: string;
+    abrigo_id: string;
 }

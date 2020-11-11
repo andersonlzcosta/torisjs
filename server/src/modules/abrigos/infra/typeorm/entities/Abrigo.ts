@@ -1,8 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
+import User from '@modules/users/infra/typeorm/entities/User';
 
-// import User from '@modules/users/infra/typeorm/entities/User';
-//abrigos "id" "nome" "endereco" "classificacao" "capacidade" "faixaEtaria" "profissionais"
 //aulas "id" "nome" "video_url"
 //cursos "id" "nome" "descricao" "aulas"
 
@@ -33,6 +32,10 @@ class Abrigo {
     @Column()
     faixaEtaria: string;
 
+    @Field(() => User)
+    @ManyToOne(() => User, user => user.abrigo)
+    users: User[];
+    
     @Field(() => String)
     @CreateDateColumn()
     createdAt: Date;

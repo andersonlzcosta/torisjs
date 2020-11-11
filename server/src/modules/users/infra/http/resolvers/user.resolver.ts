@@ -17,6 +17,8 @@ export class UsernamePasswordInput {
     profissao: string;
     @Field()
     email: string;
+    @Field()
+    abrigo_id: string;
 }
 
 // Importar as classes de Erros do Rocket

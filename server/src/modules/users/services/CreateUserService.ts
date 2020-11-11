@@ -8,10 +8,11 @@ interface Request {
     idade: string;
     profissao: string;
     password: string;
+    abrigo_id: string;
 }
 
 class CreateUserService {
-    public async execute({ nome, email, idade, profissao, password }: Request): Promise<User> {
+    public async execute({ nome, email, idade, profissao, password, abrigo_id }: Request): Promise<User> {
         const usersRepository = getCustomRepository(UsersRepository);
 
         const user = usersRepository.create({
@@ -19,7 +20,8 @@ class CreateUserService {
             email,
             idade,
             profissao,
-            password
+            password,
+            abrigo_id
         });
 
         return user;
