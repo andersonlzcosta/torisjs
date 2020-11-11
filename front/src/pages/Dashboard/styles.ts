@@ -1,6 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { DefaultBackground } from '../../styles/DefaultBackground';
 import { DefaultContainer } from '../../styles/DefaultContainer';
+
+interface INotificationProps {
+  type: string;
+}
 
 export const Container = styled.div`
   ${DefaultContainer}
@@ -176,3 +180,38 @@ export const Abrigo = styled.div`
   }
 `;
 
+export const NotificationContainer = styled.div<INotificationProps>`
+  ${DefaultBackground}
+  flex-direction: row;
+  padding: 0px 30px;
+  justify-content: space-between;
+
+  button{
+    background: none;
+    width: auto;
+    box-shadow: none;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg{
+      stroke: #dd4c37;
+    }
+
+    &:hover{
+      background: none;
+    }
+  }
+
+  ${props => props.type === "warning" && css`
+    background: #DC7835;
+
+    p{
+      color: #fff;
+    }
+    button svg{
+      stroke: #fff;
+    }
+  `}
+`;
