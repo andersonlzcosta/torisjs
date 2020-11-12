@@ -154,7 +154,7 @@ export const AulasContainer = styled.aside`
     }
   }
 
-  aside{
+  label{
     position: absolute;
     top: 0;
     letter-spacing:2px;
@@ -162,7 +162,31 @@ export const AulasContainer = styled.aside`
     background: #d5e8fa;
     border-radius: 15px;
     padding: 0 10px;
+    width: auto;
+    font-weight: 400;
 
     transform: translateY(-50%);
+  }
+
+  aside{
+    position: absolute;
+    left: -20px;
+    display: flex;
+    flex-direction: column;
+
+    button:first-child{
+      transition: transform .3s;
+      transform: translateY(15px);
+    }
+    button:last-child{
+      transition: transform .3s;
+      transform: translateY(-15px);
+    }
+  }
+
+  > div:hover aside{
+    button:first-child, button:last-child{
+      transform: translateY(0);
+    }
   }
 `;
