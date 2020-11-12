@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../services/api';
+import arrayMove from 'array-move';
 
 import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
@@ -10,7 +11,7 @@ import AulaForm from '../../components/AulaForm';
 import CursoPerguntaForm from '../../components/CursoPerguntaForm';
 
 import { Container, CursoContent, ListaModulos, Modulo, AulasContainer } from './styles';
-import { FiMinusCircle } from 'react-icons/fi';
+import { FiArrowDown, FiArrowUp, FiMinusCircle } from 'react-icons/fi';
 import { useToast } from '../../hooks/toast';
 import ModuleForm from '../../components/ModuleForm';
 import Popup from '../../components/Popup';
@@ -298,6 +299,30 @@ const Curso: React.FC = () => {
     }
   }, [curso]);
 
+  const handleMoveContent = useCallback(async (moduloId, index, isUp) => {
+    let newPosition: number;
+
+    isUp ? newPosition = index - 1 : newPosition = index + 1;
+
+    if (curso) {
+      const updatedModulos = curso.modulos.filter(modulo => {
+        if (modulo.id === moduloId) {
+          modulo.content = arrayMove(modulo.content, index, newPosition);
+        }
+        return modulo;
+      });
+
+      const updatedCurso = {
+        ...curso,
+        modulos: updatedModulos
+      }
+
+      setCurso(updatedCurso);
+
+      await api.put(`/cursos/${id}`, updatedCurso);
+    }
+  }, [curso, id]);
+
   useEffect(() => {
     api.get(`/cursos/${id}`).then(response => {
       setCurso(response.data);
@@ -327,12 +352,16 @@ const Curso: React.FC = () => {
                 </Popup>
               </div>
               <AulasContainer>
-                {modulo.content.map(content => {
+                {modulo.content.map((content, index) => {
                   if (content.content_is === 'aula') {
                     let contentData: IAulasData = content.content_data as IAulasData;
                     return (
                       <div key={contentData.id}>
-                        <aside>aula</aside>
+                        <aside>
+                          <button onClick={() => handleMoveContent(modulo.id, index, true)}><FiArrowUp size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, index, false)}><FiArrowDown size={14} /></button>
+                        </aside>
+                        <label>aula</label>
                         <button onClick={() => handleEditAula(contentData, modulo.id)}>{contentData.nome}</button>
                         <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
                       </div>
@@ -343,7 +372,11 @@ const Curso: React.FC = () => {
                     let contentData: IPerguntasData = content.content_data as IPerguntasData;
                     return (
                       <div key={contentData.id}>
-                        <aside>pergunta</aside>
+                        <aside>
+                          <button onClick={() => handleMoveContent(modulo.id, index, true)}><FiArrowUp size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, index, false)}><FiArrowDown size={14} /></button>
+                        </aside>
+                        <label>pergunta</label>
                         <button onClick={() => handleEditPergunta(contentData, modulo.id)}>{contentData.enunciado}</button>
                         <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
                       </div>

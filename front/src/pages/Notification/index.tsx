@@ -61,17 +61,17 @@ const Notification: React.FC = () => {
     setSelectedType(event.target.value);
   }, []);
 
-  const handleDelete = (notificationId: number) => {
-    if (notifications) {
-      const updatedNotifications = notifications.filter(notification => notification.id !== notificationId);
-      api.delete(`/notifications/${notificationId}`);
-      setNotifications(updatedNotifications);
-      addToast({
-        title: "Notificação deletada",
-        type: "success"
-      });
-    }
-  }
+  // const handleDelete = (notificationId: number) => {
+  //   if (notifications) {
+  //     const updatedNotifications = notifications.filter(notification => notification.id !== notificationId);
+  //     api.delete(`/notifications/${notificationId}`);
+  //     setNotifications(updatedNotifications);
+  //     addToast({
+  //       title: "Notificação deletada",
+  //       type: "success"
+  //     });
+  //   }
+  // }
 
   useEffect(() => {
     api.get('/notifications').then(response => {
@@ -90,7 +90,7 @@ const Notification: React.FC = () => {
           {notifications && notifications.map(notification => (
             <SingleNotification key={notification.id} type={notification.type} >
               <p>{notification.message}</p>
-              <button onClick={() => handleDelete(notification.id)}><FiMinusCircle size={20} /></button>
+              {/* <button onClick={() => handleDelete(notification.id)}><FiMinusCircle size={20} /></button> */}
             </SingleNotification>
           ))}
         </ViewNotifications>

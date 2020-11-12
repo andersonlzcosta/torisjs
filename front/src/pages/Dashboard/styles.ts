@@ -10,7 +10,7 @@ export const Container = styled.div`
   ${DefaultContainer}
 `;
 
-export const UserList = styled.div`
+export const DashboardContent = styled.div`
   width: 90%;
   max-width: 500px;
 
