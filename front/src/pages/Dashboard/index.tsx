@@ -6,7 +6,7 @@ import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
 import TopMenu from '../../components/TopMenu';
 
-import { Container, NotificationContainer, UserList, User, AbrigosList, Abrigo } from './styles';
+import { Container, NotificationContainer, DashboardContent, User, AbrigosList, Abrigo } from './styles';
 import { Link } from 'react-router-dom';
 import { IAbrigosData } from '../../components/AbrigoForm';
 
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
   return (
     <Container>
       <TopMenu />
-      <UserList>
+      <DashboardContent>
         <h2>notificações recentes</h2>
 
         {activeNotifications && activeNotifications.map(notification => (
@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
           ))}
         </AbrigosList>
 
-      </UserList>
+      </DashboardContent>
       <Navbar />
       <NavbarDesktop />
     </Container>
