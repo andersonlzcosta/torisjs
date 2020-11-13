@@ -12,7 +12,7 @@ class AbrigosRepository implements IAbrigosRepository {
   }
 
   public async findById(id: string): Promise<Abrigo | undefined> {
-    const abrigo = await this.ormRepository.findOne({ where: { id } });
+    const abrigo = await this.ormRepository.findOne( id , { relations: ["profissionais"]});
     return abrigo;
   }
 

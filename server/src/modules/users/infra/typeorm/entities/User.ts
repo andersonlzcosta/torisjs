@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import Abrigo from '@modules/abrigos/infra/typeorm/entities/Abrigo';
 
@@ -28,13 +28,9 @@ class User {
     @Field()
     @Column()
     profissao: string;
-      
-    @Field()
-    @Column()
-    abrigo_id: string;
-  
-    @Field()
-    @OneToMany(() => Abrigo, abrigo => abrigo.users)
+
+    @Field(() => Abrigo)
+    @ManyToOne(() => Abrigo, abrigo => abrigo.profissionais)
     abrigo: Abrigo;
 
     @Field(() => String)

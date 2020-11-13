@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -32,9 +32,9 @@ class Abrigo {
     @Column()
     faixaEtaria: string;
 
-    @Field(() => User)
-    @ManyToOne(() => User, user => user.abrigo)
-    users: User[];
+    @Field(() => [User])
+    @OneToMany(() => User, user => user.abrigo)
+    profissionais: User[];
     
     @Field(() => String)
     @CreateDateColumn()

@@ -1,7 +1,8 @@
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import User from '../entities/User';
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import { EntityRepository, getCustomRepository, getRepository, Repository } from 'typeorm';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import AbrigosRepository from '@modules/abrigos/infra/typeorm/repositories/AbrigosRepository';
 
 @EntityRepository(User)
 class UsersRepository implements IUsersRepository {
@@ -25,12 +26,18 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne({ where: { email } });
+    const user = await this.ormRepository.findOne({ where: { email: email }, relations: ["abrigo"]});
     return user;
   }
 
-  public async create({ nome, email, idade, profissao, password, abrigo_id }: ICreateUserDTO): Promise<User> {
-    const user = this.ormRepository.create({ nome, email, idade, profissao, password, abrigo_id });
+  // considerar o abrigo objeto
+  public async create({ nome, email, idade, profissao, password, abrigoId }: ICreateUserDTO): Promise<User> {
+    const user = this.ormRepository.create({ nome, email, idade, profissao, password, abrigo: { id: abrigoId } });
+
+    // need these lines to return all fields from Abrigo, maybe is the lazy eager loaders to solve it
+    // const abrigo = await getCustomRepository(AbrigosRepository).findById(abrigoId);
+    // user.abrigo = abrigo;
+
     await this.ormRepository.save(user);
     return user;
   }

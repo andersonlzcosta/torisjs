@@ -6,7 +6,7 @@ import { getCustomRepository } from "typeorm";
 
 // Tlvz um DTO
 @InputType()
-export class UsernamePasswordInput {
+class UsernamePasswordInput {
     @Field()
     password: string;
     @Field()
@@ -17,8 +17,9 @@ export class UsernamePasswordInput {
     profissao: string;
     @Field()
     email: string;
+    // considerar o abrigo objeto
     @Field()
-    abrigo_id: string;
+    abrigoId: string;
 }
 
 // Importar as classes de Erros do Rocket
@@ -32,6 +33,7 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+
     @Mutation(() => UserResponse)
     async register(
         @Arg("options") options: UsernamePasswordInput
@@ -48,9 +50,9 @@ export class UserResolver {
     async login(
         @Arg("email") email: string
     ): Promise<UserResponse> {
-        // AuthenticateUserService.ts
+        // AuthenticateUserService.ts : usar applymiddleware isAuth, quase igual o rocketseat
         const usersRepository = getCustomRepository(UsersRepository);
-        const user = await usersRepository.findByEmail(email);;
+        const user = await usersRepository.findByEmail(email);
         return { user };
     }
     // ShowProfileService.ts
