@@ -17,7 +17,7 @@ class Curso {
     nome: string;
 
     @Field()
-    @Column({ unique: true })
+    @Column()
     descricao: string;
 
     // @Field(() => [Aula])

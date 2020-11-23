@@ -1,6 +1,6 @@
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import User from '../entities/User';
-import { EntityRepository, getCustomRepository, getRepository, Repository } from 'typeorm';
+import { EntityRepository, getRepository, Repository } from 'typeorm';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 // import AbrigosRepository from '@modules/abrigos/infra/typeorm/repositories/AbrigosRepository';

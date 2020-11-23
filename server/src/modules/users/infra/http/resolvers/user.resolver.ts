@@ -106,9 +106,4 @@ export class UserResolver {
         const users = await usersRepository.findAll();
         return users;
     }
-
-    @Query(() => String)
-    helloUser() {
-        return "I say goodbye... Hello Hello!";
-    }
 }
