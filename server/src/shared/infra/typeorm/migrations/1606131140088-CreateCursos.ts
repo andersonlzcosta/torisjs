@@ -21,14 +21,6 @@ export class CreateCursos1606131140088 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'aulaId',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'perguntaaId',
-                        type: 'varchar',
-                    },
-                    {
                         name: 'created_at',
                         type: 'timestamp',
                         default: 'now()',

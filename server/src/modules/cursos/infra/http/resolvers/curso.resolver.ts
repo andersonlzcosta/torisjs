@@ -81,7 +81,7 @@ export class CursoResolver {
     }
 
     @Mutation(() => Boolean)
-    async deleteCurso(
+    async deletarCurso(
         @Arg("id") id: string
     ): Promise<boolean> {
        

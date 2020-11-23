@@ -57,7 +57,7 @@ class UserResponse {
 export class UserResolver {
 
     @Mutation(() => UserResponse)
-    async register(
+    async registrar(
         @Arg("options") options: CreateUserInput
       ): Promise<UserResponse> {
 
@@ -79,7 +79,7 @@ export class UserResolver {
     }
 
     @Mutation(() => UserResponse)
-    async updateUser(
+    async updateUsuario(
         @Arg("options") options: UpdateUserInput
     ): Promise<UserResponse> {
 
@@ -90,7 +90,7 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    async deleteUser(
+    async deletarUsuario(
         @Arg("id") id: string
     ): Promise<boolean> {
        
@@ -99,9 +99,8 @@ export class UserResolver {
         return true;
     }
  
-
     @Query(() => [User])
-    async users(): Promise<User[]> {
+    async verUsuarios(): Promise<User[]> {
         const usersRepository = getCustomRepository(UsersRepository);
         const users = await usersRepository.findAll();
         return users;

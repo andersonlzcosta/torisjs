@@ -36,12 +36,6 @@ class CursosRepository implements ICursosRepository {
 
   }
 
-  // public async save(curso: Curso): Promise<Curso> {
-
-  //   return this.ormRepository.save(curso);
-
-  // }
-
   public async update(cursoId: string, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
 
     await this.ormRepository.update( cursoId, { id: cursoId, nome, descricao });   
