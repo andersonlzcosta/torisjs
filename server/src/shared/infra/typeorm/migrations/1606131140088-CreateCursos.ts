@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
 export class CreateCursos1606131140088 implements MigrationInterface {
 
