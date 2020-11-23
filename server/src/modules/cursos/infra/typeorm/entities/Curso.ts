@@ -1,9 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-// import User from '@modules/users/infra/typeorm/entities/User';
-
-//aulas "id" "nome" "video_url"
-//cursos "id" "nome" "descricao" "aulas"
+import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 
 @ObjectType()
 @Entity('cursos')
@@ -20,13 +17,9 @@ class Curso {
     @Column()
     descricao: string;
 
-    // @Field(() => [Aula])
-    // @OneToMany(() => Aula, aula => aula.curso)
-    // aulas?: Aula[];
-
-    // @Field(() => [Pergunta])
-    // @OneToMany(() => Pergunta, pergunta => pergunta.curso)
-    // perguntas?: Pergunta[];
+    @Field(() => [Modulo])
+    @OneToMany(() => Modulo, modulo => modulo.curso)
+    modulos?: Modulo[];
     
     @Field(() => String)
     @CreateDateColumn()
