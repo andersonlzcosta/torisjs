@@ -1,9 +1,9 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
 import Abrigo from '../../typeorm/entities/Abrigo';
 import CreateAbrigoService from '../../../services/CreateAbrigoService';
+import UpdateAbrigoService from '../../../services/UpdateAbrigoService';
 import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
 import { getCustomRepository } from "typeorm";
-import User from "@modules/users/infra/typeorm/entities/User";
 
 // Preciso usar o DTO
 @InputType()
@@ -18,6 +18,22 @@ class CriarAbrigoInput {
     capacidade: string;
     @Field()
     faixaEtaria: string;
+}
+
+@InputType()
+class AtualizarAbrigoInput {
+    @Field()
+    abrigoId: string;
+    @Field()
+    nome?: string;
+    @Field()
+    endereco?: string;
+    @Field()
+    classificacao?: string;
+    @Field()
+    capacidade?: string;
+    @Field()
+    faixaEtaria?: string;
 }
 
 
@@ -63,10 +79,15 @@ export class AbrigoResolver {
 
     }
 
-    @Query(() => String)
-    helloAbrigo() {
+    @Mutation(() => AbrigoResponse)
+    async atualizarAbrigo(
+        @Arg("options") options: AtualizarAbrigoInput
+    ): Promise<AbrigoResponse> {
 
-        return "I say goodbye... Hello Hello!";
+        console.log(options);
+        const updateAbrigo = new UpdateAbrigoService();
+        const abrigo = await updateAbrigo.execute(options);
+        return { abrigo };
 
     }
 }
