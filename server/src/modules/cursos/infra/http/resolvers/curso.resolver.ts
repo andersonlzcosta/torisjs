@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "ty
 import Curso from '../../typeorm/entities/Curso';
 import CreateCursoService from '../../../services/CreateCursoService';
 import UpdateCursoService from '../../../services/UpdateCursoService';
+import DeleteCursoService from '../../../services/DeleteCursoService';
 import CursosRepository from "../../typeorm/repositories/CursosRepository";
 import { getCustomRepository } from "typeorm";
 
@@ -77,5 +78,15 @@ export class CursoResolver {
         const curso = await updateCurso.execute(options);
         return { curso };
 
+    }
+
+    @Mutation(() => Boolean)
+    async deleteCurso(
+        @Arg("id") id: string
+    ): Promise<boolean> {
+       
+        const deleteCurso = new DeleteCursoService();
+        await deleteCurso.execute( { id } );
+        return true;
     }
 }
