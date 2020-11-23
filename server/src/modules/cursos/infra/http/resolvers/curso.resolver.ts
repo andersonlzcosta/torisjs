@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
 import Curso from '../../typeorm/entities/Curso';
 import CreateCursoService from '../../../services/CreateCursoService';
-// import UpdateCursoService from '../../../services/UpdateCursoService';
+import UpdateCursoService from '../../../services/UpdateCursoService';
 import CursosRepository from "../../typeorm/repositories/CursosRepository";
 import { getCustomRepository } from "typeorm";
 
@@ -14,15 +14,15 @@ class CriarCursoInput {
     descricao: string;
 }
 
-// @InputType()
-// class AtualizarCursoInput {
-//     @Field()
-//     cursoId: string;
-//     @Field()
-//     nome?: string;
-//     @Field()
-//     descricao?: string;
-// }
+@InputType()
+class AtualizarCursoInput {
+    @Field()
+    cursoId: string;
+    @Field()
+    nome?: string;
+    @Field()
+    descricao?: string;
+}
 
 
 // return users by curso on constraints
@@ -67,15 +67,15 @@ export class CursoResolver {
 
     }
 
-    // @Mutation(() => CursoResponse)
-    // async atualizarCurso(
-    //     @Arg("options") options: AtualizarCursoInput
-    // ): Promise<CursoResponse> {
+    @Mutation(() => CursoResponse)
+    async atualizarCurso(
+        @Arg("options") options: AtualizarCursoInput
+    ): Promise<CursoResponse> {
 
-    //     console.log(options);
-    //     const updateCurso = new UpdateCursoService();
-    //     const curso = await updateCurso.execute(options);
-    //     return { curso };
+        console.log(options);
+        const updateCurso = new UpdateCursoService();
+        const curso = await updateCurso.execute(options);
+        return { curso };
 
-    // }
+    }
 }

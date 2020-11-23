@@ -2,7 +2,7 @@ import ICursosRepository from '@modules/cursos/repositories/ICursosRepository';
 import Curso from '../entities/Curso';
 import { EntityRepository, getRepository, Repository } from 'typeorm';
 import ICreateCursoDTO from '@modules/cursos/dtos/ICreateCursoDTO';
-// import IUpdateCursoDTO from '@modules/cursos/dtos/IUpdateCursoDTO';
+import IUpdateCursoDTO from '@modules/cursos/dtos/IUpdateCursoDTO';
 
 @EntityRepository(Curso)
 class CursosRepository implements ICursosRepository {
@@ -42,13 +42,14 @@ class CursosRepository implements ICursosRepository {
 
   // }
 
-  // public async update(cursoId: string, { nome, endereco, classificacao, capacidade, faixaEtaria }: IUpdateCursoDTO): Promise<Curso | undefined> {
+  public async update(cursoId: string, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
 
-  //   await this.ormRepository.update( cursoId, { id: cursoId, nome, endereco, classificacao, capacidade, faixaEtaria });   
-  //   const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["users"] });
-  //   return curso;
+    await this.ormRepository.update( cursoId, { id: cursoId, nome, descricao });   
+    // const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["users"] });
+    const curso = await this.ormRepository.findOne({ where: { id: cursoId } });
+    return curso;
 
-  // }
+  }
 }
 
 export default CursosRepository;
