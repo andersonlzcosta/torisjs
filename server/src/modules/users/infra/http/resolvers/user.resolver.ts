@@ -101,8 +101,10 @@ export class UserResolver {
  
     @Query(() => [User])
     async verUsuarios(): Promise<User[]> {
+
         const usersRepository = getCustomRepository(UsersRepository);
         const users = await usersRepository.findAll();
         return users;
+        
     }
 }

@@ -12,13 +12,19 @@ class CriarPerguntaInput {
     @Field()
     ordem: number;
     @Field()
-    nome: string;
+    enunciado: string;
     @Field()
-    video_url: string;
+    alternativa1: string;
     @Field()
-    duracao: string;
+    alternativa2: string;
     @Field()
-    status: string;
+    alternativa3: string;
+    @Field()
+    alternativa4: string;
+    @Field()
+    resposta: number;
+    @Field()
+    justificativa: string;
 }
 
 @InputType()
@@ -28,13 +34,19 @@ class AtualizarPerguntaInput {
     @Field()
     ordem?: number;
     @Field()
-    nome?: string;
+    enunciado?: string;
     @Field()
-    video_url?: string;
+    alternativa1?: string;
     @Field()
-    duracao?: string;
+    alternativa2?: string;
     @Field()
-    status?: string;
+    alternativa3?: string;
+    @Field()
+    alternativa4?: string;
+    @Field()
+    resposta?: number;
+    @Field()
+    justificativa?: string;
 }
 
 @ObjectType()
