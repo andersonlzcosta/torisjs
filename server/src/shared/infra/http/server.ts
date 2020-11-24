@@ -15,6 +15,7 @@ import { AbrigoResolver } from "@modules/abrigos/infra/http/resolvers/abrigo.res
 import { CursoResolver } from "@modules/cursos/infra/http/resolvers/curso.resolver";
 import { ModuloResolver } from "@modules/cursos/infra/http/resolvers/modulo.resolver";
 import { AulaResolver } from "@modules/cursos/infra/http/resolvers/aula.resolver";
+import { PerguntaResolver } from "@modules/cursos/infra/http/resolvers/pergunta.resolver";
 
 const app = express();
 
@@ -41,7 +42,7 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
 
 const apolloServer = new ApolloServer({
   schema: buildSchema({
-    resolvers: [UserResolver, AbrigoResolver, CursoResolver, ModuloResolver, AulaResolver],
+    resolvers: [UserResolver, AbrigoResolver, CursoResolver, ModuloResolver, AulaResolver, PerguntaResolver],
     validate: false,
   }),
 });

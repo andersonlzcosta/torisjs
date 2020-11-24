@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { ObjectType, Field } from 'type-graphql';
 import Curso from '@modules/cursos/infra/typeorm/entities/Curso';
 import Aula from '@modules/cursos/infra/typeorm/entities/Aula';
+import Pergunta from '@modules/cursos/infra/typeorm/entities/Pergunta';
 
 @ObjectType()
 @Entity('modulos')
@@ -21,6 +22,10 @@ class Modulo {
     @Field(() => [Aula])
     @OneToMany(() => Aula, aula => aula.modulo)
     aulas?: Aula[];
+
+    @Field(() => [Pergunta])
+    @OneToMany(() => Pergunta, pergunta => pergunta.modulo)
+    perguntas?: Pergunta[];
 
     @Field(() => String)
     @CreateDateColumn()

@@ -6,7 +6,6 @@ export default interface ICursosRepository {
     findById(id: string): Promise<Curso | undefined>;
     findAll(): Promise<Curso[]>;
     create(data: ICreateCursoDTO): Promise<Curso>;
-    // save(curso: Curso): Promise<Curso>;
     update(cursoId: string, data: IUpdateCursoDTO): Promise<Curso | undefined>;
     delete(id: string): Promise<Boolean>;
 }
