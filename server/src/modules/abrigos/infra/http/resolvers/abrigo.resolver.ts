@@ -90,4 +90,13 @@ export class AbrigoResolver {
         return { abrigo };
 
     }
+ 
+    @Query(() => [Abrigo])
+    async verAbrigos(): Promise<Abrigo[]> {
+
+        const abrigosRepository = getCustomRepository(AbrigosRepository);
+        const abrigos = await abrigosRepository.findAll();
+        return abrigos;
+
+    }
 }
