@@ -17,8 +17,6 @@ class CriarAulaInput {
     video_url: string;
     @Field()
     duracao: string;
-    @Field()
-    status: string;
 }
 
 @InputType()
@@ -33,8 +31,6 @@ class AtualizarAulaInput {
     video_url?: string;
     @Field()
     duracao?: string;
-    @Field()
-    status?: string;
 }
 
 @ObjectType()

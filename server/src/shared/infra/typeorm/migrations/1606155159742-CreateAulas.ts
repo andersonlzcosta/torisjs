@@ -29,10 +29,6 @@ export class CreateAulas1606155159742 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'status',
-                        type: 'varchar',
-                    },
-                    {
                         name: 'moduloId',
                         type: 'varchar',
                     },

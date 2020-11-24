@@ -28,17 +28,17 @@ class AulasRepository implements IAulasRepository {
 
   }
 
-  public async create({ ordem, nome, video_url, duracao, status }: ICreateAulaDTO): Promise<Aula> {
+  public async create({ ordem, nome, video_url, duracao }: ICreateAulaDTO): Promise<Aula> {
 
-    const aula = this.ormRepository.create({ ordem, nome, video_url, duracao, status });
+    const aula = this.ormRepository.create({ ordem, nome, video_url, duracao });
     await this.ormRepository.save(aula);
     return aula;
 
   }
 
-  public async update(aulaId: string, { ordem, nome, video_url, duracao, status }: IUpdateAulaDTO): Promise<Aula | undefined> {
+  public async update(aulaId: string, { ordem, nome, video_url, duracao }: IUpdateAulaDTO): Promise<Aula | undefined> {
 
-    await this.ormRepository.update( aulaId, { id: aulaId, ordem, nome, video_url, duracao, status });   
+    await this.ormRepository.update( aulaId, { id: aulaId, ordem, nome, video_url, duracao });   
     // const aula = await this.ormRepository.findOne({ where: { id: aulaId }, relations: ["users"] });
     const aula = await this.ormRepository.findOne({ where: { id: aulaId } });
     return aula;

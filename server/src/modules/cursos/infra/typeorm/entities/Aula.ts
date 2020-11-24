@@ -25,10 +25,6 @@ class Aula {
     @Column()
     duracao: string;
 
-    @Field()
-    @Column()
-    status: string;
-
     @Field(() => Modulo)
     @ManyToOne(() => Modulo, modulo => modulo.aulas)
     modulo: Modulo;

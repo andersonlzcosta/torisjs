@@ -3,5 +3,4 @@ export default interface ICreateAulaDTO {
     nome: string;
     video_url: string;
     duracao: string;
-    status: string;
 }
