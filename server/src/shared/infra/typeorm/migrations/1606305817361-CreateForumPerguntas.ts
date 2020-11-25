@@ -21,8 +21,9 @@ export class CreateForumPerguntas1606305817361 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'status',
+                        name: 'foiResolvido',
                         type: 'boolean',
+                        default: false,
                     },
                     {
                         name: 'userId',
