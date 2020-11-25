@@ -25,19 +25,6 @@ class AtualizarCursoInput {
     descricao?: string;
 }
 
-
-// return users by curso on constraints
-// @ObjectType()
-// class PaginatedUsers {
-//   @Field(() => [User])
-//   users: User[];
-//   @Field()
-//   hasMore: boolean;
-// }
-
-// Importar as classes de Erros do Rocket
-
-// Não identifiquei um similar desse user response
 @ObjectType()
 class CursoResponse {
     @Field(() => Curso, { nullable: true })
@@ -73,7 +60,6 @@ export class CursoResolver {
         @Arg("options") options: AtualizarCursoInput
     ): Promise<CursoResponse> {
 
-        console.log(options);
         const updateCurso = new UpdateCursoService();
         const curso = await updateCurso.execute(options);
         return { curso };
@@ -88,5 +74,14 @@ export class CursoResolver {
         const deleteCurso = new DeleteCursoService();
         await deleteCurso.execute( { id } );
         return true;
+    }
+
+    @Query(() => [Curso])
+    async verCursos(): Promise<Curso[]> {
+
+        const cursosRepository = getCustomRepository(CursosRepository);
+        const cursos = await cursosRepository.findAll();
+        return cursos;
+
     }
 }
