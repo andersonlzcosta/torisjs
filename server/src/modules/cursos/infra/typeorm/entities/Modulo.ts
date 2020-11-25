@@ -5,7 +5,7 @@ import Aula from '@modules/cursos/infra/typeorm/entities/Aula';
 import Pergunta from '@modules/cursos/infra/typeorm/entities/Pergunta';
 
 @ObjectType()
-@Entity('modulos')
+@Entity('curso_modulos')
 class Modulo {
     @Field()
     @PrimaryGeneratedColumn()

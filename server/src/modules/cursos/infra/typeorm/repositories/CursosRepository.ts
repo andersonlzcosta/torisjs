@@ -27,7 +27,13 @@ class CursosRepository implements ICursosRepository {
 
   }
 
-  public async create({ nome, descricao }: ICreateCursoDTO): Promise<Curso> {
+  public async save(curso: Curso): Promise<Curso> {
+    
+    return this.ormRepository.save(curso);
+
+  }
+
+ public async create({ nome, descricao }: ICreateCursoDTO): Promise<Curso> {
 
     const curso = this.ormRepository.create({ nome, descricao });
     await this.ormRepository.save(curso);

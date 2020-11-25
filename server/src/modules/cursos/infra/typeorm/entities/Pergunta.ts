@@ -3,7 +3,7 @@ import { ObjectType, Field } from 'type-graphql';
 import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 
 @ObjectType()
-@Entity('perguntas')
+@Entity('modulo_perguntas')
 class Pergunta {
     @Field()
     @PrimaryGeneratedColumn()
