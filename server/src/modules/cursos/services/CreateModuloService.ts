@@ -4,14 +4,16 @@ import ModulosRepository from "../infra/typeorm/repositories/ModulosRepository";
 
 interface Request {
     nome: string;
+    cursoId: string;
 }
 
 class CreateModuloService {
-    public async execute({ nome }: Request): Promise<Modulo> {
+    public async execute({ nome, cursoId }: Request): Promise<Modulo | undefined> {
         const modulosRepository = getCustomRepository(ModulosRepository);
 
         const modulo = modulosRepository.create({
-            nome
+            nome,
+            cursoId
         });
 
         return modulo;

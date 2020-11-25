@@ -11,6 +11,8 @@ import { getCustomRepository } from "typeorm";
 class CriarModuloInput {
     @Field()
     nome: string;
+    @Field()
+    cursoId: string;
 }
 
 @InputType()
@@ -19,6 +21,8 @@ class AtualizarModuloInput {
     moduloId: string;
     @Field()
     nome?: string;
+    @Field()
+    cursoId?: string;
 }
 
 @ObjectType()
@@ -71,5 +75,14 @@ export class ModuloResolver {
         const deleteModulo = new DeleteModuloService();
         await deleteModulo.execute( { id } );
         return true;
+    }
+
+    @Query(() => [Modulo])
+    async verModulos(): Promise<Modulo[]> {
+
+        const modulosRepository = getCustomRepository(ModulosRepository);
+        const modulos = await modulosRepository.findAll();
+        return modulos;
+
     }
 }

@@ -14,8 +14,7 @@ class CursosRepository implements ICursosRepository {
 
   public async findById(id: string): Promise<Curso | undefined> {
 
-    // const curso = await this.ormRepository.findOne( id , { relations: ["profissionais"]});
-    const curso = await this.ormRepository.findOne( id );
+    const curso = await this.ormRepository.findOne( id , { relations: ["modulos"]});
     return curso;
 
   }
@@ -23,7 +22,7 @@ class CursosRepository implements ICursosRepository {
   public async findAll(): Promise<Curso[]> {
 
     let cursos: Curso[];
-    cursos = await this.ormRepository.find();
+    cursos = await this.ormRepository.find({ relations: ["modulos"] });
     return cursos;
 
   }
@@ -39,8 +38,7 @@ class CursosRepository implements ICursosRepository {
   public async update(cursoId: string, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
 
     await this.ormRepository.update( cursoId, { id: cursoId, nome, descricao });   
-    // const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["users"] });
-    const curso = await this.ormRepository.findOne({ where: { id: cursoId } });
+    const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["modulos"] });
     return curso;
 
   }

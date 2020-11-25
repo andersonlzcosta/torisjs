@@ -22,22 +22,29 @@ class ModulosRepository implements IModulosRepository {
   public async findAll(): Promise<Modulo[]> {
 
     let modulos: Modulo[];
-    modulos = await this.ormRepository.find();
+    modulos = await this.ormRepository.find({ relations: ["curso"] });
     return modulos;
 
   }
 
-  public async create({ nome }: ICreateModuloDTO): Promise<Modulo> {
+  public async save(modulo: Modulo): Promise<Modulo> {
+    
+    return this.ormRepository.save(modulo);
 
-    const modulo = this.ormRepository.create({ nome });
-    await this.ormRepository.save(modulo);
+  }
+
+  public async create({ nome, cursoId }: ICreateModuloDTO): Promise<Modulo | undefined> {
+
+    const newModulo = this.ormRepository.create({ nome, curso: { id: cursoId } });
+    await this.ormRepository.save(newModulo);
+    const modulo = await this.ormRepository.findOne({ where: { id: newModulo.id }, relations: ["curso"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
     return modulo;
 
   }
 
-  public async update(moduloId: string, { nome }: IUpdateModuloDTO): Promise<Modulo | undefined> {
+  public async update(moduloId: string, { nome, cursoId }: IUpdateModuloDTO): Promise<Modulo | undefined> {
 
-    await this.ormRepository.update( moduloId, { id: moduloId, nome });   
+    await this.ormRepository.update( moduloId, { id: moduloId, nome, curso: { id: cursoId } });   
     const modulo = await this.ormRepository.findOne({ where: { id: moduloId }, relations: ["curso"] });
     return modulo;
 
