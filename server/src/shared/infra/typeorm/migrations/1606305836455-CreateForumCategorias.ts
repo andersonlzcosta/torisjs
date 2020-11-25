@@ -1,11 +1,11 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class CreateModulo1606155227312 implements MigrationInterface {
+export class CreateForumCategorias1606305836455 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name:'modulos',
+                name:'forum_categorias',
                 columns: [
                     {
                         name: 'id',
@@ -14,10 +14,6 @@ export class CreateModulo1606155227312 implements MigrationInterface {
                     },
                     {
                         name: 'nome',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'cursoId',
                         type: 'varchar',
                     },
                     {
@@ -36,7 +32,7 @@ export class CreateModulo1606155227312 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('modulos')
+        await queryRunner.dropTable('forum_categorias')
     }
 
 }

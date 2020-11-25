@@ -1,11 +1,11 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class CreatePergunta1606155176524 implements MigrationInterface {
+export class CreateForumRespostas1606305831244 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name:'perguntas',
+                name:'forum_respostas',
                 columns: [
                     {
                         name: 'id',
@@ -13,39 +13,15 @@ export class CreatePergunta1606155176524 implements MigrationInterface {
                         isPrimary: true,
                     },
                     {
-                        name: 'ordem',
-                        type: 'int',
-                    },
-                    {
-                        name: 'enunciado',
+                        name: 'corpo',
                         type: 'varchar',
                     },
                     {
-                        name: 'alternativa1',
+                        name: 'perguntaId',
                         type: 'varchar',
                     },
                     {
-                        name: 'alternativa2',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'alternativa3',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'alternativa4',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'resposta',
-                        type: 'int',
-                    },
-                    {
-                        name: 'justificativa',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'moduloId',
+                        name: 'userId',
                         type: 'varchar',
                     },
                     {
@@ -64,7 +40,7 @@ export class CreatePergunta1606155176524 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('perguntas')
+        await queryRunner.dropTable('forum_respostas')
     }
 
 }
