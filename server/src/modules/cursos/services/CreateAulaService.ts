@@ -7,17 +7,19 @@ interface Request {
     nome: string;
     video_url: string;
     duracao: string;
+    moduloId:string;
 }
 
 class CreateAulaService {
-    public async execute({ ordem, nome, video_url, duracao }: Request): Promise<Aula> {
+    public async execute({ ordem, nome, video_url, duracao, moduloId }: Request): Promise<Aula | undefined> {
         const aulasRepository = getCustomRepository(AulasRepository);
 
         const aula = aulasRepository.create({
             ordem,
             nome,
             video_url,
-            duracao
+            duracao,
+            moduloId
         });
 
         return aula;

@@ -7,4 +7,5 @@ export default interface IUpdateAulaDTO {
     alternativa4?: string;
     resposta?: number;
     justificativa?: string;
+    moduloId?: string;
 }

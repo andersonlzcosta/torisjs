@@ -25,6 +25,8 @@ class CriarPerguntaInput {
     resposta: number;
     @Field()
     justificativa: string;
+    @Field()
+    moduloId:string;
 }
 
 @InputType()
@@ -47,6 +49,8 @@ class AtualizarPerguntaInput {
     resposta?: number;
     @Field()
     justificativa?: string;
+    @Field()
+    moduloId?:string;
 }
 
 @ObjectType()
@@ -99,5 +103,14 @@ export class PerguntaResolver {
         const deletePergunta = new DeletePerguntaService();
         await deletePergunta.execute( { id } );
         return true;
+    }
+
+    @Query(() => [Pergunta])
+    async verPerguntas(): Promise<Pergunta[]> {
+
+        const perguntasRepository = getCustomRepository(PerguntasRepository);
+        const perguntas = await perguntasRepository.findAll();
+        return perguntas;
+
     }
 }

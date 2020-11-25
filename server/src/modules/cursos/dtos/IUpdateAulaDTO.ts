@@ -3,4 +3,5 @@ export default interface IUpdateAulaDTO {
     nome?: string;
     video_url?: string;
     duracao?: string;
+    moduloId?: string;
 }

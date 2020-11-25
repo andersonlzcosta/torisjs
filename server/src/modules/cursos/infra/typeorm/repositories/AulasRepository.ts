@@ -14,8 +14,7 @@ class AulasRepository implements IAulasRepository {
 
   public async findById(id: string): Promise<Aula | undefined> {
 
-    // const aula = await this.ormRepository.findOne( id , { relations: ["profissionais"]});
-    const aula = await this.ormRepository.findOne( id );
+    const aula = await this.ormRepository.findOne( id , { relations: ["modulo"]});
     return aula;
 
   }
@@ -23,24 +22,29 @@ class AulasRepository implements IAulasRepository {
   public async findAll(): Promise<Aula[]> {
 
     let aulas: Aula[];
-    aulas = await this.ormRepository.find();
+    aulas = await this.ormRepository.find({ relations: ["modulo"]});
     return aulas;
 
   }
 
-  public async create({ ordem, nome, video_url, duracao }: ICreateAulaDTO): Promise<Aula> {
-
-    const aula = this.ormRepository.create({ ordem, nome, video_url, duracao });
-    await this.ormRepository.save(aula);
-    return aula;
+  public async save(aula: Aula): Promise<Aula> {
+    
+    return this.ormRepository.save(aula);
 
   }
 
-  public async update(aulaId: string, { ordem, nome, video_url, duracao }: IUpdateAulaDTO): Promise<Aula | undefined> {
+  public async create({ ordem, nome, video_url, duracao, moduloId }: ICreateAulaDTO): Promise<Aula | undefined> {
 
-    await this.ormRepository.update( aulaId, { id: aulaId, ordem, nome, video_url, duracao });   
-    // const aula = await this.ormRepository.findOne({ where: { id: aulaId }, relations: ["users"] });
-    const aula = await this.ormRepository.findOne({ where: { id: aulaId } });
+    const newAula = this.ormRepository.create({ ordem, nome, video_url, duracao, modulo: { id: moduloId } });
+    await this.ormRepository.save(newAula);
+    const aula = this.ormRepository.findOne({ where: { id: newAula.id }, relations: ["modulo"] });
+    return aula;
+  }
+
+  public async update(aulaId: string, { ordem, nome, video_url, duracao, moduloId }: IUpdateAulaDTO): Promise<Aula | undefined> {
+
+    await this.ormRepository.update( aulaId, { id: aulaId, ordem, nome, video_url, duracao, modulo: { id: moduloId } });   
+    const aula = await this.ormRepository.findOne({ where: { id: aulaId }, relations: ["modulo"] });
     return aula;
 
   }

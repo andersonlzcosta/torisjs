@@ -17,6 +17,8 @@ class CriarAulaInput {
     video_url: string;
     @Field()
     duracao: string;
+    @Field()
+    moduloId:string;
 }
 
 @InputType()
@@ -31,6 +33,8 @@ class AtualizarAulaInput {
     video_url?: string;
     @Field()
     duracao?: string;
+    @Field()
+    moduloId?:string;
 }
 
 @ObjectType()
@@ -83,5 +87,14 @@ export class AulaResolver {
         const deleteAula = new DeleteAulaService();
         await deleteAula.execute( { id } );
         return true;
+    }
+
+    @Query(() => [Aula])
+    async verAulas(): Promise<Aula[]> {
+
+        const aulasRepository = getCustomRepository(AulasRepository);
+        const aulas = await aulasRepository.findAll();
+        return aulas;
+
     }
 }

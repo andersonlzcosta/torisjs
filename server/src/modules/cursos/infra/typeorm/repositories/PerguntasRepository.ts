@@ -14,8 +14,7 @@ class PerguntasRepository implements IPerguntasRepository {
 
   public async findById(id: string): Promise<Pergunta | undefined> {
 
-    // const pergunta = await this.ormRepository.findOne( id , { relations: ["profissionais"]});
-    const pergunta = await this.ormRepository.findOne( id );
+    const pergunta = await this.ormRepository.findOne( id , { relations: ["modulo"]});
     return pergunta;
 
   }
@@ -23,24 +22,30 @@ class PerguntasRepository implements IPerguntasRepository {
   public async findAll(): Promise<Pergunta[]> {
 
     let perguntas: Pergunta[];
-    perguntas = await this.ormRepository.find();
+    perguntas = await this.ormRepository.find({ relations: ["modulo"]});
     return perguntas;
 
   }
 
-  public async create({ ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa }: ICreatePerguntaDTO): Promise<Pergunta> {
+  public async save(pergunta: Pergunta): Promise<Pergunta> {
+    
+    return this.ormRepository.save(pergunta);
 
-    const pergunta = this.ormRepository.create({ ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa });
-    await this.ormRepository.save(pergunta);
+  }
+
+  public async create({ ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, moduloId }: ICreatePerguntaDTO): Promise<Pergunta | undefined> {
+
+    const newPergunta = this.ormRepository.create({ ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, modulo: { id: moduloId } });
+    await this.ormRepository.save(newPergunta);
+    const pergunta = this.ormRepository.findOne({ where: { id: newPergunta.id }, relations: ["modulo"] });
     return pergunta;
 
   }
 
-  public async update(perguntaId: string, { ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa }: IUpdatePerguntaDTO): Promise<Pergunta | undefined> {
+  public async update(perguntaId: string, { ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, moduloId  }: IUpdatePerguntaDTO): Promise<Pergunta | undefined> {
 
-    await this.ormRepository.update( perguntaId, { id: perguntaId, ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa });   
-    // const pergunta = await this.ormRepository.findOne({ where: { id: perguntaId }, relations: ["users"] });
-    const pergunta = await this.ormRepository.findOne({ where: { id: perguntaId } });
+    await this.ormRepository.update( perguntaId, { id: perguntaId, ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, modulo: { id: moduloId } });   
+    const pergunta = await this.ormRepository.findOne({ where: { id: perguntaId }, relations: ["modulo"] });
     return pergunta;
 
   }

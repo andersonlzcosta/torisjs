@@ -22,7 +22,7 @@ class ModulosRepository implements IModulosRepository {
   public async findAll(): Promise<Modulo[]> {
 
     let modulos: Modulo[];
-    modulos = await this.ormRepository.find({ relations: ["curso"] });
+    modulos = await this.ormRepository.find({ relations: ["curso", "aulas", "perguntas"] });
     return modulos;
 
   }
