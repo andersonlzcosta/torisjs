@@ -12,6 +12,12 @@ import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
 import { UserResolver } from "@modules/users/infra/http/resolvers/user.resolver";
 import { AbrigoResolver } from "@modules/abrigos/infra/http/resolvers/abrigo.resolver";
+import { CursoResolver } from "@modules/cursos/infra/http/resolvers/curso.resolver";
+import { ModuloResolver } from "@modules/cursos/infra/http/resolvers/modulo.resolver";
+import { AulaResolver } from "@modules/cursos/infra/http/resolvers/aula.resolver";
+import { ModuloPerguntaResolver } from "@modules/cursos/infra/http/resolvers/pergunta.resolver";
+import { ForumPerguntaResolver } from "@modules/forums/infra/http/resolvers/pergunta.resolver";
+import { ForumRespostaResolver } from "@modules/forums/infra/http/resolvers/resposta.resolver";
 
 const app = express();
 
@@ -38,7 +44,16 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
 
 const apolloServer = new ApolloServer({
   schema: buildSchema({
-    resolvers: [UserResolver, AbrigoResolver],
+    resolvers: [
+      UserResolver,
+      AbrigoResolver,
+      CursoResolver,
+      ModuloResolver,
+      AulaResolver,
+      ModuloPerguntaResolver,
+      ForumPerguntaResolver,
+      ForumRespostaResolver
+    ],
     validate: false,
   }),
 });

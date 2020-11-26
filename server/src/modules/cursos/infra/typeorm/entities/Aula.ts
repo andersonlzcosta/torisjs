@@ -1,38 +1,34 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-import Abrigo from '@modules/abrigos/infra/typeorm/entities/Abrigo';
+import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 
 @ObjectType()
-@Entity('users')
-class User {
+@Entity('modulo_aulas')
+class Aula {
     @Field()
     @PrimaryGeneratedColumn()
     id!: string;
 
     @Field()
-    @Column()
-    password: string;
+    @Column({ type: "int" })
+    ordem: number;
 
     @Field()
     @Column()
     nome: string;
 
     @Field()
-    @Column({ unique: true })
-    email!: string;
+    @Column()
+    video_url: string;
 
     @Field()
     @Column()
-    idade: string;
+    duracao: string;
 
-    @Field()
-    @Column()
-    profissao: string;
-
-    @Field(() => Abrigo)
-    @ManyToOne(() => Abrigo, abrigo => abrigo.profissionais)
-    abrigo: Abrigo;
-
+    @Field(() => Modulo)
+    @ManyToOne(() => Modulo, modulo => modulo.aulas)
+    modulo: Modulo;
+    
     @Field(() => String)
     @CreateDateColumn()
     createdAt: Date;
@@ -42,4 +38,4 @@ class User {
     updatedAt: Date;
 }
 
-export default User;
+export default Aula;
