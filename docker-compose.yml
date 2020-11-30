@@ -5,9 +5,19 @@ services:
     ports:
       - 2000:2222
   front:
-    build: front/.
+    build:
+      context: ./front
+      dockerfile: front.dockerfile
     ports:
       - 3000:3000
+    volumes:
+      - ./front:/var/www/front
+  jsonserver:
+    build:
+      context: ./front
+      dockerfile: jsonserver.dockerfile
+    ports:
+      - 3333:3333
   db:
     image: 'postgres'
     environment:
