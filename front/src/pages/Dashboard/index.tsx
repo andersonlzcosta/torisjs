@@ -86,7 +86,9 @@ const Dashboard: React.FC = () => {
       const userData: IUser = responses[1].data;
       const updatedActiveNotifications = todasNotificacoes.filter(notificacao => !userData.archivedNotifications.includes(notificacao.id));
       setActiveNotifications(updatedActiveNotifications);
-      setArchivedNotifications(userData.archivedNotifications);
+      if (userData.archivedNotifications) {
+        setArchivedNotifications(userData.archivedNotifications);
+      }
       setThisUser(userData);
     });
   }, [user]);
