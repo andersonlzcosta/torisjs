@@ -5,19 +5,17 @@ services:
     ports:
       - 2000:2222
   front:
-    build:
-      context: ./front
-      dockerfile: front.dockerfile
+    build: front/.
     ports:
       - 3000:3000
     volumes:
       - ./front:/var/www/front
   jsonserver:
-    build:
-      context: ./front
-      dockerfile: jsonserver.dockerfile
+    build: jsonserver/.
     ports:
       - 3333:3333
+    volumes:
+        - ./jsonserver:/var/app/
   db:
     image: 'postgres'
     environment:
@@ -30,3 +28,5 @@ services:
       - 5432:5432
 volumes:
   db-data:
+  jsonserver:
+    driver: local
