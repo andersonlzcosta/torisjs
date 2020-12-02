@@ -5,11 +5,16 @@ services:
     ports:
       - 2000:2222
   front:
-    build: front/.
+    build:
+      context: front/.
+      args:
+        REACT_APP_API_URL: jsonserver
     ports:
       - 3000:3000
     volumes:
       - ./front:/var/www/front
+    environment: 
+      REACT_APP_API_URL: "http://localhost:3333"
   jsonserver:
     build: jsonserver/.
     ports:
