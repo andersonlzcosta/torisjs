@@ -1,0 +1,10 @@
+FROM node:13-alpine
+
+WORKDIR /var/app
+
+RUN npm install -g json-server
+
+EXPOSE 3333
+
+ENTRYPOINT ["json-server", "--port", "3333", "--host", "0.0.0.0"]
+CMD ["server.json"]

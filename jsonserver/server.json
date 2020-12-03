@@ -4,7 +4,8 @@
       "nome": "Pedro Feliciano da Silva",
       "idade": "35",
       "profissao": "Psicólogo",
-      "id": 1
+      "id": 1,
+      "archivedNotifications": []
     },
     {
       "nome": "João Carvalho Feitosa",
