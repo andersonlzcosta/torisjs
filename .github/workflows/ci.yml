@@ -3,7 +3,7 @@ on: [push]
 jobs:
   deploy:
     if: github.ref == 'refs/heads/master'
-    runs-os: [ubuntu-latest]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v1
       - name: Push to server
