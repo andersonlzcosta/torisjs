@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -11,7 +11,9 @@ import logo from '../../images/logo.svg';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import api from '../../services/api';
+
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 interface credentialsData {
   email: string;
@@ -22,7 +24,10 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
-  const handleSubmit = useCallback(async (data: credentialsData) => {
+  const { signIn } = useAuth();
+  const { addToast } = useToast();
+
+  const handleSubmit = useCallback(async (formData: credentialsData) => {
     try {
       if (!formRef.current) {
         throw new Error('formRef invalid');
@@ -33,9 +38,11 @@ const SignIn: React.FC = () => {
         password: Yup.string().required('Senha Obrigatória'),
       });
 
-      await schema.validate(data, {
+      await schema.validate(formData, {
         abortEarly: false,
       });
+
+      await signIn({ email: formData.email, password: formData.password });
 
       history.push('/dashboard');
 
@@ -48,6 +55,15 @@ const SignIn: React.FC = () => {
         formRef.current.setErrors(errors);
         return
       }
+
+      if (err instanceof Error) {
+        addToast({
+          title: err.message,
+          message: 'tente novamente',
+          type: 'error'
+        });
+      }
+
     }
   }, []);
 
