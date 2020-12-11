@@ -8,18 +8,12 @@ import TopMenu from '../../components/TopMenu';
 
 import { Container, NotificationContainer, DashboardContent, User, AbrigosList, Abrigo } from './styles';
 import { Link } from 'react-router-dom';
-import { IAbrigosData } from '../../components/AbrigoForm';
 
 import Perfil from '../../images/perfil.jpg'
 import { FiMinusCircle } from 'react-icons/fi';
 import { useToast } from '../../hooks/toast';
 
-interface IProfissionaisData {
-  id: number;
-  nome: string;
-  idade: number;
-  profissao: string;
-}
+import { gql, useQuery } from '@apollo/client';
 
 interface INotificacao {
   id: number;
@@ -35,15 +29,63 @@ interface IUser {
   archivedNotifications: number[];
 }
 
+const GET_USERS = gql`
+{
+  verUsuarios{
+    id,
+    nome,
+    email,
+    idade,
+    profissao
+  }
+}
+`;
+
+interface IProfissionaisData {
+  id: string;
+  nome: string;
+  idade: number;
+  profissao: string;
+}
+
+interface IProfissionaisQuery {
+  verUsuarios: IProfissionaisData[];
+}
+
+const GET_ABRIGOS = gql`
+{
+  verAbrigos{
+    id,
+    nome,
+    endereco
+  }
+}
+`;
+
+interface IAbrigosData {
+  id: string;
+  nome: string;
+  endereco: string;
+}
+
+interface IAbrigosQuery {
+  verAbrigos: IAbrigosData[];
+}
+
 const Dashboard: React.FC = () => {
-  const [profissionais, setProfissionais] = useState<IProfissionaisData[]>();
-  const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
   const [activeNotifications, setActiveNotifications] = useState<INotificacao[]>();
   const [archivedNotifications, setArchivedNotifications] = useState<number[]>();
   const [thisUser, setThisUser] = useState<IUser>();
 
   const { user } = useAuth();
   const { addToast } = useToast();
+
+  /// GET ALL USERS
+  const { data: profissionaisQl } = useQuery<IProfissionaisQuery>(GET_USERS);
+
+  /// GET ALL ABRIGOS
+  const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
+
 
   const handleDelete = useCallback((notificationId: number) => {
     if (activeNotifications && archivedNotifications && thisUser) {
@@ -70,35 +112,27 @@ const Dashboard: React.FC = () => {
   }, [activeNotifications, archivedNotifications, thisUser]);
 
   useEffect(() => {
-    api.get('/users?_limit=2').then(response => {
-      setProfissionais(response.data);
-    });
-
-    api.get('/abrigos?_limit=2').then(response => {
-      setAbrigos(response.data);
-    });
-
-    Promise.all([
-      api.get('/notifications'),
-      api.get(`/users/${user.id}`)
-    ]).then(responses => {
-      const todasNotificacoes: INotificacao[] = responses[0].data;
-      const userData: IUser = responses[1].data;
-      const updatedActiveNotifications = todasNotificacoes.filter(notificacao => !userData.archivedNotifications.includes(notificacao.id));
-      setActiveNotifications(updatedActiveNotifications);
-      if (userData.archivedNotifications) {
-        setArchivedNotifications(userData.archivedNotifications);
-      }
-      setThisUser(userData);
-    });
+    // Promise.all([
+    //   api.get('/notifications'),
+    //   api.get(`/users/${user.id}`)
+    // ]).then(responses => {
+    //   const todasNotificacoes: INotificacao[] = responses[0].data;
+    //   const userData: IUser = responses[1].data;
+    //   const updatedActiveNotifications = todasNotificacoes.filter(notificacao => !userData.archivedNotifications.includes(notificacao.id));
+    //   setActiveNotifications(updatedActiveNotifications);
+    //   if (userData.archivedNotifications) {
+    //     setArchivedNotifications(userData.archivedNotifications);
+    //   }
+    //   setThisUser(userData);
+    // });
   }, [user]);
 
   return (
     <Container>
       <TopMenu />
       <DashboardContent>
-        <h2>notificações recentes</h2>
 
+        {activeNotifications && <h2>notificações recentes</h2>}
         {activeNotifications && activeNotifications.map(notification => (
           <NotificationContainer key={notification.id} type={notification.type}>
             <p>{notification.message}</p>
@@ -106,9 +140,9 @@ const Dashboard: React.FC = () => {
           </NotificationContainer>
         ))}
 
-        <h2>últimos profissionais cadastrados</h2>
 
-        {profissionais && profissionais.map(profissional => (
+        {profissionaisQl && <h2>últimos profissionais cadastrados</h2>}
+        {profissionaisQl && profissionaisQl.verUsuarios.map(profissional => (
           <User key={profissional.id}>
             <Link to={`/user/${profissional.id}`}>
               <img src={Perfil} alt="foto de perfil" />
@@ -120,9 +154,10 @@ const Dashboard: React.FC = () => {
           </User>
         ))}
 
+
         <AbrigosList>
-          <h2>últimos abrigos cadastrados</h2>
-          {abrigos && abrigos.map(abrigo => (
+          {abrigosQl && <h2>últimos abrigos cadastrados</h2>}
+          {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
             <Abrigo key={abrigo.id}>
               <Link to={`/abrigo/${abrigo.id}`}>
                 <h3>{abrigo.nome}</h3>
