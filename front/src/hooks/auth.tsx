@@ -1,11 +1,10 @@
+import { gql, useMutation } from '@apollo/client';
 import React, { createContext, useCallback, useState, useContext } from 'react';
-import api from '../services/api';
 
 interface User {
   id: string;
-  name: string;
+  nome: string;
   email: string;
-  avatar_url: string;
 }
 
 interface AuthState {
@@ -18,82 +17,99 @@ interface creadentialsData {
   password: string;
 }
 
+
+interface ILoginResponse {
+  login: {
+    user: {
+      id: string;
+      nome: string;
+      email: string;
+    }
+  }
+}
+
+const LOGIN = gql`
+  mutation UserLogin($email: String!) {
+    login(email: $email) {
+      user {
+        id,
+        nome,
+        email
+      }
+    }
+  }
+`;
+
 interface AuthContextData {
   user: User;
   signIn(credentials: creadentialsData): Promise<void>;
   signOut(): void;
-  updateUser(user: User): void;
+  // updateUser(user: User): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
 
-  // const [data, setData] = useState<AuthState>(() => {
-  //   const token = localStorage.getItem('@GoBarber:token');
-  //   const user = localStorage.getItem('@GoBarber:user');
-
-  //   if (token && user) {
-  //     api.defaults.headers.authorization = `Bearer ${token}`;
-  //     return { token, user: JSON.parse(user) }
-  //   }
-
-  //   return {} as AuthState;
-  // });
+  const [userLogin] = useMutation<ILoginResponse>(LOGIN);
 
   const [data, setData] = useState<AuthState>(() => {
-    return {
-      token: "temp-token",
-      user: {
-        id: "1",
-        name: "renan",
-        email: "email",
-        avatar_url: "url"
-      }
+    const token = localStorage.getItem('@RedeAbrigo:token');
+    const user = localStorage.getItem('@RedeAbrigo:user');
+
+    if (token && user) {
+      // validar token
+      // api.defaults.headers.authorization = `Bearer ${token}`;
+      return { token, user: JSON.parse(user) }
     }
+
+    return {} as AuthState;
   });
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions', { email, password });
+    const response = await userLogin({ variables: { email } });
 
-    const { token, user } = response.data;
-
-    if (process.env.REACT_APP_API_URL && user.avatar_url.includes('undefined')) {
-      let appUrl: string = process.env.REACT_APP_API_URL;
-      user.avatar_url = user.avatar_url.replace('undefined/', appUrl);
+    if (!response.data) {
+      throw new Error('request not sent');
     }
 
-    localStorage.setItem('@GoBarber:token', token);
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    if (response.data.login.user == null) {
+      throw new Error('usuário não encontrado');
+    }
 
-    api.defaults.headers.authorization = `Bearer ${token}`;
+    /// (LINHA ABAIXO) alem do usuario tambem tem que pegar o token
+    const { user } = response.data.login;
 
-    setData({ token, user });
+    localStorage.setItem('@RedeAbrigo:user', JSON.stringify(user));
+
+    /// valida o token (PREENCHER)
+
+    setData({ token: "fasdf", user });
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@GoBarber:token');
-    localStorage.removeItem('@GoBarber:user');
+    localStorage.removeItem('@RedeAbrigo:token');
+    localStorage.removeItem('@RedeAbrigo:user');
 
     setData({} as AuthState);
   }, []);
 
-  const updateUser = useCallback((user: User) => {
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+  // const updateUser = useCallback((user: User) => {
+  //   localStorage.setItem('@GoBarber:user', JSON.stringify(user));
 
-    if (process.env.REACT_APP_API_URL && user.avatar_url.includes('undefined')) {
-      let appUrl: string = process.env.REACT_APP_API_URL;
-      user.avatar_url = user.avatar_url.replace('undefined/', appUrl);
-    }
+  //   if (process.env.REACT_APP_API_URL && user.avatar_url.includes('undefined')) {
+  //     let appUrl: string = process.env.REACT_APP_API_URL;
+  //     user.avatar_url = user.avatar_url.replace('undefined/', appUrl);
+  //   }
 
-    setData({
-      token: data.token,
-      user,
-    });
-  }, [data.token, setData]);
+  //   setData({
+  //     token: data.token,
+  //     user,
+  //   });
+  // }, [data.token, setData]);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut, updateUser }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )
