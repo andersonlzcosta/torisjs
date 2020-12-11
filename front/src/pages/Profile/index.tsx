@@ -7,7 +7,6 @@ import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
 import Arrow from '../../images/arrow.svg';
 
-
 import { Container, ButtonsContainer } from './styles';
 import ProfileForm from '../../components/ProfileForm';
 import NavbarDesktop from '../../components/NavbarDesktop';
