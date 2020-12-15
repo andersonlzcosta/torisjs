@@ -7,7 +7,6 @@ import { buildSchema } from 'type-graphql';
 import cors from 'cors';
 import AppError from '@shared/errors/AppError'
 
-import routes from './routes';
 import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
 import { UserResolver } from "@modules/users/infra/http/resolvers/user.resolver";
@@ -23,7 +22,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(routes);
 app.use(errors());
 
 app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
