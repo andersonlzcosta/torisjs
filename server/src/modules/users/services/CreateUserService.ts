@@ -1,7 +1,7 @@
-import { hash } from "bcryptjs";
-import { getCustomRepository } from "typeorm";
+import { inject, injectable } from "tsyringe";
 import User from "../infra/typeorm/entities/User";
-import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface Request {
     nome: string;
@@ -12,18 +12,26 @@ interface Request {
     abrigoId: string;
 }
 
+@injectable()
 class CreateUserService {
-    public async execute({ nome, email, idade, profissao, password, abrigoId }: Request): Promise<User | undefined> {
-        const usersRepository = getCustomRepository(UsersRepository);
+        constructor(
+            @inject('UsersRepository')
+            private usersRepository: IUsersRepository,
+        
+            @inject('HashProvider')
+            private hashProvider: IHashProvider,
+        ) { }
+    
+        public async execute({ nome, email, idade, profissao, password, abrigoId }: Request): Promise<User | undefined> {
 
-        const hashedPassword = await hash(password, 8);
+        const encryptedPassword = await this.hashProvider.generateHash(password);
 
-        const user = await usersRepository.create({
+        const user = await this.usersRepository.create({
             nome,
             email,
             idade,
             profissao,
-            password: hashedPassword,
+            password: encryptedPassword,
             abrigoId
         });
 

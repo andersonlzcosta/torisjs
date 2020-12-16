@@ -5,6 +5,7 @@ import UpdateUserService from '../../../services/UpdateUserService';
 import DeleteUserService from '../../../services/DeleteUserService';
 import UsersRepository from "../../typeorm/repositories/UsersRepository";
 import { getCustomRepository } from "typeorm";
+import { container } from "tsyringe";
 
 // Tlvz um DTO
 @InputType()
@@ -44,13 +45,15 @@ class UpdateUserInput {
     abrigoId?: string;
 }
 
-// Importar as classes de Erros do Rocket
 
 // Não identifiquei um similar desse user response
 @ObjectType()
 class UserResponse {  
     @Field(() => User, { nullable: true })
     user?: User;
+
+    // @Field(() => AppError, { nullable: true })
+    // error?: AppError;
 }
 
 @Resolver()
@@ -61,7 +64,7 @@ export class UserResolver {
         @Arg("options") options: CreateUserInput
       ): Promise<UserResponse> {
 
-        const createUser = new CreateUserService();
+        const createUser = container.resolve(CreateUserService);
         const user = await createUser.execute(options);
         return { user };
  
