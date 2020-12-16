@@ -4,12 +4,12 @@ import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface Request {
-    nome: string;
     email: string;
-    idade: string;
-    profissao: string;
     password: string;
-    abrigoId: string;
+    nome?: string;
+    idade?: string;
+    profissao?: string;
+    abrigoId?: string;
 }
 
 @injectable()
