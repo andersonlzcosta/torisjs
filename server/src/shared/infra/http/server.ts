@@ -9,12 +9,18 @@ import AppError from '@shared/errors/AppError'
 
 import { errors } from 'celebrate';
 import '@shared/infra/typeorm';
+import '@shared/container';
+
 import { UserResolver } from "@modules/users/infra/http/resolvers/user.resolver";
+import { UserSessionResolver } from '@modules/users/infra/http/resolvers/session.resolver';
+
 import { AbrigoResolver } from "@modules/abrigos/infra/http/resolvers/abrigo.resolver";
+
 import { CursoResolver } from "@modules/cursos/infra/http/resolvers/curso.resolver";
 import { ModuloResolver } from "@modules/cursos/infra/http/resolvers/modulo.resolver";
 import { AulaResolver } from "@modules/cursos/infra/http/resolvers/aula.resolver";
 import { ModuloPerguntaResolver } from "@modules/cursos/infra/http/resolvers/pergunta.resolver";
+
 import { ForumPerguntaResolver } from "@modules/forums/infra/http/resolvers/pergunta.resolver";
 import { ForumRespostaResolver } from "@modules/forums/infra/http/resolvers/resposta.resolver";
 
@@ -44,6 +50,7 @@ const apolloServer = new ApolloServer({
   schema: buildSchema({
     resolvers: [
       UserResolver,
+      UserSessionResolver,
       AbrigoResolver,
       CursoResolver,
       ModuloResolver,
@@ -54,6 +61,10 @@ const apolloServer = new ApolloServer({
     ],
     validate: false,
   }),
+  context: ({ req, res }) => ({
+    req,
+    res,
+  }),
 });
 
 apolloServer.applyMiddleware({
@@ -63,9 +74,9 @@ apolloServer.applyMiddleware({
 
 
 app.get('/', (_, response) => {
-  return response.json({ message: 'Hellowtheeere2e' });
+  return response.json({ message: 'go to /api' });
 });
 
-app.listen(process.env.PORT || 2222, () => {
-  console.log('Server started on port 2222');
+app.listen(process.env.PORT || 2000, () => {
+  console.log('Server started on port 2000');
 });
