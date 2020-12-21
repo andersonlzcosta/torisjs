@@ -50,18 +50,18 @@ const Abrigos: React.FC = () => {
     setAbrigos(response.data);
   }, []);
 
-  useEffect(() => {
-    let searchFor = query.get('search');
-    if (searchFor) {
-      api.get(`/abrigos?nome_like=${searchFor}`).then(response => {
-        setAbrigos(response.data);
-      });
-    } else {
-      api.get('/abrigos').then(response => {
-        setAbrigos(response.data);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   let searchFor = query.get('search');
+  //   if (searchFor) {
+  //     api.get(`/abrigos?nome_like=${searchFor}`).then(response => {
+  //       setAbrigos(response.data);
+  //     });
+  //   } else {
+  //     api.get('/abrigos').then(response => {
+  //       setAbrigos(response.data);
+  //     });
+  //   }
+  // }, []);
 
   return (
     <Container>

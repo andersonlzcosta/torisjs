@@ -16,6 +16,7 @@ import Popup from '../../components/Popup';
 
 import Perfil from '../../images/perfil.jpg';
 import { FiMinusCircle } from 'react-icons/fi';
+import { gql, useQuery } from '@apollo/client';
 
 interface IAbrigoUsers {
   id: number;
@@ -38,6 +39,43 @@ interface IAbrigoFormProps {
   updateAbrigoList?: () => void;
 }
 
+const GET_ABRIGO_BY_ID = gql`
+query getAbrigoById($id: String!) {
+  verAbrigo(id: $id){
+    abrigo{
+      id,
+      nome,
+      endereco,
+      classificacao,
+      capacidade,
+      faixaEtaria,
+    }
+  }
+}
+`;
+
+interface IAbrigoQuery {
+  verAbrigo: {
+    abrigo: {
+      id: string;
+      nome: string;
+      endereco: string;
+      classificacao: string;
+      capacidade: string;
+      faixaEtaria: string;
+    }
+  }
+}
+
+const UPDATE_ABRIGO = gql`
+  mutation updateAbrigo($type: String!) {
+    addTodo(type: $type) {
+      id
+      type
+    }
+  }
+`;
+
 const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
@@ -51,11 +89,15 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
   const { setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
 
+  const { data: abrigoQl } = useQuery<IAbrigoQuery>(GET_ABRIGO_BY_ID, {
+    variables: { id: id },
+  });
+
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
     try {
       setIsLoading(true);
       let response;
-      if (abrigoId) {
+      if (id) {
         response = await api.put(`/abrigos/${abrigoId}`, data);
       } else {
         const newAbrigo = {
@@ -140,15 +182,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
 
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar novo abrigo')
-
-    if (id) {
-      setAbrigoId(id);
-      api.get(`/abrigos/${id}`)
-        .then(response => {
-          setAbrigo(response.data);
-        }
-        );
-    }
+    id ? setAbrigoId(id) : id
   }, []);
 
   return (
@@ -158,7 +192,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
 
         <label>profissionais</label>
         <button className="alt" onClick={handleAddProfissional}>adicionar profissional</button>
-        {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
+        {/* {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
           <AbrigoUserContainer key={profissional.id}>
             <AbrigoUser >
               <div>
@@ -171,9 +205,9 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
               Tem certeza que deseja remover este profissional?
             </Popup>
           </AbrigoUserContainer>
-        ))}
+        ))} */}
 
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigo}>
+        <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigoQl && abrigoQl.verAbrigo.abrigo}>
           <div className="full-width">
             <label>nome</label>
             <Input name="nome" className="alt" />
