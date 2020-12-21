@@ -4,10 +4,10 @@
 // }
 
 export default interface ICreateUserDTO {
-    nome: string;
     email: string;
-    idade: string;
-    profissao: string;
     password: string;
-    abrigoId: string;
+    nome?: string;
+    idade?: string;
+    profissao?: string;
+    abrigoId?: string;
 }
