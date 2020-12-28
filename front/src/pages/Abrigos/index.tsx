@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import api from '../../services/api';
+import { gql, useQuery } from '@apollo/client';
 
 import { Container, Estatisticas, Content, AbrigosList, Abrigo } from './styles';
 
@@ -12,16 +13,32 @@ import NavbarDesktop from '../../components/NavbarDesktop';
 import Search from '../../components/Search';
 import AbrigoForm from '../../components/AbrigoForm';
 
+const GET_ABRIGOS = gql`
+{
+  verAbrigos{
+    id,
+    nome,
+    endereco
+  }
+}
+`;
+
 interface IAbrigosData {
-  id: number;
+  id: string;
   nome: string;
   endereco: string;
+}
+
+interface IAbrigosQuery {
+  verAbrigos: IAbrigosData[];
 }
 
 const Abrigos: React.FC = () => {
   const location = useLocation();
   const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
   let query = new URLSearchParams(useLocation().search);
+
+  const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
 
   const searchAbrigos = useCallback(async (query) => {
     const response = await api.get(`/abrigos?nome_like=${query}`);
@@ -51,40 +68,16 @@ const Abrigos: React.FC = () => {
       <TopMenu />
       <Tabs
         options={[
-          { text: "ver estatísticas", path: "/estatisticas" },
           { text: "ver todos", path: "/todos" },
           { text: "criar novo", path: "/novo" },
         ]}
       />
 
-      {location.pathname === '/abrigos/estatisticas' && (
-        <Estatisticas>
-          <h2>estatísticas</h2>
-          <Content>
-            <div>
-              <h3>Total</h3>
-              <p>153 usuários cadastrados</p>
-            </div>
-
-            <div>
-              <h3>Região</h3>
-              <p>Rio de Janeiro possúi mais profissionais cadastrados</p>
-            </div>
-
-            <div>
-              <h3>Enviou mais notificações</h3>
-              <p>Ricardo Daniel</p>
-            </div>
-          </Content>
-        </Estatisticas>
-      )}
-
-
       {location.pathname === '/abrigos/todos' && (
         <>
           <Search searchTitle="abrigos cadastrados" loadList={searchAbrigos} />
           <AbrigosList>
-            {abrigos && abrigos.map(abrigo => (
+            {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
               <Abrigo key={abrigo.id}>
                 <Link to={`/abrigo/${abrigo.id}`}>
                   <h3>{abrigo.nome}</h3>

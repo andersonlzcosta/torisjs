@@ -8,7 +8,7 @@ import { getCustomRepository } from "typeorm";
 
 // Preciso usar o DTO
 @InputType()
-class CriarPerguntaInput {
+class CriarModuloPerguntaInput {
     @Field()
     ordem: number;
     @Field()
@@ -30,7 +30,7 @@ class CriarPerguntaInput {
 }
 
 @InputType()
-class AtualizarPerguntaInput {
+class AtualizarModuloPerguntaInput {
     @Field()
     perguntaId: string;
     @Field()
@@ -54,17 +54,17 @@ class AtualizarPerguntaInput {
 }
 
 @ObjectType()
-class PerguntaResponse {
+class ModuloPerguntaResponse {
     @Field(() => Pergunta, { nullable: true })
     pergunta?: Pergunta;
 }
 
 @Resolver()
-export class PerguntaResolver {
-    @Mutation(() => PerguntaResponse)
-    async criarPergunta(
-        @Arg("options") options: CriarPerguntaInput
-      ): Promise<PerguntaResponse> {
+export class ModuloPerguntaResolver {
+    @Mutation(() => ModuloPerguntaResponse)
+    async criarModuloPergunta(
+        @Arg("options") options: CriarModuloPerguntaInput
+      ): Promise<ModuloPerguntaResponse> {
 
         const createPergunta = new CreatePerguntaService();
         const pergunta = await createPergunta.execute(options);
@@ -72,10 +72,10 @@ export class PerguntaResolver {
 
     }
  
-    @Query(() => PerguntaResponse)
-    async verPergunta(
+    @Query(() => ModuloPerguntaResponse)
+    async verModuloPergunta(
         @Arg("id") id: string
-    ): Promise<PerguntaResponse> {
+    ): Promise<ModuloPerguntaResponse> {
 
         const perguntasRepository = getCustomRepository(PerguntasRepository);
         const pergunta = await perguntasRepository.findById(id);
@@ -83,10 +83,10 @@ export class PerguntaResolver {
 
     }
 
-    @Mutation(() => PerguntaResponse)
-    async atualizarPergunta(
-        @Arg("options") options: AtualizarPerguntaInput
-    ): Promise<PerguntaResponse> {
+    @Mutation(() => ModuloPerguntaResponse)
+    async atualizarModuloPergunta(
+        @Arg("options") options: AtualizarModuloPerguntaInput
+    ): Promise<ModuloPerguntaResponse> {
 
         console.log(options);
         const updatePergunta = new UpdatePerguntaService();
@@ -96,7 +96,7 @@ export class PerguntaResolver {
     }
 
     @Mutation(() => Boolean)
-    async deletarPergunta(
+    async deletarModuloPergunta(
         @Arg("id") id: string
     ): Promise<boolean> {
        
@@ -106,7 +106,7 @@ export class PerguntaResolver {
     }
 
     @Query(() => [Pergunta])
-    async verPerguntas(): Promise<Pergunta[]> {
+    async verModuloPerguntas(): Promise<Pergunta[]> {
 
         const perguntasRepository = getCustomRepository(PerguntasRepository);
         const perguntas = await perguntasRepository.findAll();

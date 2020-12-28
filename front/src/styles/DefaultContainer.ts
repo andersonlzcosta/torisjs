@@ -7,6 +7,6 @@ export const DefaultContainer = css`
   justify-content: flex-start;
 
   @media(max-width: 950px){
-    padding: 100px 0;
+    padding: 180px 0;
   }
 `;

@@ -9,7 +9,6 @@ class User {
     @PrimaryGeneratedColumn()
     id!: string;
 
-    @Field()
     @Column()
     password: string;
 
