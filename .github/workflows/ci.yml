@@ -12,4 +12,9 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          script: cd ${{ secrets.PROJECT_PATH }} && touch loremipsum
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git clone https://github.com/andersonlzcosta/torisjs .
+            docker-compose build
+            docker-compose down
+            docker-compose up
