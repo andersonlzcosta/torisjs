@@ -11,5 +11,5 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: cd ${{ secrets.PROJECT_PATH }} && ls
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          script: cd ${{ secrets.PROJECT_PATH }} && touch loremipsum
