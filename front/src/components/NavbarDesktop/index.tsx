@@ -2,14 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Menu } from './styles';
 import TopMenu from '../TopMenu';
+import logo from '../../images/logo.svg';
 
 const NavbarDesktop: React.FC = () => {
   return (
     <Container>
       <TopMenu isDesktop={true} />
       <Menu>
-        <label>dashboard</label>
-        <Link to="/dashboard">dashboard</Link>
+        <img src={logo} alt="logo da rede abrigo" />
+
+        <label>início</label>
+        <Link to="/dashboard">Painel de Controle</Link>
 
         <label>abrigos</label>
         {/* <Link to="/abrigos/estatisticas">estatísticas</Link> */}
@@ -27,8 +30,8 @@ const NavbarDesktop: React.FC = () => {
         <Link to="/cursos/novo">criar novo</Link>
         <Link to="/assistir">assistir cursos</Link>
 
-        <label>fórum</label>
-        <Link to="/forum">ver todos</Link>
+        <label>Espaço de Conversa</label>
+        <Link to="/forum">ver todas as conversas</Link>
         <Link to="/pergunta/nova">criar nova pergunta</Link>
 
         <label>notificações</label>

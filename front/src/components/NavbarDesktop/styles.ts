@@ -20,10 +20,14 @@ export const Menu = styled.div`
   align-items: flex-end;
   padding-right: 5%;
 
+  img{
+    max-width: 70px;
+    margin: 20px 0 15px;
+  }
 
   label{
     text-align: right;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #fff;
     padding-right: 10px;
@@ -36,6 +40,8 @@ export const Menu = styled.div`
     text-decoration: none;
     color: #446A97;
     width: auto;
+    font-size: 14px;
+    letter-spacing: .5px;
   }
 
   a + a, label + a{
