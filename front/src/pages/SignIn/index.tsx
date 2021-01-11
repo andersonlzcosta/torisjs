@@ -7,7 +7,7 @@ import getValidationErrors from '../../utils/getValidationErrors';
 
 
 import { Container } from './styles';
-import logo from '../../images/logo.svg';
+import logo from '../../images/redeabrigo-logo-completo.png';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';

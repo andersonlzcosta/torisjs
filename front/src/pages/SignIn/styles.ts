@@ -9,7 +9,7 @@ export const Container = styled.div`
 
   img{
     margin-bottom: 20px;
-    width: 70px;
+    max-width: 100%;
   }
 
   > a{
