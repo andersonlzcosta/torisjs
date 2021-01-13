@@ -38,29 +38,13 @@ const Abrigos: React.FC = () => {
   const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
   let query = new URLSearchParams(useLocation().search);
 
-  const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
+  const { refetch } = useQuery<IAbrigosQuery>(GET_ABRIGOS, {
+    onCompleted(data) { data && setAbrigos(data.verAbrigos) }
+  });
 
   const searchAbrigos = useCallback(async (query) => {
     const response = await api.get(`/abrigos?nome_like=${query}`);
     setAbrigos(response.data);
-  }, []);
-
-  const reloadAbrigos = useCallback(async () => {
-    const response = await api.get('/abrigos');
-    setAbrigos(response.data);
-  }, []);
-
-  useEffect(() => {
-    let searchFor = query.get('search');
-    if (searchFor) {
-      api.get(`/abrigos?nome_like=${searchFor}`).then(response => {
-        setAbrigos(response.data);
-      });
-    } else {
-      api.get('/abrigos').then(response => {
-        setAbrigos(response.data);
-      });
-    }
   }, []);
 
   return (
@@ -77,7 +61,7 @@ const Abrigos: React.FC = () => {
         <>
           <Search searchTitle="abrigos cadastrados" loadList={searchAbrigos} />
           <AbrigosList>
-            {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
+            {abrigos && abrigos.map(abrigo => (
               <Abrigo key={abrigo.id}>
                 <Link to={`/abrigo/${abrigo.id}`}>
                   <h3>{abrigo.nome}</h3>
@@ -90,7 +74,7 @@ const Abrigos: React.FC = () => {
       )}
 
       {location.pathname === '/abrigos/novo' && (
-        <AbrigoForm updateAbrigoList={reloadAbrigos} />
+        <AbrigoForm updateAbrigoList={refetch} />
       )}
 
       <NavbarDesktop />
