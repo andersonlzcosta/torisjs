@@ -36,6 +36,16 @@ export const Container = styled.div<inputProps>`
   &.line-bottom input{
     border-bottom: 1px solid #0B4385;
   }
+
+  &.checkbox{
+    border: none;
+    width: 20px;
+    margin: -3px 3px 0px 0px;
+  }
+
+  &.number{
+    width: 100px;
+  }
 `;
 
 export const Error = styled(Tooltip)`

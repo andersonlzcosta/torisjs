@@ -161,10 +161,21 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
 
   const [AtualizarAbrigo] = useMutation<IAtualizarAbrigoMutation>(UPDATE_ABRIGO, {
     onCompleted(data) {
-      console.log('completed');
+      addToast({
+        title: "Abrigo atualizado!",
+        message: "você já pode visualizar o abrigo na lista",
+        type: "success"
+      });
+      updateAbrigoList && updateAbrigoList();
+      history.push('/abrigos/todos');
     },
     onError() {
       console.log('error');
+      addToast({
+        title: "Erro ao atualizar",
+        message: "não foi possível conectar com o banco de dados",
+        type: "error"
+      });
     }
   });
 
@@ -308,24 +319,91 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText, updateAbrigoL
             <Input name="nome" className="alt" />
           </div>
 
-          <div className="full-width">
+          <div className="half-width">
+            <label>Estado</label>
+            <Input name="estado" className="alt" />
+          </div>
+
+          <div className="half-width">
+            <label>Cidade</label>
+            <Input name="cidade" className="alt" />
+          </div>
+
+          <div className="half-width">
+            <label>bairro</label>
+            <Input name="bairro" className="alt" />
+          </div>
+
+          <div className="half-width">
             <label>endereço</label>
             <Input name="endereco" className="alt" />
           </div>
 
-          <div className="full-width">
-            <label>classificação</label>
-            <Input name="classificacao" className="alt" />
+          <div className="half-width">
+            <label>Telefone 1</label>
+            <Input name="telefone1" className="alt" />
           </div>
 
           <div className="half-width">
-            <label>capacidade</label>
-            <Input className="bigger alt" name="capacidade" />
+            <label>Telefone 2</label>
+            <Input name="telefone2" className="alt" />
+          </div>
+
+          <div className="half-width">
+            <label>Email 1</label>
+            <Input name="email1" className="alt" />
+          </div>
+
+          <div className="half-width">
+            <label>Email 2</label>
+            <Input name="email2" className="alt" />
+          </div>
+
+          <div className="half-width">
+            <label>classificação</label>
+            <select name="classificacao">
+              <option value="publico">Público</option>
+              <option value="privado">Privado</option>
+            </select>
+            {/* <Input name="classificacao" className="alt" /> */}
+          </div>
+
+          <div className="half-width">
+            <label>Gênero</label>
+            <select name="genero">
+              <option value="ambos">Ambos</option>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+            </select>
           </div>
 
           <div className="half-width">
             <label>faixa etária</label>
-            <Input className="bigger alt" name="faixaEtaria" />
+            <select name="faixaEtaria">
+              <option value="adulto">a partir de 18</option>
+              <option value="crianca">até 18</option>
+            </select>
+            {/* <Input className="bigger alt" name="faixaEtaria" /> */}
+          </div>
+
+          <div className="half-width">
+            <label>capacidade (entre 0 e 40)</label>
+            <Input type="number" className="bigger alt number" name="capacidade" />
+          </div>
+
+          <div className="checkbox">
+            <Input type="checkbox" className="checkbox" name="LGBTQI" />
+            <label>aceita população LGBTQI+</label>
+          </div>
+
+          <div className="checkbox">
+            <Input type="checkbox" className="checkbox" name="deficientes" />
+            <label>Exclusivamente para crianças e adolescentes com deficiência</label>
+          </div>
+
+          <div className="full-width">
+            <label>Observações Gerais</label>
+            <textarea className="alt" name="observacoes"></textarea>
           </div>
 
           <Button type="submit" loading={isLoading}>salvar</Button>
