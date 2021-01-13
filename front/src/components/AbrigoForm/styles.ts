@@ -81,8 +81,32 @@ export const Content = styled.div`
       width: 49%;
     }
 
+    > div.checkbox{
+      width: 100%;
+      flex-direction: row;
+    }
+
     label{
       margin: 0;
+    }
+
+    select{
+      font-size: 16px;
+      border-radius: 20px;
+      padding: 2px 10px;
+      outline: none;
+      margin: 3px 0 0 -5px;
+      border-width: 2px;
+    }
+
+    textarea{
+      width: 100%;
+      border-radius: 10px;
+      min-height: 150px;
+      border-color: #002F67;
+      margin: 5px 0 0 -5px;
+      outline: none;
+      padding: 15px;
     }
 
     .bigger{
