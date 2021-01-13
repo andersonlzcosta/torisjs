@@ -89,17 +89,49 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updatePro
         <Form ref={formRef} onSubmit={handleSubmit} initialData={user}>
           <div className="full-width">
             <label>nome</label>
-            <Input name="nome" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input name="nome" className="alt" />
           </div>
 
           <div className="half-width">
-            <label>idade</label>
-            <Input className="bigger" name="idade" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <label>data de nascimento</label>
+            <Input className="alt" name="idade" />
           </div>
 
           <div className="half-width">
             <label>profissão</label>
-            <Input className="bigger" name="profissao" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
+            <Input className="alt" name="profissao" />
+          </div>
+
+          <div className="half-width">
+            <label>email</label>
+            <Input className="alt" name="email" />
+          </div>
+
+          <div className="half-width">
+            <label>email 2</label>
+            <Input className="alt" name="email2" />
+          </div>
+
+          <div className="half-width">
+            <label>telefone</label>
+            <Input className="alt" name="telefone" />
+          </div>
+
+          <div className="half-width">
+            <label>telefone 2</label>
+            <Input className="alt" name="telefone2" />
+          </div>
+
+          <div className="half-width">
+            <label>Cargo na instituição</label>
+            <select name="cargo">
+              <option value="diretor">Diretor</option>
+              <option value="assessor">Assessor da Direção</option>
+              <option value="assistente-social">Assistente Social</option>
+              <option value="psicologo">Psicólogo</option>
+              <option value="pedagogo">Pedagogo</option>
+              <option value="educador">Educador Social</option>
+            </select>
           </div>
 
           {!hookAbrigo.id && (

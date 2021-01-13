@@ -60,6 +60,15 @@ export const Content = styled.div`
       font-size: 13px;
     }
 
+    select{
+      font-size: 16px;
+      border-radius: 20px;
+      padding: 2px 10px;
+      outline: none;
+      margin: 3px 0 0 -5px;
+      border-width: 2px;
+    }
+
     .bigger{
       font-weight: 300;
       font-size: 27px;
