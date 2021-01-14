@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import { gql, useQuery } from '@apollo/client';
 import { Container, Content, Estatisticas, UserList, User, Warning } from './styles';
 import { useAbrigo } from '../../hooks/AbrigoHook';
 import { IAbrigosData } from '../../components/AbrigoForm';
@@ -23,6 +24,22 @@ interface IProfissionaisData {
   profissao: string;
 }
 
+const GET_USERS = gql`
+{
+  verUsuarios{
+    id,
+    nome,
+    email,
+    idade,
+    profissao
+  }
+}
+`;
+
+interface IProfissionaisQuery {
+  verUsuarios: IProfissionaisData[];
+}
+
 const Profissionais: React.FC = () => {
   const [profissionais, setProfissionais] = useState<IProfissionaisData[]>();
   const location = useLocation();
@@ -30,6 +47,8 @@ const Profissionais: React.FC = () => {
   let query = new URLSearchParams(useLocation().search);
   const { hookAbrigo, setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
+
+  const { data: profissionaisQl } = useQuery<IProfissionaisQuery>(GET_USERS);
 
   const searchProfissionais = useCallback(async (query) => {
     const response = await api.get(`/users?nome_like=${query}`);
@@ -65,16 +84,16 @@ const Profissionais: React.FC = () => {
   }
 
   useEffect(() => {
-    let searchFor = query.get('search');
-    if (searchFor) {
-      api.get(`/users?nome_like=${searchFor}`).then(response => {
-        setProfissionais(response.data);
-      });
-    } else {
-      api.get('/users').then(response => {
-        setProfissionais(response.data);
-      });
-    }
+    // let searchFor = query.get('search');
+    // if (searchFor) {
+    //   api.get(`/users?nome_like=${searchFor}`).then(response => {
+    //     setProfissionais(response.data);
+    //   });
+    // } else {
+    //   api.get('/users').then(response => {
+    //     setProfissionais(response.data);
+    //   });
+    // }
   }, []);
 
   return (
@@ -120,7 +139,7 @@ const Profissionais: React.FC = () => {
           )}
           <Search searchTitle="usuários cadastrados" loadList={searchProfissionais} />
           <UserList>
-            {profissionais && profissionais.map(profissional => (
+            {profissionaisQl && profissionaisQl.verUsuarios.map(profissional => (
 
               <User key={profissional.id}>
                 <Link to={`/user/${profissional.id}`}>

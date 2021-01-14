@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../services/api';
+import { gql, useQuery } from '@apollo/client';
 
 import TopMenu from '../../components/TopMenu';
 import Navbar from '../../components/Navbar';
@@ -7,15 +8,15 @@ import NavbarDesktop from '../../components/NavbarDesktop';
 import Search from '../../components/Search';
 
 import { Container, Content, PerguntasList, Pergunta, Status, Filter, FilterDataOverlay, ActiveCategoriesList, Category } from './styles';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FiMinusCircle } from 'react-icons/fi';
 
 interface IPerguntaData {
   id: number;
-  title: string;
+  titulo: string;
   nomeUsuario: string;
-  data: string;
-  isResolved: boolean;
+  createdAt: string;
+  foiResolvido: boolean;
 }
 
 interface IForumCategory {
@@ -24,10 +25,39 @@ interface IForumCategory {
   selected: boolean;
 }
 
+const GET_FORUM_PERGUNTAS = gql`
+query{
+  verForumPerguntas{
+    id,
+    titulo,
+    foiResolvido,
+    createdAt
+  }
+}`;
+
+interface IPerguntasQuery {
+  verForumPerguntas: IPerguntaData[];
+}
+
 const Forum: React.FC = () => {
   const [perguntas, setPerguntas] = useState<IPerguntaData[]>();
   const [categories, setCategories] = useState<IForumCategory[]>();
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  let query = useLocation().search;
+
+  const { refetch } = useQuery<IPerguntasQuery>(GET_FORUM_PERGUNTAS, {
+    onCompleted(data) {
+      let updatedPerguntas: IPerguntaData[] = [];
+      data.verForumPerguntas.forEach(pergunta => {
+        const date = new Date(Number(pergunta.createdAt));
+        updatedPerguntas.push({
+          ...pergunta,
+          createdAt: `${date.getDate()}/${date.getMonth() + 1}`
+        });
+      });
+      setPerguntas(updatedPerguntas);
+    }
+  });
 
   const searchPerguntas = useCallback(async (query) => {
     const response = await api.get(`/perguntas?title_like=${query}`);
@@ -46,20 +76,23 @@ const Forum: React.FC = () => {
   }
 
   useEffect(() => {
-    api.get('/perguntas?_limit=10').then(response => {
-      setPerguntas(response.data);
-    });
+    // api.get('/perguntas?_limit=10').then(response => {
+    //   setPerguntas(response.data);
+    // });
 
-    api.get('/categories').then(response => {
-      let updatedCategoryList: IForumCategory[] = response.data;
+    // api.get('/categories').then(response => {
+    //   let updatedCategoryList: IForumCategory[] = response.data;
 
-      updatedCategoryList.forEach(element => {
-        element.selected = false;
-      });
+    //   updatedCategoryList.forEach(element => {
+    //     element.selected = false;
+    //   });
 
-      setCategories(updatedCategoryList);
-    });
-  }, []);
+    //   setCategories(updatedCategoryList);
+    // });
+    if (query === '?refetch') {
+      refetch();
+    }
+  }, [query]);
 
   return (
     <Container>
@@ -93,11 +126,11 @@ const Forum: React.FC = () => {
           {perguntas && perguntas.map(pergunta => (
             <Pergunta key={pergunta.id}>
               <Link to={`/pergunta/${pergunta.id}`}>
-                <h3>{pergunta.title}</h3>
+                <h3>{pergunta.titulo}</h3>
                 <p>por {pergunta.nomeUsuario}</p>
               </Link>
-              <span>{pergunta.data}</span>
-              <Status isResolved={!!pergunta.isResolved} />
+              <span>{pergunta.createdAt}</span>
+              <Status isResolved={!!pergunta.foiResolvido} />
             </Pergunta>
           ))}
         </PerguntasList>
