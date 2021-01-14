@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import api from '../../services/api';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { useToast } from '../../hooks/toast';
 
 import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
@@ -28,13 +30,57 @@ interface IRespostas {
 
 interface IPerguntaData {
   id: number;
-  title: string;
-  body: string;
+  titulo: string;
+  corpo: string;
   nomeUsuario: string;
-  data: string;
-  isResolved: boolean;
+  createdAt: string;
+  foiResolvido: boolean;
   respostas: IRespostas[];
 }
+
+interface IVerPerguntaQuery {
+  verForumPergunta: {
+    pergunta: IPerguntaData;
+  };
+}
+
+const GET_PERGUNTA_BY_ID = gql`
+query getPerguntaById($id: String!){
+  verForumPergunta(id: $id){
+    pergunta{
+      id,
+      titulo,
+      corpo,
+      foiResolvido,
+      createdAt,
+      respostas{
+        id,
+        corpo,
+        createdAt
+      }
+    }
+  }
+}`;
+
+const DELETE_PERGUNTA_BY_ID = gql`
+mutation deletarPerguntaById($id: String!){
+  deletarForumPergunta(id: $id)
+}`;
+
+const CREATE_PERGUNTA = gql`
+mutation createPergunta($titulo: String!, $corpo: String!){
+  criarForumPergunta(options:{
+    titulo: $titulo
+    corpo: $corpo
+    foiResolvido: false
+  }){
+    pergunta{
+      id,
+      titulo,
+      corpo
+    }
+  }
+}`;
 
 const Pergunta: React.FC = () => {
   const { id } = useParams<IRouteParams>();
@@ -45,6 +91,56 @@ const Pergunta: React.FC = () => {
   const [isPerguntaPopupOpen, setIsPerguntaPopupOpen] = useState(false);
 
   const history = useHistory();
+  const { addToast } = useToast();
+
+  useQuery<IVerPerguntaQuery>(GET_PERGUNTA_BY_ID, {
+    variables: { id: id },
+    onCompleted(data) {
+      if (data) {
+        const date = new Date(Number(data.verForumPergunta.pergunta.createdAt));
+        setPergunta({
+          ...data.verForumPergunta.pergunta,
+          createdAt: `${date.getDate()}/${date.getMonth() + 1}`
+        });
+      }
+    }, onError() {
+      setNovaPergunta(true);
+    }
+  });
+
+  const [deletarPerguntaById] = useMutation(DELETE_PERGUNTA_BY_ID, {
+    onCompleted() {
+      addToast({
+        title: "Pergunta deletada!",
+        type: "success"
+      });
+      history.push('/forum?refetch');
+    },
+    onError() {
+      addToast({
+        title: "Erro ao deletar",
+        message: "não foi possível conectar com o banco de dados",
+        type: "error"
+      });
+    }
+  });
+
+  const [createPergunta] = useMutation(CREATE_PERGUNTA, {
+    onCompleted() {
+      addToast({
+        title: "Pergunta criada com sucesso!",
+        type: "success"
+      });
+      history.push('/forum?refetch');
+    },
+    onError() {
+      addToast({
+        title: "Erro ao criar a pergunta",
+        message: "não foi possível conectar com o banco de dados",
+        type: "error"
+      });
+    }
+  });
 
   const handleSubmitResposta = useCallback((data, { reset }) => {
     console.log(pergunta);
@@ -90,35 +186,32 @@ const Pergunta: React.FC = () => {
   }
 
   const handleSubmitPergunta = useCallback((data, { reset }) => {
-    const novaPergunta: IPerguntaData = {
-      id: Math.floor(Math.random() * Math.floor(1000)),
-      body: data.pergunta,
-      data: '13/10/2020',
-      isResolved: false,
-      nomeUsuario: 'Renan',
-      title: data.title,
-      respostas: []
-    }
-    api.post('/perguntas', novaPergunta);
-    history.push('/forum');
-    // setPergunta(novaPergunta);
-    // setNovaPergunta(false);
+    createPergunta({
+      variables: {
+        titulo: data.title,
+        corpo: data.pergunta
+      }
+    });
     reset();
+    history.push('/forum?refetch');
   }, []);
 
   const handleDeletePergunta = (perguntaId: number) => {
-    api.delete(`/perguntas/${perguntaId}`);
-    history.push('/forum');
+    deletarPerguntaById({
+      variables: {
+        id: perguntaId
+      }
+    });
   }
 
   useEffect(() => {
-    if (id === 'nova') {
-      setNovaPergunta(true);
-    } else if (id) {
-      api.get(`/perguntas/${id}`).then(response => {
-        setPergunta(response.data);
-      });
-    }
+    // if (id === 'nova') {
+    //   setNovaPergunta(true);
+    // } else if (id) {
+    //   api.get(`/perguntas/${id}`).then(response => {
+    //     setPergunta(response.data);
+    //   });
+    // }
   }, []);
 
   return (
@@ -140,10 +233,10 @@ const Pergunta: React.FC = () => {
       {pergunta && (
         <ContentContainer>
           <PerguntaContainer>
-            <h2>{pergunta.title}</h2>
-            <h3>por {pergunta.nomeUsuario} no dia {pergunta.data}</h3>
+            <h2>{pergunta.titulo}</h2>
+            <h3>por {pergunta.nomeUsuario} no dia {pergunta.createdAt}</h3>
             <Content>
-              {pergunta.body}
+              {pergunta.corpo}
             </Content>
 
             <button className="delete" onClick={() => setIsPerguntaPopupOpen(true)}>deletar pergunta<FiMinusCircle size={18} /></button>
