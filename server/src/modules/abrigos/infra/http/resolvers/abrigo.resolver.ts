@@ -12,29 +12,71 @@ class CriarAbrigoInput {
     @Field()
     nome: string;
     @Field()
+    telefone1: string;
+    @Field()
+    telefone2: string;
+    @Field()
+    email1: string;
+    @Field()
+    email2: string;
+    @Field()
     endereco: string;
+    @Field()
+    bairro: string;
+    @Field()
+    cidade: string;
+    @Field()
+    estado: string;
     @Field()
     classificacao: string;
     @Field()
     capacidade: string;
     @Field()
     faixaEtaria: string;
+    @Field()
+    lgbt: boolean;
+    @Field()
+    genero: string;
+    @Field()
+    pcd: boolean;
+    @Field()
+    observacao: string;
 }
 
 @InputType()
 class AtualizarAbrigoInput {
     @Field()
-    abrigoId: string;
-    @Field()
     nome?: string;
     @Field()
+    telefone1?: string;
+    @Field()
+    telefone2?: string;
+    @Field()
+    email1?: string;
+    @Field()
+    email2?: string;
+    @Field()
     endereco?: string;
+    @Field()
+    bairro?: string;
+    @Field()
+    cidade?: string;
+    @Field()
+    estado?: string;
     @Field()
     classificacao?: string;
     @Field()
     capacidade?: string;
     @Field()
     faixaEtaria?: string;
+    @Field()
+    lgbt?: boolean;
+    @Field()
+    genero?: string;
+    @Field()
+    pcd?: boolean;
+    @Field()
+    observacao?: string;
 }
 
 
