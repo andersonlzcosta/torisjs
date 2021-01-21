@@ -14,6 +14,8 @@ class CriarAulaInput {
     @Field()
     nome: string;
     @Field()
+    descricao: string;
+    @Field()
     video_url: string;
     @Field()
     duracao: string;
@@ -29,6 +31,8 @@ class AtualizarAulaInput {
     ordem?: number;
     @Field()
     nome?: string;
+    @Field()
+    descricao: string;
     @Field()
     video_url?: string;
     @Field()
