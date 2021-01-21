@@ -44,7 +44,7 @@ class AbrigosRepository implements IAbrigosRepository {
   public async update(abrigoId: string, { nome, endereco, classificacao, capacidade, faixaEtaria }: IUpdateAbrigoDTO): Promise<Abrigo | undefined> {
 
     await this.ormRepository.update( abrigoId, { id: abrigoId, nome, endereco, classificacao, capacidade, faixaEtaria });   
-    const abrigo = await this.ormRepository.findOne({ where: { id: abrigoId }, relations: ["users"] });
+    const abrigo = await this.ormRepository.findOne({ where: { id: abrigoId }, relations: ["profissionais"] });
     return abrigo;
 
   }

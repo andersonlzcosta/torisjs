@@ -7,12 +7,12 @@ export class CreateUserInput {
     email: string;
     @Field()
     password: string;
-    @Field()
+    @Field({ nullable: true })
     nome?: string;
-    @Field()
+    @Field({ nullable: true })
     idade?: string;
-    @Field()
+    @Field({ nullable: true })
     profissao?: string;
-    @Field()
+    @Field({ nullable: true })
     abrigoId?: string;
 }
