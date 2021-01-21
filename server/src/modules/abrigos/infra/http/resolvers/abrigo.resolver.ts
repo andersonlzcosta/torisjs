@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "ty
 import Abrigo from '../../typeorm/entities/Abrigo';
 import CreateAbrigoService from '../../../services/CreateAbrigoService';
 import UpdateAbrigoService from '../../../services/UpdateAbrigoService';
+import DeleteAbrigoService from "@modules/abrigos/services/DeleteAbrigoService";
 import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
 import { getCustomRepository } from "typeorm";
 
@@ -89,6 +90,16 @@ export class AbrigoResolver {
         const abrigo = await updateAbrigo.execute(options);
         return { abrigo };
 
+    }
+
+    @Mutation(() => Boolean)
+    async deletarAbrigo(
+        @Arg("id") id: string
+    ): Promise<boolean> {
+       
+        const deleteAbrigo = new DeleteAbrigoService();
+        await deleteAbrigo.execute( { id } );
+        return true;
     }
  
     @Query(() => [Abrigo])

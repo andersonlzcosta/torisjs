@@ -48,6 +48,13 @@ class AbrigosRepository implements IAbrigosRepository {
     return abrigo;
 
   }
+
+  public async delete(id: string): Promise<boolean> {
+
+    await this.ormRepository.delete( id );
+    return true;
+
+  }
 }
 
 export default AbrigosRepository;
