@@ -21,8 +21,24 @@ class User {
     email!: string;
 
     @Field({ nullable: true })
+    @Column({ unique: true, nullable: true })
+    emailAlternativo?: string;
+
+    @Field({ nullable: true })
     @Column({ nullable: true })
-    idade?: string;
+    nascimento?: Date;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    cargo?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    telefone1?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    telefone2?: string;
 
     @Field({ nullable: true })
     @Column({ nullable: true })

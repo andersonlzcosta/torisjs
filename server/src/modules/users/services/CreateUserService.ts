@@ -7,7 +7,11 @@ interface Request {
     email: string;
     password: string;
     nome?: string;
-    idade?: string;
+    emailAlternativo?: string;
+    nascimento?: Date;
+    cargo?: string;
+    telefone1?: string;
+    telefone2?: string;
     profissao?: string;
     abrigoId?: string;
 }
@@ -22,14 +26,18 @@ class CreateUserService {
             private hashProvider: IHashProvider,
         ) { }
     
-        public async execute({ nome, email, idade, profissao, password, abrigoId }: Request): Promise<User | undefined> {
+        public async execute({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: Request): Promise<User | undefined> {
 
         const encryptedPassword = await this.hashProvider.generateHash(password);
 
         const user = await this.usersRepository.create({
             nome,
             email,
-            idade,
+            emailAlternativo,
+            nascimento,
+            cargo,
+            telefone1,
+            telefone2,
             profissao,
             password: encryptedPassword,
             abrigoId
