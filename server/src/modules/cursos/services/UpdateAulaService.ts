@@ -6,13 +6,14 @@ interface Request {
     aulaId: string;
     ordem?: number;
     nome?: string;
+    descricao?: string;
     video_url?: string;
     duracao?: string;
     moduloId?: string;
 }
 
 class UpdateAulaService {
-    public async execute({ aulaId, ordem, nome, video_url, duracao, moduloId }: Request): Promise<Aula | undefined> {
+    public async execute({ aulaId, ordem, nome, descricao, video_url, duracao, moduloId }: Request): Promise<Aula | undefined> {
 
         const aulasRepository = getCustomRepository(AulasRepository);
         return aulasRepository.update( 
@@ -20,6 +21,7 @@ class UpdateAulaService {
             { 
                 ordem,
                 nome,
+                descricao,
                 video_url,
                 duracao,
                 moduloId

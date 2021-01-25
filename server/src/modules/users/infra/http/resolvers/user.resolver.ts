@@ -66,6 +66,17 @@ export class UserResolver {
         return true;
     }
  
+    @Query(() => UserResponse)
+    async verUsuario(
+        @Arg("id") id: string
+    ): Promise<UserResponse> {
+
+        const usersRepository = getCustomRepository(UsersRepository);
+        const user = await usersRepository.findById(id);
+        return { user };
+        
+    }
+ 
     @Query(() => [User])
     async verUsuarios(): Promise<User[]> {
 

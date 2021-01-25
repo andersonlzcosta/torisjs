@@ -17,20 +17,64 @@ class Abrigo {
     nome: string;
 
     @Field()
-    @Column({ unique: true })
+    @Column({ unique: true, nullable: true })
+    telefone1: string;
+
+    @Field()
+    @Column({ unique: true, nullable: true })
+    telefone2: string;
+
+    @Field()
+    @Column({ unique: true, nullable: true })
+    email1: string;
+
+    @Field()
+    @Column({ unique: true, nullable: true })
+    email2: string;
+
+    @Field()
+    @Column({ nullable: true })
     endereco: string;
 
     @Field()
-    @Column()
+    @Column({ nullable: true })
+    bairro: string;
+
+    @Field()
+    @Column({ nullable: true })
+    cidade: string;
+
+    @Field()
+    @Column({ nullable: true })
+    estado: string;
+
+    @Field()
+    @Column({ nullable: true })
     classificacao: string;
 
     @Field()
-    @Column()
+    @Column({ nullable: true })
     capacidade: string;
 
     @Field()
-    @Column()
+    @Column({ nullable: true })
     faixaEtaria: string;
+
+    @Field()
+    @Column({ nullable: true })
+    lgbt: boolean;
+
+    @Field()
+    @Column({ nullable: true })
+    genero: string;
+
+    @Field()
+    @Column({ nullable: true })
+    pcd: boolean;
+
+    @Field()
+    @Column({ nullable: true })
+    observacao: string;
 
     @Field(() => [User])
     @OneToMany(() => User, user => user.abrigo)

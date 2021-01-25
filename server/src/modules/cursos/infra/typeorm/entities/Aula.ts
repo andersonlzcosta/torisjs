@@ -19,6 +19,10 @@ class Aula {
 
     @Field()
     @Column()
+    descricao: string;
+
+    @Field()
+    @Column()
     video_url: string;
 
     @Field()

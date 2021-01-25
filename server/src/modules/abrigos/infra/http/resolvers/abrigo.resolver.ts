@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "ty
 import Abrigo from '../../typeorm/entities/Abrigo';
 import CreateAbrigoService from '../../../services/CreateAbrigoService';
 import UpdateAbrigoService from '../../../services/UpdateAbrigoService';
+import DeleteAbrigoService from "@modules/abrigos/services/DeleteAbrigoService";
 import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
 import { getCustomRepository } from "typeorm";
 
@@ -11,29 +12,71 @@ class CriarAbrigoInput {
     @Field()
     nome: string;
     @Field()
+    telefone1: string;
+    @Field()
+    telefone2: string;
+    @Field()
+    email1: string;
+    @Field()
+    email2: string;
+    @Field()
     endereco: string;
+    @Field()
+    bairro: string;
+    @Field()
+    cidade: string;
+    @Field()
+    estado: string;
     @Field()
     classificacao: string;
     @Field()
     capacidade: string;
     @Field()
     faixaEtaria: string;
+    @Field()
+    lgbt: boolean;
+    @Field()
+    genero: string;
+    @Field()
+    pcd: boolean;
+    @Field()
+    observacao: string;
 }
 
 @InputType()
 class AtualizarAbrigoInput {
     @Field()
-    abrigoId: string;
-    @Field()
     nome?: string;
     @Field()
+    telefone1?: string;
+    @Field()
+    telefone2?: string;
+    @Field()
+    email1?: string;
+    @Field()
+    email2?: string;
+    @Field()
     endereco?: string;
+    @Field()
+    bairro?: string;
+    @Field()
+    cidade?: string;
+    @Field()
+    estado?: string;
     @Field()
     classificacao?: string;
     @Field()
     capacidade?: string;
     @Field()
     faixaEtaria?: string;
+    @Field()
+    lgbt?: boolean;
+    @Field()
+    genero?: string;
+    @Field()
+    pcd?: boolean;
+    @Field()
+    observacao?: string;
 }
 
 
@@ -89,6 +132,16 @@ export class AbrigoResolver {
         const abrigo = await updateAbrigo.execute(options);
         return { abrigo };
 
+    }
+
+    @Mutation(() => Boolean)
+    async deletarAbrigo(
+        @Arg("id") id: string
+    ): Promise<boolean> {
+       
+        const deleteAbrigo = new DeleteAbrigoService();
+        await deleteAbrigo.execute( { id } );
+        return true;
     }
  
     @Query(() => [Abrigo])

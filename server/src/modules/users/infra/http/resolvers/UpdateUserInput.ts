@@ -4,18 +4,26 @@ import { InputType, Field } from "type-graphql";
 export class UpdateUserInput {
     @Field()
     userId: string;
-    @Field()
+    @Field({ nullable: true })
     old_password?: string;
-    @Field()
+    @Field({ nullable: true })
     password?: string;
-    @Field()
+    @Field({ nullable: true })
     nome?: string;
-    @Field()
-    idade?: string;
-    @Field()
+    @Field({ nullable: true })
+    emailAlternativo?: string;
+    @Field({ nullable: true })
+    nascimento?: Date;
+    @Field({ nullable: true })
+    cargo?: string;
+    @Field({ nullable: true })
+    telefone1?: string;
+    @Field({ nullable: true })
+    telefone2?: string;
+    @Field({ nullable: true })
     profissao?: string;
-    @Field()
+    @Field({ nullable: true })
     email?: string;
-    @Field()
+    @Field({ nullable: true })
     abrigoId?: string;
 }

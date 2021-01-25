@@ -12,25 +12,41 @@ class User {
     @Column()
     password: string;
 
-    @Field()
-    @Column()
-    nome: string;
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    nome?: string;
 
     @Field()
     @Column({ unique: true })
     email!: string;
 
-    @Field()
-    @Column()
-    idade: string;
+    @Field({ nullable: true })
+    @Column({ unique: true, nullable: true })
+    emailAlternativo?: string;
 
-    @Field()
-    @Column()
-    profissao: string;
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    nascimento?: Date;
 
-    @Field(() => Abrigo)
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    cargo?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    telefone1?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    telefone2?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    profissao?: string;
+
+    @Field(() => Abrigo, { nullable: true })
     @ManyToOne(() => Abrigo, abrigo => abrigo.profissionais)
-    abrigo: Abrigo;
+    abrigo?: Abrigo;
 
     @Field(() => String)
     @CreateDateColumn()

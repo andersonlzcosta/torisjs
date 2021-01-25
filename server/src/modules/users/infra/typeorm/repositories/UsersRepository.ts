@@ -35,9 +35,9 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async create({ nome, email, idade, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
+  public async create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
 
-    const newUser = this.ormRepository.create({ nome, email, idade, profissao, password, abrigo: { id: abrigoId } });
+    const newUser = this.ormRepository.create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
     await this.ormRepository.save(newUser);
     const user = await this.ormRepository.findOne({ where: { email }, relations: ["abrigo"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
     return user;
@@ -50,9 +50,9 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async update(userId: string, { nome, email, idade, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
+  public async update(userId: string, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
 
-    await this.ormRepository.update( userId, { id: userId, nome, email, idade, profissao, password, abrigo: { id: abrigoId } });   
+    await this.ormRepository.update( userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });   
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo"] });
     return user;
 
