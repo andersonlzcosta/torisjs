@@ -1,6 +1,6 @@
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import User from '../entities/User';
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import { EntityRepository, getRepository, Like, Repository } from 'typeorm';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 // import AbrigosRepository from '@modules/abrigos/infra/typeorm/repositories/AbrigosRepository';
@@ -32,6 +32,13 @@ class UsersRepository implements IUsersRepository {
     
     const user = await this.ormRepository.findOne({ where: { email: email }, relations: ["abrigo"]});
     return user;
+
+  }
+
+  public async findByName(nome: string): Promise<User[]> {
+    
+    const users = await this.ormRepository.find({  where: `"nome" ILIKE '%${nome}%'` });
+    return users;
 
   }
 

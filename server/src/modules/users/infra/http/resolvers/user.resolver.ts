@@ -78,6 +78,17 @@ export class UserResolver {
     }
  
     @Query(() => [User])
+    async procurarUsuarios(
+        @Arg("nome") nome: string
+    ): Promise<User[]> {
+
+        const usersRepository = getCustomRepository(UsersRepository);
+        const users = await usersRepository.findByName(nome);
+        return users;
+        
+    }
+ 
+    @Query(() => [User])
     async verUsuarios(): Promise<User[]> {
 
         const usersRepository = getCustomRepository(UsersRepository);
