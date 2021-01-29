@@ -27,6 +27,13 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
+  public async findByName(nome: string): Promise<Abrigo[]> {
+
+    const abrigos = await this.ormRepository.find({  where: `"nome" ILIKE '%${nome}%'` });
+    return abrigos;
+
+  }
+
   public async create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: ICreateAbrigoDTO): Promise<Abrigo> {
 
     const abrigo = this.ormRepository.create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });

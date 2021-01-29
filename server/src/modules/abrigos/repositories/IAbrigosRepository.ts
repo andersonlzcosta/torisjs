@@ -5,6 +5,7 @@ import IUpdateAbrigoDTO from '../dtos/IUpdateAbrigoDTO';
 export default interface IAbrigosRepository {
     findById(id: string): Promise<Abrigo | undefined>;
     findAll(): Promise<Abrigo[]>;
+    findByName(nome: string): Promise<Abrigo[]>;
     create(data: ICreateAbrigoDTO): Promise<Abrigo>;
     save(abrigo: Abrigo): Promise<Abrigo>;
     update(abrigoId: string, data: IUpdateAbrigoDTO): Promise<Abrigo | undefined>;
