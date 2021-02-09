@@ -24,7 +24,7 @@ import { GET_ABRIGO_BY_ID, CRIAR_ABRIGO, DELETAR_ABRIGO, UPDATE_ABRIGO } from '.
 import { GET_ABRIGOS } from '../../pages/Abrigos/apolloQueries';
 
 interface IAbrigoUsers {
-  id: number;
+  id: string;
   nome: string;
 }
 
@@ -85,13 +85,13 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
 
   useQuery<IVerAbrigoQuery>(GET_ABRIGO_BY_ID, {
     variables: { id: id },
-    onCompleted(data) { setAbrigo(data.verAbrigo.abrigo) }
+    onCompleted(data) {
+      setAbrigo(data.verAbrigo.abrigo);
+    }
   });
 
   const [AtualizarAbrigo] = useMutation<IAtualizarAbrigoMutation>(UPDATE_ABRIGO, {
-    refetchQueries: [{
-      query: GET_ABRIGOS
-    }],
+    refetchQueries: [{ query: GET_ABRIGOS }],
     onCompleted() {
       addToast({
         title: "Abrigo atualizado!",
@@ -100,7 +100,8 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       });
       history.push('/abrigos/todos');
     },
-    onError() {
+    onError(err) {
+      console.log(err);
       addToast({
         title: "Erro ao atualizar",
         message: "Tente novamente",
@@ -110,9 +111,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   });
 
   const [DeletarAbrigo] = useMutation(DELETAR_ABRIGO, {
-    refetchQueries: [{
-      query: GET_ABRIGOS
-    }],
+    refetchQueries: [{ query: GET_ABRIGOS }],
     onCompleted() {
       addToast({
         title: "Abrigo deletado!",
@@ -129,27 +128,29 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     }
   });
 
-  const [CriarAbrigo, data] = useMutation(CRIAR_ABRIGO, {
-    onCompleted(data) {
-      console.log(data);
-      if (data) {
-        addToast({
-          type: 'success',
-          title: 'Abrigo Criado!',
-          message: 'este abrigo já está visível na lista.',
-        });
-        history.push('/abrigos/todos');
-      }
+  const [CriarAbrigo] = useMutation(CRIAR_ABRIGO, {
+    refetchQueries: [{ query: GET_ABRIGOS }],
+    onCompleted() {
+      addToast({
+        type: 'success',
+        title: 'Abrigo Criado!',
+        message: 'este abrigo já está visível na lista.',
+      });
+      history.push('/abrigos/todos');
     },
-    onError(data) {
-      console.log('error');
+    onError() {
+      addToast({
+        type: 'error',
+        title: 'Ocorreu um erro ao criar o abrigo',
+      });
     }
   });
 
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
+    // ESTá ACEITANDO USAR TUDO COMO STRING
+    // TODOS OS CAMPOS SAO OBRIGATORIOS
     try {
       setIsLoading(true);
-      console.log(data);
       if (abrigo) {
         console.log("update");
         AtualizarAbrigo({
@@ -177,25 +178,24 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         console.log('create');
         CriarAbrigo({
           variables: {
-            nome: "data.nome",
-            tel1: "data.telefone1",
-            tel2: "data.telefone2",
-            email1: "data.email1",
-            email2: "data.email2",
-            endereco: "data.endereco",
-            bairro: "data.bairro",
-            cidade: "data.cidade",
-            estado: "data.estado",
-            classificacao: "data.classificacao",
-            capacidade: "data.capacidade",
-            faixaEtaria: "data.faixaEtaria",
+            nome: data.nome,
+            tel1: data.telefone1,
+            tel2: data.telefone2,
+            email1: data.email1,
+            email2: data.email2,
+            endereco: data.endereco,
+            bairro: data.bairro,
+            cidade: data.cidade,
+            estado: data.estado,
+            classificacao: data.classificacao,
+            capacidade: data.capacidade,
+            faixaEtaria: data.faixaEtaria,
             lgbt: true,
-            genero: "data.genero",
+            genero: data.genero,
             pcd: false,
-            observacao: "data.observacao"
+            observacao: data.observacao
           }
         });
-        console.log('end create');
       }
       setIsLoading(false);
     } catch (err) {
@@ -219,7 +219,6 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       setIsLoading(false);
       setIsPopupOpen(!isPopupOpen);
     } catch (err) {
-      console.log(err);
       addToast({
         type: 'error',
         title: 'Erro ao deletar',
@@ -229,30 +228,30 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     }
   }, [abrigoId, setIsLoading, history]);
 
-  const handleRemoveProfissional = (profissionalId: number) => {
-    if (abrigo) {
-      const profissionais = abrigo.profissionais.filter(
-        profissional => profissional.id !== profissionalId
-      );
+  const handleRemoveProfissional = (profissionalId: string) => {
+    // if (abrigo) {
+    //   const profissionais = abrigo.profissionais.filter(
+    //     profissional => profissional.id !== profissionalId
+    //   );
 
-      try {
-        api.put(`/abrigos/${abrigo.id}`, { ...abrigo, profissionais });
-        setAbrigo({ ...abrigo, profissionais });
-        addToast({
-          type: 'success',
-          title: 'Profissional Removido!',
-          message: 'informações do abrigo foram atualizadas',
-        });
-        setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
-      } catch (err) {
-        addToast({
-          type: 'error',
-          title: 'Erro ao remover!',
-          message: 'tente novamente ou entre em contato com suporte.',
-        });
-        setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
-      }
-    }
+    //   try {
+    //     api.put(`/abrigos/${abrigo.id}`, { ...abrigo, profissionais });
+    //     setAbrigo({ ...abrigo, profissionais });
+    //     addToast({
+    //       type: 'success',
+    //       title: 'Profissional Removido!',
+    //       message: 'informações do abrigo foram atualizadas',
+    //     });
+    //     setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
+    //   } catch (err) {
+    //     addToast({
+    //       type: 'error',
+    //       title: 'Erro ao remover!',
+    //       message: 'tente novamente ou entre em contato com suporte.',
+    //     });
+    //     setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
+    //   }
+    // }
   }
 
   const handleAddProfissional = () => {
@@ -265,7 +264,8 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar novo abrigo')
     id && setAbrigoId(id)
-  }, []);
+    console.log(id);
+  }, [id]);
 
   return (
     <Container>
@@ -371,7 +371,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
 
           <div className="full-width">
             <label>Observações Gerais</label>
-            <Textarea className="alt" name="observacoes"></Textarea>
+            <Textarea className="alt" name="observacao"></Textarea>
           </div>
 
           <Button type="submit" loading={isLoading}>salvar</Button>
