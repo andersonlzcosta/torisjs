@@ -17,6 +17,9 @@ export const DefaultBackground = css`
   border-radius: 53px;
   padding: 40px 30px;
   position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
   background-color: #fff;
   box-shadow: 0px 15px 38px 0px #426fa340;

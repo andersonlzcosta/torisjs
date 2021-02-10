@@ -1,92 +1,219 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import { useAbrigo } from '../../hooks/AbrigoHook';
-import api from '../../services/api';
+import { useMutation, useQuery } from '@apollo/client';
 
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { IUserData } from '../../pages/Profile';
+import DatePicker from '../Datepicker';
 import Popup from '../Popup';
 import { useToast } from '../../hooks/toast';
+import Select from '../Select';
+import { GET_USERS, CRIAR_USUARIO, ATUALIZAR_USUARIO, DELETAR_USUARIO, GET_ABRIGOS } from '../../pages/Profissionais/apolloQueries';
+
+export interface IUserData {
+  id: string;
+  email: string;
+  password: string;
+  nome: string;
+  emailAlternativo: string;
+  nascimento: any;
+  cargo: string;
+  telefone1: string;
+  telefone2: string;
+  profissao: string;
+  abrigoId: string;
+}
 
 interface IProfileFormProps {
-  user?: IUserData;
+  inheritedUser?: IUserData;
   headingText?: string;
   updateProfissionaisList?: () => void;
 }
 
-const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updateProfissionaisList }) => {
+interface IAbrigosData {
+  id: string;
+  nome: string;
+}
+
+interface IAbrigosQuery {
+  verAbrigos: IAbrigosData[];
+}
+
+const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, updateProfissionaisList }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
-  const [userId, setUserId] = useState<string>();
+  const [user, setUser] = useState<IUserData>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
 
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { hookAbrigo } = useAbrigo();
   const { addToast } = useToast();
 
-  const handleSubmit = useCallback(async (data: IUserData) => {
-    try {
-      setIsLoading(true);
-      let response;
-      if (userId) {
-        response = await api.put(`/users/${userId}`, data);
-      } else {
-        response = await api.post(`/users`, data);
-        history.push('/profissionais/todos');
-      }
-      setIsLoading(false);
+  const [Register] = useMutation(CRIAR_USUARIO, {
+    onCompleted() {
       addToast({
         title: "Profissional criado com sucesso!",
         message: "você será redirecionado para todos",
         type: "success"
       });
       updateProfissionaisList && updateProfissionaisList();
-    } catch (err) {
+      history.push('/profissionais/todos');
+    }, onError() {
+      addToast({
+        title: "Erro ao criar",
+        message: "tente novamente",
+        type: "error"
+      });
+    }
+  });
+
+  const [Update] = useMutation(ATUALIZAR_USUARIO, {
+    refetchQueries: [{
+      query: GET_USERS
+    }],
+    onCompleted() {
+      addToast({
+        title: "Profissional atualizado com sucesso!",
+        message: "você será redirecionado para todos",
+        type: "success"
+      });
+      history.push('/profissionais/todos');
+    }, onError() {
       addToast({
         title: "Ocorreu um erro",
         message: "tente novamente",
         type: "error"
       });
-      setIsLoading(false);
     }
-  }, [userId, setIsLoading, setUserId]);
+  });
+
+  const [Delete] = useMutation(DELETAR_USUARIO, {
+    refetchQueries: [{
+      query: GET_USERS
+    }],
+    onCompleted() {
+      addToast({ title: "usuário deletado", type: "success" });
+      updateProfissionaisList && updateProfissionaisList();
+      history.push('/profissionais/todos');
+    },
+    onError() { addToast({ title: "usuário deletado", type: "error" }) },
+  });
+
+  useQuery<IAbrigosQuery>(GET_ABRIGOS, {
+    onCompleted(data) {
+      if (data) {
+        setAbrigos([{ id: "", nome: "--selecione um abrigo--" }, ...data.verAbrigos]);
+      }
+    }
+  });
+
+  const handleSubmit = useCallback(async (formData: IUserData) => {
+    setIsLoading(true);
+    try {
+      if (!formRef.current) {
+        throw new Error('formRef invalid');
+      }
+      formRef.current.setErrors({});
+      const schema = Yup.object().shape({
+        nome: Yup.string().required('O nome é obrigatório'),
+        email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
+        emailAlternativo: Yup.string().required('E-mail é obrigatório').email('User um email válido'),
+        password: Yup.string().required('Senha Obrigatória'),
+        cargo: Yup.string(),
+        profissao: Yup.string(),
+        abrigoId: Yup.string(),
+        nascimento: Yup.date(),
+      });
+
+      await schema.validate(formData, {
+        abortEarly: false
+      });
+
+      let abrigoId;
+      if (formData.abrigoId === "") {
+        abrigoId = null
+      } else {
+        abrigoId = formData.abrigoId
+      }
+
+      if (user) {
+        await Update({
+          variables: {
+            userId: user.id,
+            email: formData.email,
+            pass: formData.password,
+            nome: formData.nome,
+            emailAlt: formData.emailAlternativo,
+            nascimento: formData.nascimento,
+            cargo: formData.cargo,
+            tel1: formData.telefone1,
+            tel2: formData.telefone2,
+            profissao: formData.profissao,
+            abrigoId
+          }
+        });
+      } else {
+        await Register({
+          variables: {
+            email: formData.email,
+            pass: formData.password,
+            nome: formData.nome,
+            emailAlt: formData.emailAlternativo,
+            nascimento: formData.nascimento,
+            cargo: formData.cargo,
+            tel1: formData.telefone1,
+            tel2: formData.telefone2,
+            profissao: formData.profissao,
+            abrigoId
+          }
+        });
+      }
+      setIsLoading(false);
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      console.log(errors);
+      if (!formRef.current) {
+        throw new Error('formRef invalid');
+      }
+      formRef.current.setErrors(errors);
+      setIsLoading(false);
+      return
+    }
+  }, [user]);
 
   const handleDelete = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await api.delete(`/users/${userId}`);
-      setIsLoading(false);
-      setIsPopupOpen(!isPopupOpen);
-      history.push('/profissionais/todos');
-    } catch (err) {
-      console.log('erro ao deletar');
-      setIsLoading(false);
-      setIsPopupOpen(!isPopupOpen);
+    setIsLoading(true);
+    if (user) {
+      Delete({
+        variables: { id: user.id }
+      });
     }
-  }, [userId, setIsLoading, history]);
+    setIsPopupOpen(!isPopupOpen);
+    setIsLoading(false);
+  }, [setIsLoading, history, user]);
 
   useEffect(() => {
     hookAbrigo.id ? setHeading('visualizar perfil') : setHeading(headingText)
 
-    if (user) {
-      setUserId(user.id.toString());
+    if (inheritedUser) {
+      setUser(inheritedUser);
     }
-  }, [setUserId, setHeading, user]);
+  }, [inheritedUser]);
 
   return (
     <Container>
       <h1>{heading}</h1>
       <Content>
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={user}>
+        <Form ref={formRef} onSubmit={handleSubmit} initialData={inheritedUser}>
           <div className="full-width">
             <label>nome</label>
             <Input name="nome" className="alt" />
@@ -94,7 +221,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updatePro
 
           <div className="half-width">
             <label>data de nascimento</label>
-            <Input className="alt" name="idade" />
+            <DatePicker name="nascimento" />
           </div>
 
           <div className="half-width">
@@ -108,30 +235,51 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updatePro
           </div>
 
           <div className="half-width">
-            <label>email 2</label>
-            <Input className="alt" name="email2" />
+            <label>email alternativo</label>
+            <Input className="alt" name="emailAlternativo" />
           </div>
 
           <div className="half-width">
             <label>telefone</label>
-            <Input className="alt" name="telefone" />
+            <Input className="alt" name="telefone1" type="number" />
           </div>
 
           <div className="half-width">
             <label>telefone 2</label>
-            <Input className="alt" name="telefone2" />
+            <Input className="alt" name="telefone2" type="number" />
           </div>
 
           <div className="half-width">
-            <label>Cargo na instituição</label>
-            <select name="cargo">
-              <option value="diretor">Diretor</option>
-              <option value="assessor">Assessor da Direção</option>
-              <option value="assistente-social">Assistente Social</option>
-              <option value="psicologo">Psicólogo</option>
-              <option value="pedagogo">Pedagogo</option>
-              <option value="educador">Educador Social</option>
-            </select>
+            <label>cargo</label>
+            <Select name="cargo" options={[
+              { value: 'diretor', label: 'Diretor' },
+              { value: 'assessor', label: 'Assessor' },
+              { value: 'assistente-social', label: 'Assistente Social' },
+              { value: 'psicologo', label: 'Psicologo' },
+              { value: 'pedagogo', label: 'Pedagogo' },
+              { value: 'educador', label: 'Educador' }
+            ]} />
+          </div>
+
+          {abrigos && (
+            <div className="half-width">
+              <label>abrigo associado</label>
+              <Select name="abrigoId" options={abrigos.map(abrigo => {
+                return { value: abrigo.id, label: abrigo.nome }
+              })} />
+            </div>
+          )}
+
+          {user && (
+            <div className="half-width">
+              <label>senha antiga</label>
+              <Input className="alt" name="old_password" type="password" />
+            </div>
+          )}
+
+          <div className="half-width">
+            <label>senha</label>
+            <Input className="alt" name="password" type="password" />
           </div>
 
           {!hookAbrigo.id && (
@@ -139,7 +287,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ user, headingText, updatePro
           )}
         </Form>
 
-        {userId && !hookAbrigo.id && (
+        {user && !hookAbrigo.id && (
           <>
             <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar perfil</Button>
             <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >

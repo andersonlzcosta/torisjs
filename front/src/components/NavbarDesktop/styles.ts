@@ -2,6 +2,11 @@ import styled from 'styled-components';
 import { DefaultBackground } from '../../styles/DefaultBackground';
 
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
   position: fixed;
   top: 0;
   right: 0;
@@ -16,6 +21,11 @@ export const Container = styled.div`
 `;
 
 export const Menu = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
   width: 90%;
   align-items: flex-end;
   padding-right: 5%;

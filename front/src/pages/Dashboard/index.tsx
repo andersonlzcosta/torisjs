@@ -30,12 +30,11 @@ interface IUser {
 }
 
 const GET_USERS = gql`
-{
+query VerUsuarios{
   verUsuarios{
     id,
     nome,
     email,
-    idade,
     profissao
   }
 }
@@ -44,7 +43,6 @@ const GET_USERS = gql`
 interface IProfissionaisData {
   id: string;
   nome: string;
-  idade: number;
   profissao: string;
 }
 
@@ -148,7 +146,7 @@ const Dashboard: React.FC = () => {
               <img src={Perfil} alt="foto de perfil" />
               <div>
                 <h3>{profissional.nome}</h3>
-                <strong>{profissional.idade} anos - {profissional.profissao}</strong>
+                <strong>{profissional.profissao}</strong>
               </div>
             </Link>
           </User>

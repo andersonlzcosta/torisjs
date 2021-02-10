@@ -13,15 +13,7 @@ import NavbarDesktop from '../../components/NavbarDesktop';
 import Search from '../../components/Search';
 import AbrigoForm from '../../components/AbrigoForm';
 
-const GET_ABRIGOS = gql`
-{
-  verAbrigos{
-    id,
-    nome,
-    endereco
-  }
-}
-`;
+import { GET_ABRIGOS } from './apolloQueries';
 
 interface IAbrigosData {
   id: string;
@@ -38,7 +30,7 @@ const Abrigos: React.FC = () => {
   const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
   let query = new URLSearchParams(useLocation().search);
 
-  const { refetch } = useQuery<IAbrigosQuery>(GET_ABRIGOS, {
+  useQuery<IAbrigosQuery>(GET_ABRIGOS, {
     onCompleted(data) { data && setAbrigos(data.verAbrigos) }
   });
 
@@ -74,7 +66,7 @@ const Abrigos: React.FC = () => {
       )}
 
       {location.pathname === '/abrigos/novo' && (
-        <AbrigoForm updateAbrigoList={refetch} />
+        <AbrigoForm />
       )}
 
       <NavbarDesktop />
