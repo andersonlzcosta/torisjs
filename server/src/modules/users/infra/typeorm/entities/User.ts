@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import Abrigo from '@modules/abrigos/infra/typeorm/entities/Abrigo';
+import Notificacao from '@modules/notificacoes/infra/typeorm/entities/Notificacao';
 
 @ObjectType()
 @Entity('users')
@@ -47,6 +48,11 @@ class User {
     @Field(() => Abrigo, { nullable: true })
     @ManyToOne(() => Abrigo, abrigo => abrigo.profissionais)
     abrigo?: Abrigo;
+
+    @Field(() => [Notificacao], { nullable: true })
+    @ManyToMany(() => Notificacao, notificacao => notificacao.users)
+    @JoinTable()
+    notificacoes?: Notificacao[];
 
     @Field(() => String)
     @CreateDateColumn()
