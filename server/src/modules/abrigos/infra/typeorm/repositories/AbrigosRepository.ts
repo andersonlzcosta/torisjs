@@ -27,9 +27,43 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
-  public async create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: ICreateAbrigoDTO): Promise<Abrigo> {
+  public async create({
+    nome,
+    telefone1,
+    telefone2,
+    email1,
+    email2,
+    endereco,
+    bairro,
+    cidade,
+    estado,
+    classificacao,
+    capacidade,
+    faixaEtaria,
+    lgbt,
+    genero,
+    pcd,
+    observacao 
+  }: ICreateAbrigoDTO): Promise<Abrigo> {
 
-    const abrigo = this.ormRepository.create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });
+    const abrigo = this.ormRepository.create({ 
+      nome,
+      telefone1,
+      telefone2,
+      email1,
+      email2,
+      endereco,
+      bairro,
+      cidade,
+      estado,
+      classificacao,
+      capacidade,
+      faixaEtaria,
+      lgbt,
+      genero,
+      pcd,
+      observacao 
+    });
     await this.ormRepository.save(abrigo);
     return abrigo;
 
@@ -41,9 +75,49 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
-  public async update(abrigoId: string, { nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: IUpdateAbrigoDTO): Promise<Abrigo | undefined> {
+  public async update(
+    abrigoId: string,
+    {
+      nome,
+      telefone1,
+      telefone2,
+      email1,
+      email2,
+      endereco,
+      bairro,
+      cidade,
+      estado,
+      classificacao,
+      capacidade,
+      faixaEtaria,
+      lgbt,
+      genero,
+      pcd,
+      observacao    
+    }: IUpdateAbrigoDTO): Promise<Abrigo | undefined> {
 
-    await this.ormRepository.update( abrigoId, { id: abrigoId, nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });   
+    await this.ormRepository.update(
+      abrigoId,
+      { 
+        id: abrigoId,
+        nome,
+        telefone1,
+        telefone2,
+        email1,
+        email2,
+        endereco,
+        bairro,
+        cidade,
+        estado,
+        classificacao,
+        capacidade,
+        faixaEtaria,
+        lgbt,
+        genero,
+        pcd,
+        observacao 
+      }
+    );
     const abrigo = await this.ormRepository.findOne({ where: { id: abrigoId }, relations: ["profissionais"] });
     return abrigo;
 
