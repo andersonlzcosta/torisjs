@@ -1,16 +1,20 @@
-import { getCustomRepository } from "typeorm";
-import AbrigosRepository from "../infra/typeorm/repositories/AbrigosRepository";
-// import IAbrigosRepository from '@modules/abrigos/repositories/IAbrigosRepository';
+import { inject, injectable } from "tsyringe";
+import IAbrigosRepository from "../repositories/IAbrigosRepository";
 
 interface Request {
     id: string;
 }
 
+@injectable()
 class DeleteAbrigoService {
+    constructor(
+        @inject('AbrigosRepository')
+        private abrigosRepository: IAbrigosRepository
+    ) { }
+
     public async execute( { id } : Request): Promise<boolean> {
 
-        const abrigosRepository = getCustomRepository(AbrigosRepository);
-        await abrigosRepository.delete( id );
+        await this.abrigosRepository.delete( id );
         return true;
 
     }
