@@ -35,12 +35,34 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
+  public async create({ 
+      nome,
+      email,
+      emailAlternativo,
+      nascimento,
+      cargo,
+      telefone1,
+      telefone2,
+      profissao,
+      password,
+      abrigoId
+  }: ICreateUserDTO): Promise<User | undefined> {
 
-    const newUser = this.ormRepository.create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
-    await this.ormRepository.save(newUser);
-    const user = await this.ormRepository.findOne({ where: { email }, relations: ["abrigo"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
-    return user;
+      const newUser = this.ormRepository.create({ 
+        nome,
+        email,
+        emailAlternativo,
+        nascimento,
+        cargo,
+        telefone1,
+        telefone2,
+        profissao,
+        password,
+        abrigo: { id: abrigoId } 
+      });
+      await this.ormRepository.save(newUser);
+      const user = await this.ormRepository.findOne({ where: { email }, relations: ["abrigo"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
+      return user;
 
   }
 

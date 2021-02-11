@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
 import User from '../../typeorm/entities/User';
 import CreateUserService from '../../../services/CreateUserService';
 import UpdateUserService from '../../../services/UpdateUserService';
