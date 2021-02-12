@@ -1,6 +1,6 @@
-import { getCustomRepository } from "typeorm";
+import { inject, injectable } from "tsyringe";
 import Abrigo from "../infra/typeorm/entities/Abrigo";
-import AbrigosRepository from "../infra/typeorm/repositories/AbrigosRepository";
+import IAbrigosRepository from "../repositories/IAbrigosRepository";
 
 interface Request {
     nome: string;
@@ -21,11 +21,33 @@ interface Request {
     observacao: string;
 }
 
+@injectable()
 class CreateAbrigoService {
-    public async execute({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: Request): Promise<Abrigo> {
-        const abrigosRepository = getCustomRepository(AbrigosRepository);
+    constructor(
+        @inject('AbrigosRepository')
+        private abrigosRepository: IAbrigosRepository
+    ) { }
+    
+    public async execute({
+        nome,
+        telefone1,
+        telefone2,
+        email1,
+        email2,
+        endereco,
+        bairro,
+        cidade,
+        estado,
+        classificacao,
+        capacidade,
+        faixaEtaria,
+        lgbt,
+        genero,
+        pcd,
+        observacao
+     }: Request): Promise<Abrigo> {
 
-        const abrigo = abrigosRepository.create({
+        const abrigo = this.abrigosRepository.create({
             nome,
             telefone1,
             telefone2,

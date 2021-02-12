@@ -2,9 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { ObjectType, Field } from 'type-graphql';
 import User from '@modules/users/infra/typeorm/entities/User';
 
-//aulas "id" "nome" "video_url"
-//cursos "id" "nome" "descricao" "aulas"
-
 @ObjectType()
 @Entity('abrigos')
 class Abrigo {
@@ -16,63 +13,63 @@ class Abrigo {
     @Column()
     nome: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     telefone1: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     telefone2: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     email1: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     email2: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     endereco: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     bairro: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     cidade: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     estado: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     classificacao: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     capacidade: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     faixaEtaria: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     lgbt: boolean;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     genero: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     pcd: boolean;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     observacao: string;
 

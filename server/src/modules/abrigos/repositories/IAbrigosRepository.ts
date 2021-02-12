@@ -9,4 +9,5 @@ export default interface IAbrigosRepository {
     create(data: ICreateAbrigoDTO): Promise<Abrigo>;
     save(abrigo: Abrigo): Promise<Abrigo>;
     update(abrigoId: string, data: IUpdateAbrigoDTO): Promise<Abrigo | undefined>;
+    delete(id: string): Promise<Boolean>;
 }

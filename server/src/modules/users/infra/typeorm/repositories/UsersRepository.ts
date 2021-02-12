@@ -21,7 +21,6 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findAll(): Promise<User[]> {
-
     let users: User[];
     users = await this.ormRepository.find();
     return users;
@@ -29,21 +28,19 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    
     const user = await this.ormRepository.findOne({ where: { email: email }, relations: ["abrigo"]});
     return user;
 
   }
 
+
   public async findByName(nome: string): Promise<User[]> {
-    
     const users = await this.ormRepository.find({  where: `"nome" ILIKE '%${nome}%'` });
     return users;
 
   }
 
   public async create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
-
     const newUser = this.ormRepository.create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
     await this.ormRepository.save(newUser);
     const user = await this.ormRepository.findOne({ where: { email }, relations: ["abrigo"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it

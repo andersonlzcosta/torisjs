@@ -27,6 +27,7 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
+
   public async findByName(nome: string): Promise<Abrigo[]> {
 
     const abrigos = await this.ormRepository.find({  where: `"nome" ILIKE '%${nome}%'` });
@@ -48,9 +49,49 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
-  public async update(abrigoId: string, { nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: IUpdateAbrigoDTO): Promise<Abrigo | undefined> {
+  public async update(
+    abrigoId: string,
+    {
+      nome,
+      telefone1,
+      telefone2,
+      email1,
+      email2,
+      endereco,
+      bairro,
+      cidade,
+      estado,
+      classificacao,
+      capacidade,
+      faixaEtaria,
+      lgbt,
+      genero,
+      pcd,
+      observacao    
+    }: IUpdateAbrigoDTO): Promise<Abrigo | undefined> {
 
-    await this.ormRepository.update( abrigoId, { id: abrigoId, nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });   
+    await this.ormRepository.update(
+      abrigoId,
+      { 
+        id: abrigoId,
+        nome,
+        telefone1,
+        telefone2,
+        email1,
+        email2,
+        endereco,
+        bairro,
+        cidade,
+        estado,
+        classificacao,
+        capacidade,
+        faixaEtaria,
+        lgbt,
+        genero,
+        pcd,
+        observacao 
+      }
+    );
     const abrigo = await this.ormRepository.findOne({ where: { id: abrigoId }, relations: ["profissionais"] });
     return abrigo;
 
