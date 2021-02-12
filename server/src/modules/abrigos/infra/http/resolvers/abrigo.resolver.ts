@@ -66,6 +66,17 @@ export class AbrigoResolver {
     }
  
     @Query(() => [Abrigo])
+    async procurarAbrigos(
+        @Arg("nome") nome: string
+    ): Promise<Abrigo[]> {
+
+        const abrigosRepository = getCustomRepository(AbrigosRepository);
+        const users = await abrigosRepository.findByName(nome);
+        return users;
+
+    }
+
+    @Query(() => [Abrigo])
     async verAbrigos(): Promise<Abrigo[]> {
 
         const abrigosRepository = getCustomRepository(AbrigosRepository);

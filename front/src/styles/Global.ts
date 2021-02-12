@@ -26,7 +26,7 @@ export default createGlobalStyle`
     animation: ${fadeIn} .8s;
   }
 
-  section, div, form, #root{
+  section, form, #root, div.defaultdiv{
     display: flex;
     flex-direction: column;
     align-items: center;

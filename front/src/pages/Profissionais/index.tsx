@@ -16,25 +16,13 @@ import Plus from '../../images/plus.svg';
 import api from '../../services/api';
 import NavbarDesktop from '../../components/NavbarDesktop';
 import { useToast } from '../../hooks/toast';
+import { GET_USERS } from './apolloQueries';
 
 interface IProfissionaisData {
   id: number;
   nome: string;
-  idade: number;
   profissao: string;
 }
-
-const GET_USERS = gql`
-{
-  verUsuarios{
-    id,
-    nome,
-    email,
-    idade,
-    profissao
-  }
-}
-`;
 
 interface IProfissionaisQuery {
   verUsuarios: IProfissionaisData[];
@@ -48,15 +36,10 @@ const Profissionais: React.FC = () => {
   const { hookAbrigo, setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
 
-  const { data: profissionaisQl } = useQuery<IProfissionaisQuery>(GET_USERS);
+  const { data: profissionaisQl, refetch } = useQuery<IProfissionaisQuery>(GET_USERS);
 
   const searchProfissionais = useCallback(async (query) => {
     const response = await api.get(`/users?nome_like=${query}`);
-    setProfissionais(response.data);
-  }, []);
-
-  const reloadProfissionais = useCallback(async () => {
-    const response = await api.get('/users');
     setProfissionais(response.data);
   }, []);
 
@@ -84,16 +67,6 @@ const Profissionais: React.FC = () => {
   }
 
   useEffect(() => {
-    // let searchFor = query.get('search');
-    // if (searchFor) {
-    //   api.get(`/users?nome_like=${searchFor}`).then(response => {
-    //     setProfissionais(response.data);
-    //   });
-    // } else {
-    //   api.get('/users').then(response => {
-    //     setProfissionais(response.data);
-    //   });
-    // }
   }, []);
 
   return (
@@ -106,28 +79,6 @@ const Profissionais: React.FC = () => {
           { text: "criar novo", path: "/novo" },
         ]}
       />
-
-      {location.pathname === '/profissionais/estatisticas' && (
-        <Estatisticas>
-          <h2>estatísticas</h2>
-          <Content>
-            <div>
-              <h3>Total</h3>
-              <p>153 usuários cadastrados</p>
-            </div>
-
-            <div>
-              <h3>Região</h3>
-              <p>Rio de Janeiro possúi mais profissionais cadastrados</p>
-            </div>
-
-            <div>
-              <h3>Enviou mais notificações</h3>
-              <p>Ricardo Daniel</p>
-            </div>
-          </Content>
-        </Estatisticas>
-      )}
 
       {location.pathname === '/profissionais/todos' && (
         <>
@@ -146,7 +97,7 @@ const Profissionais: React.FC = () => {
                   <img src={Perfil} alt="foto de perfil" />
                   <div>
                     <h3>{profissional.nome}</h3>
-                    <strong>{profissional.idade} anos - {profissional.profissao}</strong>
+                    <strong>{profissional.profissao}</strong>
                   </div>
                 </Link>
                 {hookAbrigo.id && (
@@ -165,7 +116,7 @@ const Profissionais: React.FC = () => {
       )}
 
       {location.pathname === '/profissionais/novo' && (
-        <ProfileForm headingText="criar novo profissional" updateProfissionaisList={reloadProfissionais} />
+        <ProfileForm headingText="criar novo profissional" updateProfissionaisList={refetch} />
       )}
 
       <NavbarDesktop />
