@@ -13,6 +13,10 @@ query VerUsuario($id: String!){
       telefone1
       telefone2
       profissao
+      abrigo{
+        id
+        nome
+      }
     }
   }
 }

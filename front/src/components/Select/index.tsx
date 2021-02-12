@@ -23,15 +23,14 @@ const Select: React.FC<SelectProps> = ({ name, options, ...rest }) => {
   return (
     <Container>
       <select
-        defaultValue={defaultValue}
         ref={selectRef}
-        value={defaultValue}
         {...rest}
       >
         {options.map(option => (
           <option
             key={option.value}
             value={option.value}
+            selected={option.value === defaultValue}
           >
             {option.label}
           </option>

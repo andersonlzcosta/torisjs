@@ -20,7 +20,6 @@ import { GET_USERS, CRIAR_USUARIO, ATUALIZAR_USUARIO, DELETAR_USUARIO, GET_ABRIG
 export interface IUserData {
   id: string;
   email: string;
-  password: string;
   nome: string;
   emailAlternativo: string;
   nascimento: any;
@@ -30,6 +29,7 @@ export interface IUserData {
   profissao: string;
   abrigoId: string;
 }
+
 
 interface IProfileFormProps {
   inheritedUser?: IUserData;
@@ -77,15 +77,14 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
   });
 
   const [Update] = useMutation(ATUALIZAR_USUARIO, {
-    refetchQueries: [{
-      query: GET_USERS
-    }],
+    refetchQueries: [{ query: GET_USERS }],
     onCompleted() {
       addToast({
         title: "Profissional atualizado com sucesso!",
         message: "você será redirecionado para todos",
         type: "success"
       });
+
       history.push('/profissionais/todos');
     }, onError() {
       addToast({
@@ -118,6 +117,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
 
   const handleSubmit = useCallback(async (formData: IUserData) => {
     setIsLoading(true);
+    console.log(formData);
     try {
       if (!formRef.current) {
         throw new Error('formRef invalid');
@@ -127,7 +127,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         nome: Yup.string().required('O nome é obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
         emailAlternativo: Yup.string().required('E-mail é obrigatório').email('User um email válido'),
-        password: Yup.string().required('Senha Obrigatória'),
+        password: Yup.string(),
         cargo: Yup.string(),
         profissao: Yup.string(),
         abrigoId: Yup.string(),
@@ -150,7 +150,6 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           variables: {
             userId: user.id,
             email: formData.email,
-            pass: formData.password,
             nome: formData.nome,
             emailAlt: formData.emailAlternativo,
             nascimento: formData.nascimento,
@@ -165,7 +164,6 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         await Register({
           variables: {
             email: formData.email,
-            pass: formData.password,
             nome: formData.nome,
             emailAlt: formData.emailAlternativo,
             nascimento: formData.nascimento,
@@ -180,7 +178,6 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
       setIsLoading(false);
     } catch (err) {
       const errors = getValidationErrors(err);
-      console.log(errors);
       if (!formRef.current) {
         throw new Error('formRef invalid');
       }
@@ -270,7 +267,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
             </div>
           )}
 
-          {user && (
+          {/* {user && (
             <div className="half-width">
               <label>senha antiga</label>
               <Input className="alt" name="old_password" type="password" />
@@ -280,7 +277,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           <div className="half-width">
             <label>senha</label>
             <Input className="alt" name="password" type="password" />
-          </div>
+          </div> */}
 
           {!hookAbrigo.id && (
             <Button type="submit" loading={isLoading}>salvar</Button>
