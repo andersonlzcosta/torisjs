@@ -13,7 +13,7 @@ services:
       context: server/.
       dockerfile: prod.Dockerfile
     ports:
-      - 2000:2000
+      - ${SERVER_PORT}:2000
     expose:
       - "2000"
   # jsonserver:
