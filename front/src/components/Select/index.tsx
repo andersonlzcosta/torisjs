@@ -1,46 +1,42 @@
 import React, { useRef, useEffect, SelectHTMLAttributes } from 'react';
-import { Container, Error } from './styles';
-import { FiAlertCircle } from 'react-icons/fi';
-
 import { useField } from '@unform/core';
+import { Container } from './styles';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
-  containerStyle?: object;
-  className?: string;
+  options: {
+    value: string;
+    label: string;
+  }[]
 }
 
-const Select: React.FC<SelectProps> = ({ name, containerStyle, className, ...rest }) => {
-  const inputRef = useRef<HTMLSelectElement>(null);
-  const { fieldName, registerField, error, defaultValue } = useField(name);
-
+const Select: React.FC<SelectProps> = ({ name, options, ...rest }) => {
+  const selectRef = useRef(null);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
+      ref: selectRef.current,
       path: 'value',
     });
   }, [fieldName, registerField]);
-
   return (
-    <Container style={containerStyle} className={className} isErrored={!!error}>
+    <Container>
       <select
-        defaultValue={defaultValue}
-        ref={inputRef}
+        ref={selectRef}
         {...rest}
       >
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
+        {options.map(option => (
+          <option
+            key={option.value}
+            value={option.value}
+            selected={option.value === defaultValue}
+          >
+            {option.label}
+          </option>
+        ))}
       </select>
-      {error && (
-        <Error title={error}>
-          <FiAlertCircle color="#fff" size={20} />
-        </Error>
-      )}
     </Container>
   );
 };
-
 export default Select;

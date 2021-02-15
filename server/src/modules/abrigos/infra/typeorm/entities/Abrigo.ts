@@ -2,9 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { ObjectType, Field } from 'type-graphql';
 import User from '@modules/users/infra/typeorm/entities/User';
 
-//aulas "id" "nome" "video_url"
-//cursos "id" "nome" "descricao" "aulas"
-
 @ObjectType()
 @Entity('abrigos')
 class Abrigo {

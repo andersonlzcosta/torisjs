@@ -77,7 +77,12 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({ pergunta, updatePergu
 
           <div className="full-width">
             <label>qual é a resposta certa?</label>
-            <Select name="resposta_certa" />
+            <Select name="resposta_certa" options={[
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+              { value: "3", label: "3" },
+              { value: "4", label: "4" },
+            ]} />
           </div>
 
           <div className="full-width">

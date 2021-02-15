@@ -42,17 +42,16 @@ export const Content = styled.div`
       margin: 4px 0 0;
     }
 
-    > div{
+    > div.full-width{
+      width: 100%;
       align-items: flex-start;
       margin: 10px 0;
     }
 
-    > div.full-width{
-      width: 100%;
-    }
-
     > div.half-width{
       width: 49%;
+      align-items: flex-start;
+      margin: 10px 0;
     }
 
     label{
@@ -69,9 +68,17 @@ export const Content = styled.div`
       border-width: 2px;
     }
 
+    aside{
+      font-size: 12px;
+    }
+
     .bigger{
       font-weight: 300;
       font-size: 27px;
+    }
+
+    svg{
+      stroke: red;
     }
   }
 `;

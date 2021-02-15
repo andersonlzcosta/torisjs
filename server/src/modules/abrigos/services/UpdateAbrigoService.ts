@@ -1,6 +1,6 @@
-import { getCustomRepository } from "typeorm";
+import { inject, injectable } from "tsyringe";
 import Abrigo from "../infra/typeorm/entities/Abrigo";
-import AbrigosRepository from "../infra/typeorm/repositories/AbrigosRepository";
+import IAbrigosRepository from "../repositories/IAbrigosRepository";
 
 interface Request {
     abrigoId: string;
@@ -22,11 +22,54 @@ interface Request {
     observacao?: string;
 }
 
+@injectable()
 class UpdateAbrigoService {
-    public async execute({ abrigoId, nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: Request): Promise<Abrigo | undefined> {
+    constructor(
+        @inject('AbrigosRepository')
+        private abrigosRepository: IAbrigosRepository
+    ) { }
 
-        const abrigosRepository = getCustomRepository(AbrigosRepository);
-        return abrigosRepository.update( abrigoId, { nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });
+    public async execute({
+        abrigoId,
+        nome,
+        telefone1,
+        telefone2,
+        email1,
+        email2,
+        endereco,
+        bairro,
+        cidade,
+        estado,
+        classificacao,
+        capacidade,
+        faixaEtaria,
+        lgbt,
+        genero,
+        pcd,
+        observacao        
+    }: Request): Promise<Abrigo | undefined> {
+
+        return this.abrigosRepository.update(
+            abrigoId, 
+            { 
+                nome,
+                telefone1,
+                telefone2,
+                email1,
+                email2,
+                endereco,
+                bairro,
+                cidade,
+                estado,
+                classificacao,
+                capacidade,
+                faixaEtaria,
+                lgbt,
+                genero,
+                pcd,
+                observacao 
+            }
+        );
     
     }
 }
