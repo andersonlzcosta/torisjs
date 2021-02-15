@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -21,9 +21,9 @@ class Notificacao {
     @Column({ nullable: true })
     tipo: string;
 
-    @Field(() => [User], { nullable: true })
-    @ManyToMany(() => User, user => user.notificacoes)
-    users?: User[];
+    @Field(() => User, { nullable: true })
+    @ManyToOne(() => User, user => user.notificacoes)
+    user?: User;
 
     @Field(() => String)
     @CreateDateColumn()

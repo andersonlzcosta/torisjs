@@ -11,17 +11,17 @@ interface Request {
 
 @injectable()
 class CreateNotificacaoService {
-        constructor(
-            @inject('NotificacoesRepository')
-            private notificacoesRepository: INotificacoesRepository
-        ) { }
-    
-        public async execute({ 
-            conteudo,
-            arquivada,
-            tipo,
-            userId
-        }: Request): Promise<Notificacao | undefined> {
+    constructor(
+        @inject('NotificacoesRepository')
+        private notificacoesRepository: INotificacoesRepository
+    ) { }
+
+    public async execute({ 
+        conteudo,
+        arquivada,
+        tipo,
+        userId
+    }: Request): Promise<Notificacao | undefined> {
 
 
         const notificacao = await this.notificacoesRepository.create({
