@@ -15,4 +15,3 @@ export default interface ICreateUserDTO {
     profissao?: string;
     abrigoId?: string;
 }
-

@@ -1,7 +1,7 @@
 FROM node:13-alpine as build-stage
 
-# ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=http://redeabrigo.tk/api
+ARG REACT_APP_API_URL
+# ENV REACT_APP_API_URL=http://redeabrigo.tk/api
 
 ARG CHOKIDAR_USEPOLLING=true
 ENV CHOKIDAR_USEPOLLING=$CHOKIDAR_USEPOLLING

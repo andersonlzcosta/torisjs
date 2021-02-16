@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
 import User from '../../typeorm/entities/User';
 import CreateUserService from '../../../services/CreateUserService';
 import UpdateUserService from '../../../services/UpdateUserService';
@@ -74,6 +74,17 @@ export class UserResolver {
         const usersRepository = getCustomRepository(UsersRepository);
         const user = await usersRepository.findById(id);
         return { user };
+        
+    }
+ 
+    @Query(() => [User])
+    async procurarUsuarios(
+        @Arg("nome") nome: string
+    ): Promise<User[]> {
+
+        const usersRepository = getCustomRepository(UsersRepository);
+        const users = await usersRepository.findByName(nome);
+        return users;
         
     }
  

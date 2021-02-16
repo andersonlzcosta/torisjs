@@ -7,7 +7,7 @@ import { ToastProvider } from '../hooks/toast';
 
 
 const client = new ApolloClient({
-  uri: 'http://localhost:2000/graphql',
+  uri: process.env.REACT_APP_API_URL + '/graphql',
   cache: new InMemoryCache(),
 });
 

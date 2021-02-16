@@ -16,6 +16,8 @@ import { UserSessionResolver } from '@modules/users/infra/http/resolvers/session
 
 import { AbrigoResolver } from "@modules/abrigos/infra/http/resolvers/abrigo.resolver";
 
+import { NotificacaoResolver } from '@modules/notificacoes/infra/http/resolvers/notificacao.resolver';
+
 import { CursoResolver } from "@modules/cursos/infra/http/resolvers/curso.resolver";
 import { ModuloResolver } from "@modules/cursos/infra/http/resolvers/modulo.resolver";
 import { AulaResolver } from "@modules/cursos/infra/http/resolvers/aula.resolver";
@@ -52,6 +54,7 @@ const apolloServer = new ApolloServer({
       UserResolver,
       UserSessionResolver,
       AbrigoResolver,
+      NotificacaoResolver,
       CursoResolver,
       ModuloResolver,
       AulaResolver,

@@ -183,7 +183,6 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
 
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
 
-    console.log(data);
     try {
       setIsLoading(true);
       if (abrigo) {
@@ -267,6 +266,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     if (abrigo) {
       // update abrigo ID in user
     }
+
   }
 
   const handleAddProfissional = (formData: { profissionais: string; }) => {

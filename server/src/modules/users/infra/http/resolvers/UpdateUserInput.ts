@@ -2,6 +2,7 @@ import { InputType, Field } from "type-graphql";
 
 @InputType()
 export class UpdateUserInput {
+
     @Field()
     userId: string;
     @Field({ nullable: true })
@@ -26,4 +27,5 @@ export class UpdateUserInput {
     email?: string;
     @Field({ nullable: true })
     abrigoId?: string;
+    
 }

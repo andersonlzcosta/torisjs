@@ -1,97 +1,18 @@
-import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
+import { container } from "tsyringe";
+
 import Abrigo from '../../typeorm/entities/Abrigo';
 import CreateAbrigoService from '../../../services/CreateAbrigoService';
 import UpdateAbrigoService from '../../../services/UpdateAbrigoService';
 import DeleteAbrigoService from "@modules/abrigos/services/DeleteAbrigoService";
+
 import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
 import { getCustomRepository } from "typeorm";
 
-// Preciso usar o DTO
-@InputType()
-class CriarAbrigoInput {
-    @Field()
-    nome: string;
-    @Field()
-    telefone1: string;
-    @Field()
-    telefone2: string;
-    @Field()
-    email1: string;
-    @Field()
-    email2: string;
-    @Field()
-    endereco: string;
-    @Field()
-    bairro: string;
-    @Field()
-    cidade: string;
-    @Field()
-    estado: string;
-    @Field()
-    classificacao: string;
-    @Field()
-    capacidade: string;
-    @Field()
-    faixaEtaria: string;
-    @Field()
-    lgbt: boolean;
-    @Field()
-    genero: string;
-    @Field()
-    pcd: boolean;
-    @Field()
-    observacao: string;
-}
-
-@InputType()
-class AtualizarAbrigoInput {
-    @Field()
-    nome?: string;
-    @Field()
-    telefone1?: string;
-    @Field()
-    telefone2?: string;
-    @Field()
-    email1?: string;
-    @Field()
-    email2?: string;
-    @Field()
-    endereco?: string;
-    @Field()
-    bairro?: string;
-    @Field()
-    cidade?: string;
-    @Field()
-    estado?: string;
-    @Field()
-    classificacao?: string;
-    @Field()
-    capacidade?: string;
-    @Field()
-    faixaEtaria?: string;
-    @Field()
-    lgbt?: boolean;
-    @Field()
-    genero?: string;
-    @Field()
-    pcd?: boolean;
-    @Field()
-    observacao?: string;
-}
+import { CriarAbrigoInput } from "./CreateAbrigoInput";
+import { AtualizarAbrigoInput } from "./UpdateAbrigoInput";
 
 
-// return users by abrigo on constraints
-// @ObjectType()
-// class PaginatedUsers {
-//   @Field(() => [User])
-//   users: User[];
-//   @Field()
-//   hasMore: boolean;
-// }
-
-// Importar as classes de Erros do Rocket
-
-// Não identifiquei um similar desse user response
 @ObjectType()
 class AbrigoResponse {
     @Field(() => Abrigo, { nullable: true })
@@ -105,7 +26,7 @@ export class AbrigoResolver {
         @Arg("options") options: CriarAbrigoInput
       ): Promise<AbrigoResponse> {
 
-        const createAbrigo = new CreateAbrigoService();
+        const createAbrigo = container.resolve(CreateAbrigoService);
         const abrigo = await createAbrigo.execute(options);
         return { abrigo };
 
@@ -128,7 +49,7 @@ export class AbrigoResolver {
     ): Promise<AbrigoResponse> {
 
         console.log(options);
-        const updateAbrigo = new UpdateAbrigoService();
+        const updateAbrigo = container.resolve(UpdateAbrigoService);
         const abrigo = await updateAbrigo.execute(options);
         return { abrigo };
 
@@ -139,11 +60,22 @@ export class AbrigoResolver {
         @Arg("id") id: string
     ): Promise<boolean> {
        
-        const deleteAbrigo = new DeleteAbrigoService();
+        const deleteAbrigo = container.resolve(DeleteAbrigoService);
         await deleteAbrigo.execute( { id } );
         return true;
     }
  
+    @Query(() => [Abrigo])
+    async procurarAbrigos(
+        @Arg("nome") nome: string
+    ): Promise<Abrigo[]> {
+
+        const abrigosRepository = getCustomRepository(AbrigosRepository);
+        const users = await abrigosRepository.findByName(nome);
+        return users;
+
+    }
+
     @Query(() => [Abrigo])
     async verAbrigos(): Promise<Abrigo[]> {
 
