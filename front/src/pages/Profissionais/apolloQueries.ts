@@ -37,6 +37,18 @@ mutation Register(
   }){
     user{
       id
+      nome
+      email
+      emailAlternativo
+      nascimento
+      cargo
+      telefone1
+      telefone2
+      profissao
+      abrigo{
+        id
+        nome
+      }
     }
   }
 }

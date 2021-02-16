@@ -113,6 +113,10 @@ export const Content = styled.div`
       font-weight: 300;
       font-size: 27px;
     }
+
+    &.full-width{
+      width: 100%;
+    }
   }
 
   div + div{

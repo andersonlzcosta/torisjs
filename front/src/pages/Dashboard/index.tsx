@@ -9,7 +9,7 @@ import TopMenu from '../../components/TopMenu';
 import { Container, NotificationContainer, DashboardContent, User, AbrigosList, Abrigo } from './styles';
 import { Link } from 'react-router-dom';
 
-import Perfil from '../../images/perfil.jpg'
+import Perfil from '../../images/perfil-avatar.png'
 import { FiMinusCircle } from 'react-icons/fi';
 import { useToast } from '../../hooks/toast';
 

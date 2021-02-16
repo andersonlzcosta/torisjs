@@ -1,31 +1,31 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import api from '../../services/api';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { Form } from '@unform/web';
+import { FiMinusCircle } from 'react-icons/fi';
+
 import { useToast } from '../../hooks/toast';
+import { GET_FORUM_PERGUNTAS } from '../Forum/apolloQueries';
+import { GET_PERGUNTA_BY_ID, DELETE_PERGUNTA_BY_ID, CREATE_RESPOSTA, DELETE_RESPOSTA_BY_ID } from './apolloQueries';
 
 import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
 import TopMenu from '../../components/TopMenu';
 
-import { Form } from '@unform/web';
-import Textarea from '../../components/Textarea';
 import Button from '../../components/Button';
+import Textarea from '../../components/Textarea';
+import Popup from '../../components/Popup';
 
 import { Container, ContentContainer, Content, PerguntaContainer } from './styles';
-import { FiMinusCircle } from 'react-icons/fi';
-import Input from '../../components/Input';
-import Popup from '../../components/Popup';
 
 interface IRouteParams {
   id: string;
 }
 
 interface IRespostas {
-  id: number;
-  body: string;
-  nomeUsuario: string;
-  data: string;
+  id: string;
+  corpo: string;
+  createdAt: string;
 }
 
 interface IPerguntaData {
@@ -44,49 +44,11 @@ interface IVerPerguntaQuery {
   };
 }
 
-const GET_PERGUNTA_BY_ID = gql`
-query getPerguntaById($id: String!){
-  verForumPergunta(id: $id){
-    pergunta{
-      id,
-      titulo,
-      corpo,
-      foiResolvido,
-      createdAt,
-      respostas{
-        id,
-        corpo,
-        createdAt
-      }
-    }
-  }
-}`;
-
-const DELETE_PERGUNTA_BY_ID = gql`
-mutation deletarPerguntaById($id: String!){
-  deletarForumPergunta(id: $id)
-}`;
-
-const CREATE_PERGUNTA = gql`
-mutation createPergunta($titulo: String!, $corpo: String!){
-  criarForumPergunta(options:{
-    titulo: $titulo
-    corpo: $corpo
-    foiResolvido: false
-  }){
-    pergunta{
-      id,
-      titulo,
-      corpo
-    }
-  }
-}`;
 
 const Pergunta: React.FC = () => {
   const { id } = useParams<IRouteParams>();
   const [pergunta, setPergunta] = useState<IPerguntaData>();
   const [isLoading, setIsLoading] = useState(false);
-  const [novaPergunta, setNovaPergunta] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPerguntaPopupOpen, setIsPerguntaPopupOpen] = useState(false);
 
@@ -104,17 +66,22 @@ const Pergunta: React.FC = () => {
         });
       }
     }, onError() {
-      setNovaPergunta(true);
+      addToast({
+        title: "erro ao carregar pergunta",
+        type: "error"
+      })
     }
   });
 
+  // PERGUNTA NAO ESTA SENDO DELETADA
   const [deletarPerguntaById] = useMutation(DELETE_PERGUNTA_BY_ID, {
+    refetchQueries: [{ query: GET_FORUM_PERGUNTAS }],
     onCompleted() {
       addToast({
         title: "Pergunta deletada!",
         type: "success"
       });
-      history.push('/forum?refetch');
+      history.push('/forum');
     },
     onError() {
       addToast({
@@ -125,76 +92,64 @@ const Pergunta: React.FC = () => {
     }
   });
 
-  const [createPergunta] = useMutation(CREATE_PERGUNTA, {
+  const [createResposta] = useMutation(CREATE_RESPOSTA, {
+    refetchQueries: [{ query: GET_PERGUNTA_BY_ID }],
     onCompleted() {
       addToast({
-        title: "Pergunta criada com sucesso!",
+        title: "Resposta enviada!",
         type: "success"
       });
-      history.push('/forum?refetch');
     },
     onError() {
       addToast({
-        title: "Erro ao criar a pergunta",
-        message: "não foi possível conectar com o banco de dados",
+        title: "Erro ao enviar resposta",
         type: "error"
       });
     }
   });
 
-  const handleSubmitResposta = useCallback((data, { reset }) => {
-    console.log(pergunta);
-    setIsLoading(true);
-    if (pergunta) {
-
-      let updatedRespostas = pergunta.respostas;
-      updatedRespostas.push({
-        id: 812,
-        body: data.resposta,
-        data: '12/10/2020',
-        nomeUsuario: 'Usuário'
+  //   RESPOSTA NAO ESTA SENDO DELETADA
+  const [deletarResposta] = useMutation(DELETE_RESPOSTA_BY_ID, {
+    refetchQueries: [{ query: GET_PERGUNTA_BY_ID }],
+    onCompleted() {
+      addToast({
+        title: "Resposta deletada!",
+        type: "success"
       });
+      history.push('/forum');
+    },
+    onError() {
+      addToast({
+        title: "Erro ao deletar",
+        type: "error"
+      });
+    }
+  });
 
-      const updatedPergunta = {
-        ...pergunta,
-        respostas: updatedRespostas
-      }
+  const handleSubmitResposta = useCallback((data: { resposta: string }) => {
+    setIsLoading(true);
 
-      setPergunta(updatedPergunta);
-      api.put(`/perguntas/${pergunta.id}`, updatedPergunta);
-      setIsLoading(false);
-      reset();
+    if (!pergunta) {
+      throw new Error('Pergunta não encontrada');
     }
 
-  }, [pergunta, setIsLoading]);
-
-  const handleDeleteResposta = (respostaId: number) => {
-    if (pergunta) {
-      const updatedRespostas = pergunta.respostas.filter(resposta =>
-        resposta.id !== respostaId
-      );
-
-      const updatedPergunta = {
-        ...pergunta,
-        respostas: updatedRespostas
-      }
-
-      api.put(`/perguntas/${pergunta.id}`, updatedPergunta);
-      setPergunta(updatedPergunta);
-      setIsPopupOpen(!isPopupOpen);
-    }
-  }
-
-  const handleSubmitPergunta = useCallback((data, { reset }) => {
-    createPergunta({
+    createResposta({
       variables: {
-        titulo: data.title,
-        corpo: data.pergunta
+        corpo: data.resposta,
+        perguntaId: pergunta.id
       }
     });
-    reset();
-    history.push('/forum?refetch');
-  }, []);
+
+    setIsLoading(false);
+  }, [pergunta]);
+
+  const handleDeleteResposta = (respostaId: string) => {
+    deletarResposta({
+      variables: {
+        id: respostaId
+      }
+    })
+  }
 
   const handleDeletePergunta = (perguntaId: number) => {
     deletarPerguntaById({
@@ -204,31 +159,9 @@ const Pergunta: React.FC = () => {
     });
   }
 
-  useEffect(() => {
-    // if (id === 'nova') {
-    //   setNovaPergunta(true);
-    // } else if (id) {
-    //   api.get(`/perguntas/${id}`).then(response => {
-    //     setPergunta(response.data);
-    //   });
-    // }
-  }, []);
-
   return (
     <Container>
       <TopMenu />
-
-      {novaPergunta && (
-        <ContentContainer>
-          <h2>Nova Pergunta</h2>
-          <Form onSubmit={handleSubmitPergunta}>
-            <Input name="title" placeholder="Título da pergunta" />
-            <Textarea name="pergunta"></Textarea>
-
-            <Button type="submit" loading={isLoading}>enviar pergunta</Button>
-          </Form>
-        </ContentContainer>
-      )}
 
       {pergunta && (
         <ContentContainer>
@@ -248,9 +181,9 @@ const Pergunta: React.FC = () => {
           {pergunta.respostas && pergunta.respostas.length > 0 && <h2>Respostas</h2>}
           {pergunta.respostas && pergunta.respostas.map(resposta => (
             <div key={resposta.id}>
-              <h3>{resposta.nomeUsuario} no dia {resposta.data} respondeu:</h3>
+              <h3>Feita no dia {resposta.createdAt}:</h3>
               <Content key={resposta.id}>
-                {resposta.body}
+                {resposta.corpo}
                 <>
                   <Button className="delete" onClick={() => setIsPopupOpen(true)} loading={isLoading}><FiMinusCircle size={24} /></Button>
                   <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(false)} onFulfill={() => handleDeleteResposta(resposta.id)} >

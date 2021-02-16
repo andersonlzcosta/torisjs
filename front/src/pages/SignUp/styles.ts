@@ -7,15 +7,13 @@ export const Container = styled.div`
   width: 90%;
   max-width: 450px;
 
-  img{
-    margin-bottom: 20px;
-    max-width: 100%;
-  }
-
-  aside{
-    margin-top: 30px;
+  h1{
+    text-align: center;
+    font-size: 40px;
+    padding: 0px;
+    margin: 0px 0px 20px 0px;
     font-weight: 400;
-    font-size: 17px;
+    text-transform: lowercase;
   }
 
   > a{
@@ -28,7 +26,7 @@ export const Container = styled.div`
     color: #002F67;
     border-radius: 30px;
     padding: 8px 15px;
-    margin-top: 10px;
+    margin-top: 30px;
     text-decoration: none;
     transition: background .4s;
 

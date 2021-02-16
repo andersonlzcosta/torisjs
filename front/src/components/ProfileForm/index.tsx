@@ -126,7 +126,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
       const schema = Yup.object().shape({
         nome: Yup.string().required('O nome é obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
-        emailAlternativo: Yup.string().required('E-mail é obrigatório').email('User um email válido'),
+        emailAlternativo: Yup.string().email('User um email válido'),
         password: Yup.string(),
         cargo: Yup.string(),
         profissao: Yup.string(),

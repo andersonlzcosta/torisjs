@@ -14,10 +14,8 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-  
     const user = await this.ormRepository.findOne({ where: { id }, relations: ["abrigo", "notificacoes"] });
     return user;
-  
   }
 
   public async findAll(): Promise<User[]> {
@@ -28,10 +26,8 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    
     const user = await this.ormRepository.findOne({ where: { email: email }, relations: ["abrigo", "notificacoes"]});
     return user;
-
   }
 
 
@@ -57,7 +53,7 @@ class UsersRepository implements IUsersRepository {
 
   public async update(userId: string, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
 
-    await this.ormRepository.update( userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });   
+    await this.ormRepository.update(userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo"] });
     return user;
 
@@ -65,7 +61,7 @@ class UsersRepository implements IUsersRepository {
 
   public async delete(id: string): Promise<boolean> {
 
-    await this.ormRepository.delete( id );
+    await this.ormRepository.delete(id);
     return true;
 
   }

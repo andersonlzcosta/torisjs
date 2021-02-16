@@ -22,9 +22,12 @@ class UpdateProfileService {
 
         const usersRepository = getCustomRepository(UsersRepository);
         const user = await usersRepository.findById(userId);
+        if (!user) {
+            throw new Error('user not found on updateProfileService');
+        }
         if (!(user.password == old_password)) { password = user.password };
-        return usersRepository.update( userId, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId });
-    
+        return usersRepository.update(userId, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId });
+
     }
 }
 

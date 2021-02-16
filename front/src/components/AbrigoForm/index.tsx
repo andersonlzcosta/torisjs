@@ -20,7 +20,7 @@ import Button from '../../components/Button';
 import Popup from '../../components/Popup';
 
 import { Container, Content, AbrigoUserContainer, AbrigoUser } from './styles';
-import { GET_ABRIGO_BY_ID, CRIAR_ABRIGO, DELETAR_ABRIGO, UPDATE_ABRIGO } from './apolloQueries';
+import { GET_ABRIGO_BY_ID, CRIAR_ABRIGO, DELETAR_ABRIGO, UPDATE_ABRIGO, GET_USERS } from './apolloQueries';
 import { GET_ABRIGOS } from '../../pages/Abrigos/apolloQueries';
 
 interface IAbrigoUsers {
@@ -70,15 +70,32 @@ interface ICriarAbrigoMutation {
   criarAbrigo: IAbrigoResponse;
 }
 
+interface IProfissionaisData {
+  id: string;
+  nome: string;
+  profissao: string;
+}
+
+interface IProfissionaisQuery {
+  verUsuarios: IProfissionaisData[];
+}
+
+interface ISelectOptions {
+  value: string;
+  label: string;
+}
+
 const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [abrigoId, setAbrigoId] = useState<string>();
   const [abrigo, setAbrigo] = useState<IAbrigosData>();
+  const [profissionais, setProfissionais] = useState<ISelectOptions[]>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isProfissionalPopupOpen, setIsProfissionalPopupOpen] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
+  const profissionaisFormRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
@@ -87,6 +104,24 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     variables: { id: id },
     onCompleted(data) {
       setAbrigo(data.verAbrigo.abrigo);
+    }
+  });
+
+  useQuery<IProfissionaisQuery>(GET_USERS, {
+    onCompleted(data) {
+      const profissionaisSelect = data.verUsuarios.map(profissional => {
+        const options = {
+          value: profissional.id,
+          label: profissional.nome
+        }
+        return options;
+      });
+
+      profissionaisSelect.unshift({
+        value: "null",
+        label: "selecionar"
+      });
+      setProfissionais(profissionaisSelect);
     }
   });
 
@@ -147,8 +182,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   });
 
   const handleSubmit = useCallback(async (data: IAbrigosData) => {
-    // ESTá ACEITANDO USAR TUDO COMO STRING
-    // TODOS OS CAMPOS SAO OBRIGATORIOS
+
     try {
       setIsLoading(true);
       if (abrigo) {
@@ -190,9 +224,9 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
             classificacao: data.classificacao,
             capacidade: data.capacidade,
             faixaEtaria: data.faixaEtaria,
-            lgbt: true,
+            lgbt: data.lgbt,
             genero: data.genero,
-            pcd: false,
+            pcd: data.pcd,
             observacao: data.observacao
           }
         });
@@ -229,51 +263,38 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   }, [abrigoId, setIsLoading, history]);
 
   const handleRemoveProfissional = (profissionalId: string) => {
-    // if (abrigo) {
-    //   const profissionais = abrigo.profissionais.filter(
-    //     profissional => profissional.id !== profissionalId
-    //   );
+    if (abrigo) {
+      // update abrigo ID in user
+    }
 
-    //   try {
-    //     api.put(`/abrigos/${abrigo.id}`, { ...abrigo, profissionais });
-    //     setAbrigo({ ...abrigo, profissionais });
-    //     addToast({
-    //       type: 'success',
-    //       title: 'Profissional Removido!',
-    //       message: 'informações do abrigo foram atualizadas',
-    //     });
-    //     setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
-    //   } catch (err) {
-    //     addToast({
-    //       type: 'error',
-    //       title: 'Erro ao remover!',
-    //       message: 'tente novamente ou entre em contato com suporte.',
-    //     });
-    //     setIsProfissionalPopupOpen(!isProfissionalPopupOpen);
-    //   }
-    // }
   }
 
-  const handleAddProfissional = () => {
-    if (abrigo) {
-      setHookAbrigo(abrigo);
-      history.push('/profissionais/todos');
+  const handleAddProfissional = (formData: { profissionais: string; }) => {
+    console.log(formData);
+    if (formData.profissionais !== "null") {
+      //update apenas abrigoId in user
     }
   }
 
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar novo abrigo')
     id && setAbrigoId(id)
-    console.log(id);
   }, [id]);
 
   return (
     <Container>
       <h1>{heading}</h1>
       <Content>
+        <Form ref={profissionaisFormRef} onSubmit={handleAddProfissional} className="full-width">
+          <div className="full-width">
+            <label>profissionais</label>
+            {profissionais && (
+              <Select name="profissionais" options={profissionais} />
+            )}
+          </div>
+          <button className="alt" type="submit">adicionar profissional</button>
+        </Form>
 
-        <label>profissionais</label>
-        <button className="alt" onClick={handleAddProfissional}>adicionar profissional</button>
         {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
           <AbrigoUserContainer key={profissional.id}>
             <AbrigoUser >

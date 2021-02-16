@@ -3,29 +3,44 @@ import { Link, useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import { useMutation } from '@apollo/client';
+
+import { CREATE_USER } from './apolloQueries';
 import getValidationErrors from '../../utils/getValidationErrors';
-
-
-import { Container } from './styles';
-import logo from '../../images/redeabrigo-logo-completo.png';
+import { useToast } from '../../hooks/toast';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-import { useAuth } from '../../hooks/auth';
-import { useToast } from '../../hooks/toast';
+import { Container } from './styles';
 
 interface credentialsData {
+  nome: string;
   email: string;
-  password: string;
+  pass: string;
 }
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
-  const { signIn } = useAuth();
   const { addToast } = useToast();
+
+  const [CreateUser] = useMutation(CREATE_USER, {
+    onCompleted() {
+      addToast({
+        title: "Usuário criado!",
+        type: "success"
+      });
+      history.push('/');
+    },
+    onError() {
+      addToast({
+        title: "Erro ao criar usuário",
+        type: "error"
+      });
+    }
+  });
 
   const handleSubmit = useCallback(async (formData: credentialsData) => {
     try {
@@ -34,18 +49,22 @@ const SignIn: React.FC = () => {
       }
       formRef.current.setErrors({});
       const schema = Yup.object().shape({
+        nome: Yup.string().required('Nome obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
-        password: Yup.string().required('Senha Obrigatória'),
+        pass: Yup.string().required('Senha Obrigatória'),
       });
 
       await schema.validate(formData, {
         abortEarly: false,
       });
 
-      await signIn({ email: formData.email, password: formData.password });
-
-      history.push('/dashboard');
-
+      CreateUser({
+        variables: {
+          nome: formData.nome,
+          email: formData.email,
+          pass: formData.pass
+        }
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -69,19 +88,17 @@ const SignIn: React.FC = () => {
 
   return (
     <Container style={{ maxWidth: 400 }}>
-      <img src={logo} alt="logo da Rede Abrigo" />
-
       <Form ref={formRef} onSubmit={handleSubmit}>
-        <Input name="email" placeholder="E-mail" />
-        <Input name="password" type="password" placeholder="Senha" />
+        <h1>Cadastre-se</h1>
+        <Input name="nome" placeholder="Nome" />
+        <Input name="email" placeholder="E-mail" type="email" />
+        <Input name="pass" type="password" placeholder="Senha" />
         <Button type="submit">Entrar</Button>
       </Form>
 
-      <aside>ainda não possui login?</aside>
-      <Link to="/cadastro">Cadastre-se</Link>
-      <a href="https://www.redeabrigo.org/" target="_blank">Sobre a Rede Abrigo</a>
+      <Link to="/">Voltar ao login</Link>
     </Container>
   );
 }
 
-export default SignIn;
+export default SignUp;

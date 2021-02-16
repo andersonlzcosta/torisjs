@@ -10,6 +10,16 @@ export const GET_ABRIGOS = gql`
 }
 `;
 
+export const GET_USERS = gql`
+{
+  verUsuarios{
+    id,
+    nome,
+    profissao
+  }
+}
+`;
+
 export const GET_ABRIGO_BY_ID = gql`
 query getAbrigoById($id: String!) {
   verAbrigo(id: $id){
@@ -81,6 +91,22 @@ export const UPDATE_ABRIGO = gql`
     }){
       abrigo{
         id
+        nome
+        telefone1
+        telefone2
+        email1
+        email2
+        endereco
+        bairro
+        cidade
+        estado
+        classificacao
+        capacidade
+        faixaEtaria
+        lgbt
+        genero
+        pcd
+        observacao
       }
     }
   }
@@ -126,6 +152,21 @@ export const CRIAR_ABRIGO = gql`
       abrigo{
         id
         nome
+        telefone1
+        telefone2
+        email1
+        email2
+        endereco
+        bairro
+        cidade
+        estado
+        classificacao
+        capacidade
+        faixaEtaria
+        lgbt
+        genero
+        pcd
+        observacao
       }
     }
   }
