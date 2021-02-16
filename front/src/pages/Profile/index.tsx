@@ -22,7 +22,22 @@ interface IRouteParams {
 interface IUserData {
   id: string;
   email: string;
-  password: string;
+  nome: string;
+  emailAlternativo: string;
+  nascimento: any;
+  cargo: string;
+  telefone1: string;
+  telefone2: string;
+  profissao: string;
+  abrigo: {
+    id: string;
+    nome: string;
+  } | null;
+}
+
+interface IUserManipulatedData {
+  id: string;
+  email: string;
   nome: string;
   emailAlternativo: string;
   nascimento: any;
@@ -42,7 +57,7 @@ interface IGETQueryResponse {
 const Profile: React.FC = () => {
   const { id } = useParams<IRouteParams>();
   const { hookAbrigo, setHookAbrigo } = useAbrigo();
-  const [user, setUser] = useState<IUserData>();
+  const [user, setUser] = useState<IUserManipulatedData>();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const history = useHistory();
   const { addToast } = useToast();
@@ -51,9 +66,12 @@ const Profile: React.FC = () => {
     variables: { id: id },
     onCompleted(data) {
       const nascimento = new Date(data.verUsuario.user.nascimento);
+      let abrigoId = "";
+      if (data.verUsuario.user.abrigo) { abrigoId = data.verUsuario.user.abrigo.id }
       setUser({
         ...data.verUsuario.user,
-        nascimento: nascimento
+        nascimento: nascimento,
+        abrigoId
       });
     },
     onError() { addToast({ title: "erro ao carregar usuário" }) }
