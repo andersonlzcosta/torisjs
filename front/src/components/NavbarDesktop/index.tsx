@@ -32,7 +32,7 @@ const NavbarDesktop: React.FC = () => {
 
         <label>Espaço de Conversa</label>
         <Link to="/forum">ver todas as conversas</Link>
-        <Link to="/pergunta/nova">criar nova pergunta</Link>
+        <Link to="/novapergunta">criar nova pergunta</Link>
 
         <label>notificações</label>
         <Link to="/notifications/new">criar notificação</Link>
