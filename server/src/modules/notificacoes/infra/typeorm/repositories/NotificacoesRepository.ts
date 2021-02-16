@@ -14,7 +14,7 @@ class NotificacoesRepository implements INotificacoesRepository {
   
     public async findById(id: string): Promise<Notificacao | undefined> {
     
-        const notificacao = await this.ormRepository.findOne({ where: { id } });
+        const notificacao = await this.ormRepository.findOne({ where: { id }, relations: ["user"]  });
         return notificacao;
     
     }
@@ -38,10 +38,10 @@ class NotificacoesRepository implements INotificacoesRepository {
             conteudo,
             arquivada,
             tipo,
-            users: [{ id: userId }]
+            user: { id: userId }
         });
         await this.ormRepository.save(newNotificacao);
-        const notificacao = await this.ormRepository.findOne({ where: { conteudo }, relations: ["users"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
+        const notificacao = await this.ormRepository.findOne({ where: { id: newNotificacao.id }, relations: ["user"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
         return notificacao;
   
     }
@@ -66,7 +66,7 @@ class NotificacoesRepository implements INotificacoesRepository {
           conteudo,
           arquivada,
           tipo,
-          users: [{ id: userId }]
+          user: { id: userId }
         }
       );   
       const notificacao = await this.ormRepository.findOne({ where: { id: notificacaoId }, relations: ["users"] });

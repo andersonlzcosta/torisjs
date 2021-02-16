@@ -73,8 +73,8 @@ class Abrigo {
     @Column({ nullable: true })
     observacao: string;
 
-    @Field(() => [User])
-    @OneToMany(() => User, user => user.abrigo)
+    @Field(() => [User],{ nullable: true })
+    @OneToMany(() => User, user => user.abrigo, { nullable: true })
     profissionais: User[];
     
     @Field(() => String)

@@ -1,13 +1,15 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
+import { container } from "tsyringe";
+
 import Notificacao from '../../typeorm/entities/Notificacao';
 import CreateNotificacaoService from '../../../services/CreateNotificacaoService';
 import UpdateNotificacaoService from '../../../services/UpdateNotificacaoService';
+
 import NotificacoesRepository from "../../typeorm/repositories/NotificacoesRepository";
 import { getCustomRepository } from "typeorm";
-import { container } from "tsyringe";
 
-import { CreateNotificacaoInput } from "./CreateNotificacaoInput";
-import { UpdateNotificacaoInput } from "./UpdateNotificacaoInput";
+import { CriarNotificacaoInput } from "./CreateNotificacaoInput";
+import { AtualizarNotificacaoInput } from "./UpdateNotificacaoInput";
 
 @ObjectType()
 class NotificacaoResponse {  
@@ -23,7 +25,7 @@ export class NotificacaoResolver {
 
     @Mutation(() => NotificacaoResponse)
     async criarNotificacao(
-        @Arg("options") options: CreateNotificacaoInput
+        @Arg("options") options: CriarNotificacaoInput
       ): Promise<NotificacaoResponse> {
 
         const createNotificacao = container.resolve(CreateNotificacaoService);
@@ -34,7 +36,7 @@ export class NotificacaoResolver {
 
     @Mutation(() => NotificacaoResponse)
     async updateNotificacao(
-        @Arg("options") options: UpdateNotificacaoInput
+        @Arg("options") options: AtualizarNotificacaoInput
     ): Promise<NotificacaoResponse> {
 
         const updateNotificacao = container.resolve(UpdateNotificacaoService);
