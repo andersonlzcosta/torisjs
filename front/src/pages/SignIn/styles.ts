@@ -12,6 +12,12 @@ export const Container = styled.div`
     max-width: 100%;
   }
 
+  aside{
+    margin-top: 30px;
+    font-weight: 400;
+    font-size: 17px;
+  }
+
   > a{
     width: 100%;
     max-width: 250px;
@@ -22,7 +28,7 @@ export const Container = styled.div`
     color: #002F67;
     border-radius: 30px;
     padding: 8px 15px;
-    margin-top: 30px;
+    margin-top: 10px;
     text-decoration: none;
     transition: background .4s;
 
