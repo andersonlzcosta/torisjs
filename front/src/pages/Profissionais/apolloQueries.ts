@@ -5,8 +5,7 @@ export const GET_USERS = gql`
   verUsuarios{
     id,
     nome,
-    email,
-    profissao
+    profissao,
   }
 }
 `;
@@ -38,6 +37,18 @@ mutation Register(
   }){
     user{
       id
+      nome
+      email
+      emailAlternativo
+      nascimento
+      cargo
+      telefone1
+      telefone2
+      profissao
+      abrigo{
+        id
+        nome
+      }
     }
   }
 }
@@ -47,7 +58,6 @@ export const ATUALIZAR_USUARIO = gql`
 mutation Update(
   $userId: String!
   $email: String!
-  $pass: String!
   $nome: String
   $emailAlt: String
   $nascimento: DateTime
@@ -60,7 +70,6 @@ mutation Update(
   updateUsuario(options:{
     userId: $userId
     email: $email
-    password: $pass
     nome: $nome
     emailAlternativo: $emailAlt
     nascimento: $nascimento
@@ -72,6 +81,18 @@ mutation Update(
   }){
     user{
       id
+      nome
+      email
+      emailAlternativo
+      nascimento
+      cargo
+      telefone1
+      telefone2
+      profissao
+      abrigo{
+        id
+        nome
+      }
     }
   }
 }
