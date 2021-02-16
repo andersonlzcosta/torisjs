@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 import Profissionais from '../pages/Profissionais';
 import Abrigos from '../pages/Abrigos';
@@ -14,6 +15,7 @@ import CursoDetails from '../pages/Assistir/CursoDetails';
 import Aula from '../pages/Assistir/Aula';
 import Forum from '../pages/Forum';
 import Pergunta from '../pages/Pergunta';
+import NovaPergunta from '../pages/NovaPergunta';
 import CursoPergunta from '../pages/Assistir/CursoPergunta';
 import Notification from '../pages/Notification';
 
@@ -22,6 +24,7 @@ const Routes: React.FC = () => {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
+      <Route path="/cadastro" exact component={SignUp} />
       <Route path="/dashboard" component={Dashboard} />
 
       <Route path="/profissionais" component={Profissionais} />
@@ -40,6 +43,7 @@ const Routes: React.FC = () => {
 
       <Route path="/forum" component={Forum} />
       <Route path="/pergunta/:id" component={Pergunta} />
+      <Route path="/novapergunta" component={NovaPergunta} />
 
       <Route path="/notifications" component={Notification} />
     </Switch>
