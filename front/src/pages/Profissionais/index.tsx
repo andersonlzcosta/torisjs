@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
-import { Container, Content, Estatisticas, UserList, User, Warning } from './styles';
+import { useQuery } from '@apollo/client';
+import { Container, UserList, User, Warning } from './styles';
 import { useAbrigo } from '../../hooks/AbrigoHook';
 import { IAbrigosData } from '../../components/AbrigoForm';
 
@@ -11,7 +11,7 @@ import Tabs from '../../components/Tabs';
 import Search from '../../components/Search';
 import ProfileForm from '../../components/ProfileForm';
 
-import Perfil from '../../images/perfil.jpg';
+import Perfil from '../../images/perfil-avatar.png';
 import Plus from '../../images/plus.svg';
 import api from '../../services/api';
 import NavbarDesktop from '../../components/NavbarDesktop';
@@ -65,9 +65,6 @@ const Profissionais: React.FC = () => {
       });
     }
   }
-
-  useEffect(() => {
-  }, []);
 
   return (
     <Container>
