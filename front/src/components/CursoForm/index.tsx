@@ -1,109 +1,155 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useToast } from '../../hooks/toast';
-import api from '../../services/api';
-
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import { useMutation } from '@apollo/client';
 import * as Yup from 'yup';
-import getValidationErrors from '../../utils/getValidationErrors';
 
-import { Container, Content } from './styles';
+import { useToast } from '../../hooks/toast';
+import getValidationErrors from '../../utils/getValidationErrors';
+import { CREATE_CURSO, DELETAR_CURSO, UPDATE_CURSO } from './apolloQueries';
+import { VER_CURSOS } from '../../pages/Cursos/apolloQueries';
+
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Form } from '@unform/web';
 import Popup from '../Popup';
+import { Container, Content } from './styles';
 
-import { FormHandles } from '@unform/core';
-import { ICursoData } from '../../pages/Curso';
+import { ICursoGQL } from '../../pages/Curso';
 
-interface ICursoSubmittedData {
+interface ICursoFormData {
   nome: string;
   descricao: string;
 }
 
 interface ICursoFormProps {
-  curso?: ICursoData;
+  curso?: ICursoGQL;
   headingText?: string;
   updateCursosList?: () => void;
 }
 
 const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursosList }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
   const [cursoId, setCursoId] = useState<string>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [initialData, setInitialData] = useState<ICursoFormData>();
 
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
   const { addToast } = useToast();
 
-  const handleSubmit = useCallback(async (data: ICursoSubmittedData) => {
-    try {
-      setIsLoading(true);
-      if (curso) {
-        const updatedCurso = {
-          id: curso.id,
-          nome: data.nome,
-          descricao: data.descricao,
-          modulos: curso.modulos
-        }
-        await api.put(`/cursos/${cursoId}`, updatedCurso);
-        addToast({
-          title: "Curso atualizado!",
-          type: "success"
-        });
-      } else {
-        await api.post(`/cursos`, {
-          id: Math.floor(Math.random() * Math.floor(1000)),
-          nome: data.nome,
-          descricao: data.descricao,
-          modulos: []
-        });
-        addToast({
-          title: "Curso criado!",
-          type: "success"
-        });
-        history.push('/cursos/todos');
-        updateCursosList && updateCursosList();
-      }
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
+  const [CreateCurso] = useMutation(CREATE_CURSO, {
+    refetchQueries: [{ query: VER_CURSOS }],
+    onCompleted() {
       addToast({
-        title: "Erro ao criar",
-        message: "tente novamente",
+        title: "Curso criado com sucesso!",
+        type: "success",
+      });
+      history.push('/cursos/todos');
+    },
+    onError() {
+      addToast({
+        title: "Ocorreu um erro ao criar o curso",
         type: "error"
       });
-      setIsLoading(false);
     }
-  }, [cursoId, setIsLoading, setCursoId, curso]);
+  });
 
-  const handleDelete = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await api.delete(`/cursos/${cursoId}`);
-      setIsLoading(false);
+  const [DeletarCurso] = useMutation(DELETAR_CURSO, {
+    refetchQueries: [{ query: VER_CURSOS }],
+    onCompleted() {
       addToast({
-        title: "Curso deletado",
+        title: "curso deletado com sucesso",
         type: "success"
       });
-      setIsPopupOpen(!isPopupOpen);
       history.push('/cursos/todos');
-    } catch (err) {
+    },
+    onError() {
       addToast({
-        title: "Erro ao deletar",
-        message: "tente novamente",
+        title: "Ocorreu um erro ao deletar o curso",
         type: "error"
       });
-      setIsLoading(false);
-      setIsPopupOpen(!isPopupOpen);
     }
-  }, [cursoId, setIsLoading, history]);
+  });
+
+  const [AtualizarCurso] = useMutation(UPDATE_CURSO, {
+    refetchQueries: [{ query: VER_CURSOS }],
+    onCompleted() {
+      addToast({
+        title: "Curso atualizado com sucesso!",
+        type: "success",
+      });
+      history.push('/cursos/todos');
+    },
+    onError() {
+      addToast({
+        title: "Ocorreu um erro ao atualizar o curso",
+        type: "error"
+      });
+    }
+  });
+
+  const handleSubmit = useCallback(async (data: ICursoFormData) => {
+    try {
+      if (!formRef.current) {
+        throw new Error('formRef invalid');
+      }
+      formRef.current.setErrors({});
+      const schema = Yup.object().shape({
+        nome: Yup.string().required('O nome é obrigatório'),
+        descricao: Yup.string().required('este campo é obrigatório')
+      });
+
+      await schema.validate(data, {
+        abortEarly: false
+      });
+
+      if (curso) {
+        AtualizarCurso({
+          variables: {
+            cursoId: curso.verCurso.curso.id,
+            nome: data.nome,
+            descricao: data.descricao
+          }
+        });
+      } else {
+        CreateCurso({
+          variables: {
+            nome: data.nome,
+            descricao: data.descricao
+          }
+        });
+      }
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      if (!formRef.current) {
+        throw new Error('formRef invalid');
+      }
+      formRef.current.setErrors(errors);
+      return
+    }
+
+
+  }, [curso]);
+
+  const handleDelete = useCallback(async () => {
+    curso &&
+      DeletarCurso({
+        variables: {
+          id: curso.verCurso.curso.id
+        }
+      });
+  }, [curso]);
 
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar curso');
 
     if (curso) {
-      setCursoId(curso.id.toString());
+      setCursoId(curso.verCurso.curso.id);
+      setInitialData({
+        nome: curso.verCurso.curso.nome,
+        descricao: curso.verCurso.curso.descricao
+      });
     }
   }, [setCursoId, setHeading, curso]);
 
@@ -111,7 +157,7 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
     <Container>
       <h1>{heading}</h1>
       <Content>
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={curso}>
+        <Form ref={formRef} onSubmit={handleSubmit} initialData={initialData}>
           <div className="full-width">
             <label>nome</label>
             <Input name="nome" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
@@ -122,12 +168,12 @@ const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursos
             <Input name="descricao" containerStyle={{ border: 'none', borderRadius: 0, width: '100%' }} />
           </div>
 
-          <Button type="submit" loading={isLoading}>salvar curso</Button>
+          <Button type="submit">salvar curso</Button>
         </Form>
 
         {cursoId && (
           <>
-            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar curso</Button>
+            <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)}>deletar curso</Button>
             <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >
               Tem certeza que deseja deletar este curso?
             </Popup>

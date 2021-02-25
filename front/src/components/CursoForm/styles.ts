@@ -64,5 +64,8 @@ export const Content = styled.div`
       font-weight: 300;
       font-size: 27px;
     }
+    svg{
+      stroke: red;
+    }
   }
 `;
