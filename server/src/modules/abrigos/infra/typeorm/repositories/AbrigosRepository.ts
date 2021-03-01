@@ -22,7 +22,7 @@ class AbrigosRepository implements IAbrigosRepository {
   public async findAll(): Promise<Abrigo[]> {
 
     let abrigos: Abrigo[];
-    abrigos = await this.ormRepository.find();
+    abrigos = await this.ormRepository.find({ relations: ["profissionais"]});
     return abrigos;
 
   }
