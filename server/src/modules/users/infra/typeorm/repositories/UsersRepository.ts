@@ -20,7 +20,7 @@ class UsersRepository implements IUsersRepository {
 
   public async findAll(): Promise<User[]> {
     let users: User[];
-    users = await this.ormRepository.find();
+    users = await this.ormRepository.find({ relations: ["abrigo"] });
     return users;
 
   }
@@ -54,6 +54,14 @@ class UsersRepository implements IUsersRepository {
   public async update(userId: string, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
 
     await this.ormRepository.update(userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
+    const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo"] });
+    return user;
+
+  }
+  
+  public async updateAbrigo(userId: string, abrigoId:string): Promise<User | undefined> {
+
+    await this.ormRepository.update( userId, { id: userId, abrigo: { id: abrigoId } });   
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo"] });
     return user;
 
