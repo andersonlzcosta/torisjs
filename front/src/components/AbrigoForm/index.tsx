@@ -3,12 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { FiMinusCircle } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import * as Yup from 'yup';
 
 import { useAbrigo } from '../../hooks/AbrigoHook';
 import { useToast } from '../../hooks/toast';
-import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import Perfil from '../../images/perfil.jpg';
@@ -20,7 +19,7 @@ import Button from '../../components/Button';
 import Popup from '../../components/Popup';
 
 import { Container, Content, AbrigoUserContainer, AbrigoUser } from './styles';
-import { GET_ABRIGO_BY_ID, CRIAR_ABRIGO, DELETAR_ABRIGO, UPDATE_ABRIGO, GET_USERS } from './apolloQueries';
+import { GET_ABRIGO_BY_ID, CRIAR_ABRIGO, DELETAR_ABRIGO, UPDATE_ABRIGO, GET_USERS, ADICIONAR_PROFISSIONAL } from './apolloQueries';
 import { GET_ABRIGOS } from '../../pages/Abrigos/apolloQueries';
 
 interface IAbrigoUsers {
@@ -66,10 +65,6 @@ interface IAtualizarAbrigoMutation {
   atualizarAbrigo: IAbrigoResponse;
 }
 
-interface ICriarAbrigoMutation {
-  criarAbrigo: IAbrigoResponse;
-}
-
 interface IProfissionaisData {
   id: string;
   nome: string;
@@ -88,8 +83,6 @@ interface ISelectOptions {
 const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heading, setHeading] = useState<string>();
-  const [abrigoId, setAbrigoId] = useState<string>();
-  const [abrigo, setAbrigo] = useState<IAbrigosData>();
   const [profissionais, setProfissionais] = useState<ISelectOptions[]>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isProfissionalPopupOpen, setIsProfissionalPopupOpen] = useState(false);
@@ -100,11 +93,9 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
   const { setHookAbrigo } = useAbrigo();
   const { addToast } = useToast();
 
-  useQuery<IVerAbrigoQuery>(GET_ABRIGO_BY_ID, {
+  const [getAbrigo, { data: abrigoQl }] = useLazyQuery<IVerAbrigoQuery>(GET_ABRIGO_BY_ID, {
     variables: { id: id },
-    onCompleted(data) {
-      setAbrigo(data.verAbrigo.abrigo);
-    }
+    fetchPolicy: "no-cache"
   });
 
   useQuery<IProfissionaisQuery>(GET_USERS, {
@@ -181,15 +172,35 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     }
   });
 
-  const handleSubmit = useCallback(async (data: IAbrigosData) => {
+  const [AdicionarProfissional] = useMutation(ADICIONAR_PROFISSIONAL, {
+    onCompleted() {
+      addToast({
+        type: 'success',
+        title: 'Profissional Adicionado!',
+      });
+      getAbrigo()
+    },
+    onError() {
+      addToast({
+        type: 'error',
+        title: 'Ocorreu um erro ao adicionar o profissional',
+      });
+    }
+  });
 
+  const handleSubmit = useCallback(async (data: any) => {
+    let formData = {} as any;
+    Object.keys(data).forEach(key => {
+      if (data[key] !== "") {
+        formData[key] = data[key];
+      }
+    });
     try {
       setIsLoading(true);
-      if (abrigo) {
-        console.log("update");
+      if (abrigoQl) {
         AtualizarAbrigo({
           variables: {
-            id: abrigo.id,
+            id: abrigoQl.verAbrigo.abrigo.id,
             nome: data.nome,
             telefone1: data.telefone1,
             telefone2: data.telefone2,
@@ -209,26 +220,8 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
           }
         });
       } else {
-        console.log('create');
         CriarAbrigo({
-          variables: {
-            nome: data.nome,
-            tel1: data.telefone1,
-            tel2: data.telefone2,
-            email1: data.email1,
-            email2: data.email2,
-            endereco: data.endereco,
-            bairro: data.bairro,
-            cidade: data.cidade,
-            estado: data.estado,
-            classificacao: data.classificacao,
-            capacidade: data.capacidade,
-            faixaEtaria: data.faixaEtaria,
-            lgbt: data.lgbt,
-            genero: data.genero,
-            pcd: data.pcd,
-            observacao: data.observacao
-          }
+          variables: formData
         });
       }
       setIsLoading(false);
@@ -240,62 +233,57 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
         message: 'tente novamente ou entre em contato com suporte.',
       });
     }
-  }, [abrigo, setIsLoading, setAbrigoId]);
+  }, [abrigoQl]);
 
   const handleDelete = useCallback(async () => {
-    try {
-      setIsLoading(true);
+    abrigoQl &&
       DeletarAbrigo({
         variables: {
-          id: abrigoId
+          id: abrigoQl.verAbrigo.abrigo.id
         }
       });
-      setIsLoading(false);
-      setIsPopupOpen(!isPopupOpen);
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao deletar',
-        message: 'tente novamente ou entre em contato com suporte.',
-      });
-      setIsPopupOpen(!isPopupOpen);
-    }
-  }, [abrigoId, setIsLoading, history]);
+    setIsPopupOpen(!isPopupOpen);
+  }, [abrigoQl]);
 
   const handleRemoveProfissional = (profissionalId: string) => {
-    if (abrigo) {
+    if (abrigoQl) {
       // update abrigo ID in user
     }
-
   }
 
   const handleAddProfissional = (formData: { profissionais: string; }) => {
-    console.log(formData);
-    if (formData.profissionais !== "null") {
-      //update apenas abrigoId in user
+    if (formData.profissionais !== "null" && abrigoQl) {
+      AdicionarProfissional({
+        variables: {
+          abrigoId: abrigoQl.verAbrigo.abrigo.id,
+          profissionalId: formData.profissionais
+        }
+      });
     }
   }
 
   useEffect(() => {
     headingText ? setHeading(headingText) : setHeading('criar novo abrigo')
-    id && setAbrigoId(id)
+    id && getAbrigo();
   }, [id]);
 
   return (
     <Container>
       <h1>{heading}</h1>
       <Content>
-        <Form ref={profissionaisFormRef} onSubmit={handleAddProfissional} className="full-width">
-          <div className="full-width">
-            <label>profissionais</label>
-            {profissionais && (
-              <Select name="profissionais" options={profissionais} />
-            )}
-          </div>
-          <button className="alt" type="submit">adicionar profissional</button>
-        </Form>
+        {abrigoQl && (
+          <Form ref={profissionaisFormRef} onSubmit={handleAddProfissional} className="full-width">
+            <div className="full-width">
+              <label>profissionais</label>
+              {profissionais && (
+                <Select name="profissionais" options={profissionais} />
+              )}
+            </div>
+            <button className="alt" type="submit">adicionar profissional</button>
+          </Form>
+        )}
 
-        {abrigo && abrigo.profissionais && abrigo.profissionais.map(profissional => (
+        {abrigoQl && abrigoQl.verAbrigo.abrigo.profissionais && abrigoQl.verAbrigo.abrigo.profissionais.map(profissional => (
           <AbrigoUserContainer key={profissional.id}>
             <AbrigoUser >
               <div>
@@ -310,7 +298,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
           </AbrigoUserContainer>
         ))}
 
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigo}>
+        <Form ref={formRef} onSubmit={handleSubmit} initialData={abrigoQl && abrigoQl.verAbrigo.abrigo}>
           <div className="full-width">
             <label>nome</label>
             <Input name="nome" className="alt" />
@@ -398,7 +386,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
           <Button type="submit" loading={isLoading}>salvar</Button>
         </Form>
 
-        {abrigo && (
+        {abrigoQl && (
           <>
             <Button className="delete" onClick={() => setIsPopupOpen(!isPopupOpen)} loading={isLoading}>deletar abrigo</Button>
             <Popup isVisible={isPopupOpen} onCancel={() => setIsPopupOpen(!isPopupOpen)} onFulfill={handleDelete} >

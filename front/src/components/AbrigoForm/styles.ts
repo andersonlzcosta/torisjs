@@ -104,8 +104,9 @@ export const Content = styled.div`
       border-radius: 10px;
       min-height: 150px;
       border-color: #002F67;
-      margin: 5px 0 0 -5px;
+      margin: 5px 0 0 0;
       outline: none;
+      border-radius: 30px;
       padding: 15px;
     }
 
@@ -135,7 +136,9 @@ export const AbrigoUser = styled.aside`
   width: 100%;
 
   div{
+    display: flex;
     flex-direction: row;
+    align-items: center;
   }
 
   img{

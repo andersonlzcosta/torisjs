@@ -115,39 +115,39 @@ export const UPDATE_ABRIGO = gql`
 export const CRIAR_ABRIGO = gql`
   mutation CriarAbrigo(
     $nome: String!
-    $tel1: String!
-    $tel2: String!
-    $email1: String!
-    $email2: String!
-    $endereco: String!
-    $bairro: String!
-    $cidade: String!
-    $estado: String!
-    $classificacao: String!
-    $capacidade: String!
-    $faixaEtaria: String!
-    $lgbt: Boolean!
-    $genero: String!
-    $pcd: Boolean!
-    $observacao: String!
+    $telefone1: String
+    $telefone2: String
+    $email1: String
+    $email2: String
+    $endereco: String
+    $bairro: String
+    $cidade: String
+    $estado: String
+    $classificacao: String
+    $capacidade: String
+    $faixaEtaria: String
+    $lgbt: Boolean
+    $genero: String
+    $pcd: Boolean
+    $observacao: String
   ){
     criarAbrigo(options: {
-      nome: $nome,
-      telefone1: $tel1,
-      telefone2: $tel2,
-      email1: $email1,
-      email2: $email2,
-      endereco: $endereco,
-      bairro: $bairro,
-      cidade: $cidade,
-      estado: $estado,
-      classificacao: $classificacao,
-      capacidade: $capacidade,
-      faixaEtaria: $faixaEtaria,
-      lgbt: $lgbt,
-      genero: $genero,
-      pcd: $pcd,
-      observacao: $observacao,
+      nome: $nome
+      telefone1: $telefone1
+      telefone2: $telefone2
+      email1: $email1
+      email2: $email2
+      endereco: $endereco
+      bairro: $bairro
+      cidade: $cidade
+      estado: $estado
+      classificacao: $classificacao
+      capacidade: $capacidade
+      faixaEtaria: $faixaEtaria
+      lgbt: $lgbt
+      genero: $genero
+      pcd: $pcd
+      observacao: $observacao
     }){
       abrigo{
         id
@@ -175,5 +175,26 @@ export const CRIAR_ABRIGO = gql`
 export const DELETAR_ABRIGO = gql`
   mutation DeletarAbrigo($id: String!){
     deletarAbrigo(id: $id)
+  }
+`;
+
+export const ADICIONAR_PROFISSIONAL = gql`
+  mutation AdicionarProfissional(
+    $profissionalId: String!
+    $abrigoId: String!
+  ){
+    adicionarUsuarioAoAbrigo(
+      abrigoId: $abrigoId
+      userId: $profissionalId
+    ){
+      user{
+        id
+        nome
+        cargo
+        abrigo{
+          id
+        }
+      }
+    }
   }
 `;
