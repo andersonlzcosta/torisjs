@@ -21,6 +21,8 @@ export interface IUserData {
   id: string;
   email: string;
   nome: string;
+  password: string;
+  oldPassword: string;
   emailAlternativo: string;
   nascimento: any;
   cargo: string;
@@ -115,7 +117,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
     }
   });
 
-  const handleSubmit = useCallback(async (formData: IUserData) => {
+  const handleSubmit = useCallback(async (formData: any) => {
     setIsLoading(true);
     console.log(formData);
     try {
@@ -126,7 +128,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
       const schema = Yup.object().shape({
         nome: Yup.string().required('O nome é obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
-        emailAlternativo: Yup.string().email('User um email válido'),
+        emailAlternativo: Yup.string().email('Use um email válido'),
         password: Yup.string(),
         cargo: Yup.string(),
         profissao: Yup.string(),
@@ -138,41 +140,21 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         abortEarly: false
       });
 
-      let abrigoId;
-      if (formData.abrigoId === "") {
-        abrigoId = null
-      } else {
-        abrigoId = formData.abrigoId
-      }
+      let parsedData = {} as any;
+      Object.keys(formData).forEach(key => {
+        if (formData[key] !== "") {
+          parsedData[key] = formData[key];
+        }
+      });
 
       if (user) {
+        parsedData.userId = user.id;
         await Update({
-          variables: {
-            userId: user.id,
-            email: formData.email,
-            nome: formData.nome,
-            emailAlt: formData.emailAlternativo,
-            nascimento: formData.nascimento,
-            cargo: formData.cargo,
-            tel1: formData.telefone1,
-            tel2: formData.telefone2,
-            profissao: formData.profissao,
-            abrigoId
-          }
+          variables: parsedData
         });
       } else {
         await Register({
-          variables: {
-            email: formData.email,
-            nome: formData.nome,
-            emailAlt: formData.emailAlternativo,
-            nascimento: formData.nascimento,
-            cargo: formData.cargo,
-            tel1: formData.telefone1,
-            tel2: formData.telefone2,
-            profissao: formData.profissao,
-            abrigoId
-          }
+          variables: parsedData
         });
       }
       setIsLoading(false);
@@ -196,7 +178,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
     }
     setIsPopupOpen(!isPopupOpen);
     setIsLoading(false);
-  }, [setIsLoading, history, user]);
+  }, [setIsLoading, user]);
 
   useEffect(() => {
     hookAbrigo.id ? setHeading('visualizar perfil') : setHeading(headingText)
@@ -267,17 +249,27 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
             </div>
           )}
 
-          {/* {user && (
+          {user && (
+            <>
+              <div className="half-width">
+                <label>senha antiga</label>
+                <Input className="alt" name="old_password" type="password" />
+              </div>
+
+              <div className="half-width">
+                <label>senha nova</label>
+                <Input className="alt" name="password" type="password" />
+              </div>
+            </>
+          )}
+
+          {!user && (
             <div className="half-width">
-              <label>senha antiga</label>
-              <Input className="alt" name="old_password" type="password" />
+              <label>senha</label>
+              <Input className="alt" name="password" type="password" />
             </div>
           )}
 
-          <div className="half-width">
-            <label>senha</label>
-            <Input className="alt" name="password" type="password" />
-          </div> */}
 
           {!hookAbrigo.id && (
             <Button type="submit" loading={isLoading}>salvar</Button>
