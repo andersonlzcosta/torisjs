@@ -30,13 +30,10 @@ const Abrigos: React.FC = () => {
   const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
   let query = new URLSearchParams(useLocation().search);
 
-  useQuery<IAbrigosQuery>(GET_ABRIGOS, {
-    onCompleted(data) { data && setAbrigos(data.verAbrigos) }
-  });
+  const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
 
   const searchAbrigos = useCallback(async (query) => {
-    const response = await api.get(`/abrigos?nome_like=${query}`);
-    setAbrigos(response.data);
+
   }, []);
 
   return (
@@ -53,7 +50,7 @@ const Abrigos: React.FC = () => {
         <>
           <Search searchTitle="abrigos cadastrados" loadList={searchAbrigos} />
           <AbrigosList>
-            {abrigos && abrigos.map(abrigo => (
+            {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
               <Abrigo key={abrigo.id}>
                 <Link to={`/abrigo/${abrigo.id}`}>
                   <h3>{abrigo.nome}</h3>

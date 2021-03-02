@@ -13,25 +13,25 @@ export const GET_USERS = gql`
 export const CRIAR_USUARIO = gql`
 mutation Register(
   $email: String!
-  $pass: String!
+  $password: String!
   $nome: String
-  $emailAlt: String
+  $emailAlternativo: String
   $nascimento: DateTime
   $cargo: String
-  $tel1: String
-  $tel2: String
+  $telefone1: String
+  $telefone2: String
   $profissao: String
   $abrigoId: String
 ){
   registrar(options:{
     email: $email
-    password: $pass
+    password: $password
     nome: $nome
-    emailAlternativo: $emailAlt
+    emailAlternativo: $emailAlternativo
     nascimento: $nascimento
     cargo: $cargo
-    telefone1: $tel1
-    telefone2: $tel2
+    telefone1: $telefone1
+    telefone2: $telefone2
     profissao: $profissao
     abrigoId: $abrigoId
   }){
@@ -59,11 +59,11 @@ mutation Update(
   $userId: String!
   $email: String!
   $nome: String
-  $emailAlt: String
+  $emailAlternativo: String
   $nascimento: DateTime
   $cargo: String
-  $tel1: String
-  $tel2: String
+  $telefone1: String
+  $telefone2: String
   $profissao: String
   $abrigoId: String
 ){
@@ -71,11 +71,11 @@ mutation Update(
     userId: $userId
     email: $email
     nome: $nome
-    emailAlternativo: $emailAlt
+    emailAlternativo: $emailAlternativo
     nascimento: $nascimento
     cargo: $cargo
-    telefone1: $tel1
-    telefone2: $tel2
+    telefone1: $telefone1
+    telefone2: $telefone2
     profissao: $profissao
     abrigoId: $abrigoId
   }){

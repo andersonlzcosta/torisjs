@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { Form } from '@unform/web';
 import { FiMinusCircle } from 'react-icons/fi';
 
@@ -47,24 +47,20 @@ interface IVerPerguntaQuery {
 
 const Pergunta: React.FC = () => {
   const { id } = useParams<IRouteParams>();
-  const [pergunta, setPergunta] = useState<IPerguntaData>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPerguntaPopupOpen, setIsPerguntaPopupOpen] = useState(false);
+  const [parsedData, setParsedData] = useState<string>();
 
   const history = useHistory();
   const { addToast } = useToast();
 
-  useQuery<IVerPerguntaQuery>(GET_PERGUNTA_BY_ID, {
+  const [getPergunta, { data: perguntaQl }] = useLazyQuery<IVerPerguntaQuery>(GET_PERGUNTA_BY_ID, {
     variables: { id: id },
+    fetchPolicy: "no-cache",
     onCompleted(data) {
-      if (data) {
-        const date = new Date(Number(data.verForumPergunta.pergunta.createdAt));
-        setPergunta({
-          ...data.verForumPergunta.pergunta,
-          createdAt: `${date.getDate()}/${date.getMonth() + 1}`
-        });
-      }
+      const date = new Date(Number(data.verForumPergunta.pergunta.createdAt));
+      setParsedData(`${date.getDate()}/${date.getMonth() + 1}`);
     }, onError() {
       addToast({
         title: "erro ao carregar pergunta",
@@ -73,7 +69,6 @@ const Pergunta: React.FC = () => {
     }
   });
 
-  // PERGUNTA NAO ESTA SENDO DELETADA
   const [deletarPerguntaById] = useMutation(DELETE_PERGUNTA_BY_ID, {
     refetchQueries: [{ query: GET_FORUM_PERGUNTAS }],
     onCompleted() {
@@ -93,12 +88,12 @@ const Pergunta: React.FC = () => {
   });
 
   const [createResposta] = useMutation(CREATE_RESPOSTA, {
-    refetchQueries: [{ query: GET_PERGUNTA_BY_ID }],
     onCompleted() {
       addToast({
         title: "Resposta enviada!",
         type: "success"
       });
+      getPergunta();
     },
     onError() {
       addToast({
@@ -108,15 +103,13 @@ const Pergunta: React.FC = () => {
     }
   });
 
-  //   RESPOSTA NAO ESTA SENDO DELETADA
   const [deletarResposta] = useMutation(DELETE_RESPOSTA_BY_ID, {
-    refetchQueries: [{ query: GET_PERGUNTA_BY_ID }],
     onCompleted() {
       addToast({
         title: "Resposta deletada!",
         type: "success"
       });
-      history.push('/forum');
+      getPergunta();
     },
     onError() {
       addToast({
@@ -129,26 +122,27 @@ const Pergunta: React.FC = () => {
   const handleSubmitResposta = useCallback((data: { resposta: string }) => {
     setIsLoading(true);
 
-    if (!pergunta) {
+    if (!perguntaQl) {
       throw new Error('Pergunta não encontrada');
     }
 
     createResposta({
       variables: {
         corpo: data.resposta,
-        perguntaId: pergunta.id
+        perguntaId: perguntaQl.verForumPergunta.pergunta.id
       }
     });
 
     setIsLoading(false);
-  }, [pergunta]);
+  }, [perguntaQl]);
 
   const handleDeleteResposta = (respostaId: string) => {
     deletarResposta({
       variables: {
         id: respostaId
       }
-    })
+    });
+    setIsPopupOpen(false);
   }
 
   const handleDeletePergunta = (perguntaId: number) => {
@@ -159,27 +153,31 @@ const Pergunta: React.FC = () => {
     });
   }
 
+  useEffect(() => {
+    id && getPergunta()
+  }, [id]);
+
   return (
     <Container>
       <TopMenu />
 
-      {pergunta && (
+      {perguntaQl && (
         <ContentContainer>
           <PerguntaContainer>
-            <h2>{pergunta.titulo}</h2>
-            <h3>por {pergunta.nomeUsuario} no dia {pergunta.createdAt}</h3>
+            <h2>{perguntaQl.verForumPergunta.pergunta.titulo}</h2>
+            <h3>por {perguntaQl.verForumPergunta.pergunta.nomeUsuario} no dia {parsedData}</h3>
             <Content>
-              {pergunta.corpo}
+              {perguntaQl.verForumPergunta.pergunta.corpo}
             </Content>
 
             <button className="delete" onClick={() => setIsPerguntaPopupOpen(true)}>deletar pergunta<FiMinusCircle size={18} /></button>
-            <Popup isVisible={isPerguntaPopupOpen} onCancel={() => setIsPerguntaPopupOpen(false)} onFulfill={() => handleDeletePergunta(pergunta.id)} >
+            <Popup isVisible={isPerguntaPopupOpen} onCancel={() => setIsPerguntaPopupOpen(false)} onFulfill={() => handleDeletePergunta(perguntaQl.verForumPergunta.pergunta.id)} >
               Tem certeza que deseja deletar esta pergunta?
             </Popup>
           </PerguntaContainer>
 
-          {pergunta.respostas && pergunta.respostas.length > 0 && <h2>Respostas</h2>}
-          {pergunta.respostas && pergunta.respostas.map(resposta => (
+          {perguntaQl.verForumPergunta.pergunta.respostas && perguntaQl.verForumPergunta.pergunta.respostas.length > 0 && <h2>Respostas</h2>}
+          {perguntaQl.verForumPergunta.pergunta.respostas && perguntaQl.verForumPergunta.pergunta.respostas.map(resposta => (
             <div key={resposta.id}>
               <h3>Feita no dia {resposta.createdAt}:</h3>
               <Content key={resposta.id}>

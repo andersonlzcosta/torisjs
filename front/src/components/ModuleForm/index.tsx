@@ -1,37 +1,86 @@
 import React, { useRef } from 'react';
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import { useMutation } from '@apollo/client';
 
-import { Container, Content } from './styles';
+import { useToast } from '../../hooks/toast';
+import { CRIAR_MODULO, UPDATE_MODULO } from './apolloQueries';
+
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Form } from '@unform/web';
 
-import { FormHandles } from '@unform/core';
+import { Container, Content } from './styles';
 
 interface IModuloData {
   nome: string;
-  id: number;
+  id: string;
 }
 
 interface IModuleFormProps {
+  cursoId: string;
   modulo?: IModuloData;
-  addModuleToCurso?: (moduleName: string) => void;
-  updateModule?: (moduleId: number, moduleName: string) => void;
+  setVisibility?: (v: boolean) => void;
+  reloadCurso?: () => void;
 }
 
 interface IFormData {
   nome: string;
-  id?: string;
 }
 
-const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, addModuleToCurso, updateModule }) => {
+const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, cursoId, setVisibility, reloadCurso }) => {
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
+
+  const [CriarModulo] = useMutation(CRIAR_MODULO, {
+    onCompleted() {
+      addToast({
+        title: "modulo criado com sucesso",
+        type: "success"
+      });
+      reloadCurso && reloadCurso();
+      setVisibility && setVisibility(false);
+    },
+    onError() {
+      addToast({
+        title: "erro ao criar o modulo",
+        type: "error"
+      });
+    }
+  });
+
+  const [AtualizarModulo] = useMutation(UPDATE_MODULO, {
+    onCompleted() {
+      addToast({
+        title: "modulo atualizado com sucesso",
+        type: "success"
+      });
+      reloadCurso && reloadCurso();
+      setVisibility && setVisibility(false);
+    },
+    onError() {
+      addToast({
+        title: "erro ao atualizar o modulo",
+        type: "error"
+      });
+    }
+  });
 
   const handleSubmit = (data: IFormData) => {
-    if (data.id) {
-      const moduleId = parseInt(data.id);
-      updateModule && updateModule(moduleId, data.nome);
+    if (modulo && modulo.id) {
+      AtualizarModulo({
+        variables: {
+          moduloId: modulo.id,
+          nome: data.nome,
+          cursoId: cursoId
+        }
+      });
     } else {
-      addModuleToCurso && addModuleToCurso(data.nome);
+      CriarModulo({
+        variables: {
+          nome: data.nome,
+          cursoId: cursoId
+        }
+      });
     }
   }
 
@@ -43,8 +92,6 @@ const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, addModuleToCurso, upda
             <label>nome do módulo</label>
             <Input name="nome" className="alt line-bottom" />
           </div>
-
-          <Input name="id" type="hidden" className="alt" />
 
           <Button type="submit">salvar módulo</Button>
         </Form>

@@ -1,52 +1,36 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { Container, Content, Estatisticas, CursoList, Curso, Warning } from './styles';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 
+import { VER_CURSOS } from './apolloQueries';
+
+import NavbarDesktop from '../../components/NavbarDesktop';
 import Navbar from '../../components/Navbar';
 import TopMenu from '../../components/TopMenu';
 import Tabs from '../../components/Tabs';
 import Search from '../../components/Search';
 import CursoForm from '../../components/CursoForm';
 
-import api from '../../services/api';
-import NavbarDesktop from '../../components/NavbarDesktop';
-import { useToast } from '../../hooks/toast';
+import { Container, Content, Estatisticas, CursoList, Curso, Warning } from './styles';
 
-interface ICursosData {
-  id: number;
-  nome: string;
-  descricao: string;
+interface IVerCursos {
+  verCursos: {
+    id: string;
+    nome: string;
+    descricao: string;
+  }[]
 }
 
 const Cursos: React.FC = () => {
-  const [cursos, setCursos] = useState<ICursosData[]>();
   const location = useLocation();
-  const history = useHistory();
-  const { addToast } = useToast();
-  let query = new URLSearchParams(useLocation().search);
+  // let query = new URLSearchParams(useLocation().search);
 
-  const updateCursosList = useCallback(async () => {
-    const response = await api.get('/cursos');
-    setCursos(response.data);
-  }, []);
+  const { data: cursosData, refetch } = useQuery<IVerCursos>(VER_CURSOS);
 
-  const loadCursos = useCallback(async (query) => {
-    const response = await api.get(`/cursos?nome_like=${query}`);
-    setCursos(response.data);
-  }, []);
-
-  useEffect(() => {
-    let searchQuery = query.get('search');
-    if (searchQuery) {
-      api.get(`/cursos?nome_like=${searchQuery}`).then(response => {
-        setCursos(response.data);
-      });
-    } else {
-      api.get('/cursos').then(response => {
-        setCursos(response.data);
-      });
-    }
-  }, []);
+  // const loadCursos = useCallback(async (query) => {
+  //   const response = await api.get(`/cursos?nome_like=${query}`);
+  //   setCursos(response.data);
+  // }, []);
 
   return (
     <Container>
@@ -83,10 +67,10 @@ const Cursos: React.FC = () => {
 
       {location.pathname === '/cursos/todos' && (
         <>
-          <Search searchTitle="cursos cadastrados" loadList={loadCursos} />
+          {/* <Search searchTitle="cursos cadastrados" loadList={loadCursos} /> */}
           <CursoList>
 
-            {cursos && cursos.map(curso => (
+            {cursosData && cursosData.verCursos.map(curso => (
               <Curso key={curso.id}>
                 <Link to={`/curso/${curso.id}`}>
                   <div>
@@ -102,7 +86,7 @@ const Cursos: React.FC = () => {
       )}
 
       {location.pathname === '/cursos/novo' && (
-        <CursoForm updateCursosList={updateCursosList} />
+        <CursoForm updateCursosList={refetch} />
       )}
 
       <NavbarDesktop />

@@ -41,6 +41,7 @@ export const Content = styled.div`
   button{
     width: 48%;
     background: #dd4c37;
+    margin: 0 5px;
 
     &:hover{
       background: ${shade(.2, '#dd4c37')};
