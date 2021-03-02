@@ -4,12 +4,12 @@ export const CREATE_USER = gql`
   mutation CreateUser(
     $nome: String
     $email: String!
-    $pass: String!
+    $password: String!
   ) {
     registrar(options: {
       nome: $nome
       email: $email
-      password: $pass
+      password: $password
     }){
       user{
         id
