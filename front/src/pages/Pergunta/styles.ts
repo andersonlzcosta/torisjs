@@ -49,6 +49,7 @@ export const ContentContainer = styled.div`
 
 export const Content = styled.div`
   ${DefaultBackground}
+  align-items: flex-start;
 
   button.delete{
     position: absolute;
