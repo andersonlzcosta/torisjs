@@ -23,6 +23,8 @@ interface IUserData {
   id: string;
   email: string;
   nome: string;
+  password: string;
+  oldPassword: string;
   emailAlternativo: string;
   nascimento: any;
   cargo: string;
@@ -39,6 +41,8 @@ interface IUserManipulatedData {
   id: string;
   email: string;
   nome: string;
+  password: string;
+  oldPassword: string;
   emailAlternativo: string;
   nascimento: any;
   cargo: string;
@@ -68,6 +72,7 @@ const Profile: React.FC = () => {
       const nascimento = new Date(data.verUsuario.user.nascimento);
       let abrigoId = "";
       if (data.verUsuario.user.abrigo) { abrigoId = data.verUsuario.user.abrigo.id }
+      console.log(abrigoId);
       setUser({
         ...data.verUsuario.user,
         nascimento: nascimento,
