@@ -23,7 +23,6 @@ class AbrigosRepository implements IAbrigosRepository {
 
     let abrigos: Abrigo[];
     abrigos = await this.ormRepository.find({ relations: ["profissionais"]});
-    console.log(abrigos);
     return abrigos;
 
   }

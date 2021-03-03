@@ -59,6 +59,14 @@ class UsersRepository implements IUsersRepository {
     return user;
 
   }
+  
+  public async updateAbrigo(userId: number, abrigoId:number): Promise<User | undefined> {
+
+    await this.ormRepository.update( userId, { id: userId, abrigo: { id: abrigoId } });   
+    const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo", "notificacoes"] });
+    return user;
+
+  }
 
   public async delete(id: number): Promise<boolean> {
 

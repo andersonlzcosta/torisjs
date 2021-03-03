@@ -1,8 +1,11 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
 import User from '../../typeorm/entities/User';
+
 import CreateUserService from '../../../services/CreateUserService';
 import UpdateUserService from '../../../services/UpdateUserService';
 import DeleteUserService from '../../../services/DeleteUserService';
+import AddUserToAbrigoService from "@modules/users/services/AddUserToAbrigoService";
+
 import UsersRepository from "../../typeorm/repositories/UsersRepository";
 import { getCustomRepository } from "typeorm";
 import { container } from "tsyringe";
@@ -96,4 +99,16 @@ export class UserResolver {
         return users;
         
     }
+
+    @Mutation(() => UserResponse)
+    async adicionarUsuarioAoAbrigo(
+        @Arg("userId") userId: number,
+        @Arg("abrigoId") abrigoId: number
+    ): Promise<UserResponse> {
+       
+        const adicionarUsuarioAoAbrigo = container.resolve(AddUserToAbrigoService);
+        const user = await adicionarUsuarioAoAbrigo.execute( { userId, abrigoId } );
+        return { user };
+    }
+    
 }

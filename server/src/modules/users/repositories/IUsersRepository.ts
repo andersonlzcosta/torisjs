@@ -10,5 +10,6 @@ export default interface IUsersRepository {
     create(data: ICreateUserDTO): Promise<User | undefined>;
     save(user: User): Promise<User>;
     update(userId: number, data: IUpdateUserDTO): Promise<User | undefined>;
+    updateAbrigo(userId: number, abrigoId: number): Promise<User | undefined>;
     delete(id: number): Promise<Boolean>;
 }
