@@ -17,7 +17,7 @@ import { Container } from './styles';
 interface credentialsData {
   nome: string;
   email: string;
-  pass: string;
+  password: string;
 }
 
 const SignUp: React.FC = () => {
@@ -51,7 +51,7 @@ const SignUp: React.FC = () => {
       const schema = Yup.object().shape({
         nome: Yup.string().required('Nome obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
-        pass: Yup.string().required('Senha Obrigatória'),
+        password: Yup.string().required('Senha Obrigatória'),
       });
 
       await schema.validate(formData, {
@@ -62,7 +62,7 @@ const SignUp: React.FC = () => {
         variables: {
           nome: formData.nome,
           email: formData.email,
-          pass: formData.pass
+          password: formData.password
         }
       });
     } catch (err) {
@@ -92,7 +92,7 @@ const SignUp: React.FC = () => {
         <h1>Cadastre-se</h1>
         <Input name="nome" placeholder="Nome" />
         <Input name="email" placeholder="E-mail" type="email" />
-        <Input name="pass" type="password" placeholder="Senha" />
+        <Input name="password" type="password" placeholder="Senha" />
         <Button type="submit">Entrar</Button>
       </Form>
 

@@ -31,7 +31,7 @@ interface IPerguntasQuery {
 }
 
 const Forum: React.FC = () => {
-  // const [perguntas, setPerguntas] = useState<IPerguntaData[]>();
+  const [parsedPerguntas, setParsedPerguntas] = useState<IPerguntaData[]>();
   const [categories, setCategories] = useState<IForumCategory[]>();
   const [showFilters, setShowFilters] = useState<boolean>(false);
   let query = useLocation().search;
@@ -53,22 +53,27 @@ const Forum: React.FC = () => {
     }
   }
 
+  const handleSetPerguntas = () => {
+    if (perguntas) {
+      const parsedPerguntas = perguntas.verForumPerguntas.map(pergunta => {
+        const date = new Date(Number(pergunta.createdAt));
+        const updatedPergunta = {
+          id: pergunta.id,
+          titulo: pergunta.titulo,
+          nomeUsuario: pergunta.nomeUsuario,
+          createdAt: `${date.getDate()}/${date.getMonth() + 1}`,
+          foiResolvido: pergunta.foiResolvido
+        };
+        return updatedPergunta;
+      });
+
+      setParsedPerguntas(parsedPerguntas);
+    }
+  }
+
   useEffect(() => {
-    // api.get('/perguntas?_limit=10').then(response => {
-    //   setPerguntas(response.data);
-    // });
-
-    // api.get('/categories').then(response => {
-    //   let updatedCategoryList: IForumCategory[] = response.data;
-
-    //   updatedCategoryList.forEach(element => {
-    //     element.selected = false;
-    //   });
-
-    //   setCategories(updatedCategoryList);
-    // });
-
-  }, [query]);
+    handleSetPerguntas();
+  }, [perguntas]);
 
   return (
     <Container>
@@ -99,7 +104,7 @@ const Forum: React.FC = () => {
       <Content>
 
         <PerguntasList>
-          {perguntas && perguntas.verForumPerguntas.map(pergunta => (
+          {parsedPerguntas && parsedPerguntas.map(pergunta => (
             <Pergunta key={pergunta.id}>
               <Link to={`/pergunta/${pergunta.id}`}>
                 <h3>{pergunta.titulo}</h3>
