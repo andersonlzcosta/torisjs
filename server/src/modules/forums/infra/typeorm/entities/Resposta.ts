@@ -7,7 +7,7 @@ import Pergunta from '@modules/forums/infra/typeorm/entities/Pergunta';
 class Resposta {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
     @Field()
     @Column()
