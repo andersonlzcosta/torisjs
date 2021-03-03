@@ -9,5 +9,5 @@ export default interface IUpdateUserDTO {
     profissao?: string;
     old_password?: string;
     password?: string;
-    abrigoId?: string;
+    abrigoId?: number;
 }

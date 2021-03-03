@@ -8,7 +8,7 @@ import Notificacao from '@modules/notificacoes/infra/typeorm/entities/Notificaca
 class User {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
     @Column()
     password: string;
@@ -60,6 +60,7 @@ class User {
     @Field(() => String)
     @UpdateDateColumn()
     updatedAt: Date;
+    
 }
 
 export default User;

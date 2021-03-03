@@ -58,7 +58,7 @@ export class UserResolver {
 
     @Mutation(() => Boolean)
     async deletarUsuario(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deleteUser = new DeleteUserService();
@@ -68,7 +68,7 @@ export class UserResolver {
  
     @Query(() => UserResponse)
     async verUsuario(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<UserResponse> {
 
         const usersRepository = getCustomRepository(UsersRepository);

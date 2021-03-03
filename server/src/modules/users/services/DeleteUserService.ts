@@ -3,7 +3,7 @@ import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
 // import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 interface Request {
-    id: string;
+    id: number;
 }
 
 class DeleteUserService {
