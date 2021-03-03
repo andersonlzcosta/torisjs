@@ -4,7 +4,7 @@ import ModulosRepository from "../infra/typeorm/repositories/ModulosRepository";
 
 interface Request {
     nome: string;
-    cursoId: string;
+    cursoId: number;
 }
 
 class CreateModuloService {

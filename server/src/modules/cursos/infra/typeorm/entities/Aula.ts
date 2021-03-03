@@ -7,29 +7,29 @@ import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 class Aula {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column({ type: "int" })
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     ordem: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     nome: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     descricao: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     video_url: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     duracao: string;
 
-    @Field(() => Modulo)
+    @Field(() => Modulo, { nullable: true })
     @ManyToOne(() => Modulo, modulo => modulo.aulas)
     modulo: Modulo;
     

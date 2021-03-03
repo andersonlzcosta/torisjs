@@ -9,21 +9,21 @@ import Pergunta from '@modules/cursos/infra/typeorm/entities/Pergunta';
 class Modulo {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     nome: string;
 
-    @Field(() => Curso)
+    @Field(() => Curso, { nullable: true })
     @ManyToOne(() => Curso, curso => curso.modulos)
     curso: Curso;
 
-    @Field(() => [Aula])
+    @Field(() => [Aula], { nullable: true })
     @OneToMany(() => Aula, aula => aula.modulo)
     aulas?: Aula[];
 
-    @Field(() => [Pergunta])
+    @Field(() => [Pergunta], { nullable: true })
     @OneToMany(() => Pergunta, pergunta => pergunta.modulo)
     perguntas?: Pergunta[];
 

@@ -5,40 +5,41 @@ import UpdateAulaService from '../../../services/UpdateAulaService';
 import DeleteAulaService from '../../../services/DeleteAulaService';
 import AulasRepository from "../../typeorm/repositories/AulasRepository";
 import { getCustomRepository } from "typeorm";
+import { container } from "tsyringe";
 
 // Preciso usar o DTO
 @InputType()
 class CriarAulaInput {
-    @Field()
+    @Field({ nullable: true })
     ordem: number;
-    @Field()
+    @Field({ nullable: true })
     nome: string;
-    @Field()
+    @Field({ nullable: true })
     descricao: string;
-    @Field()
+    @Field({ nullable: true })
     video_url: string;
-    @Field()
+    @Field({ nullable: true })
     duracao: string;
-    @Field()
-    moduloId:string;
+    @Field({ nullable: true })
+    moduloId: number;
 }
 
 @InputType()
 class AtualizarAulaInput {
     @Field()
-    aulaId: string;
-    @Field()
+    aulaId: number;
+    @Field({ nullable: true })
     ordem?: number;
-    @Field()
+    @Field({ nullable: true })
     nome?: string;
-    @Field()
+    @Field({ nullable: true })
     descricao: string;
-    @Field()
+    @Field({ nullable: true })
     video_url?: string;
-    @Field()
+    @Field({ nullable: true })
     duracao?: string;
-    @Field()
-    moduloId?:string;
+    @Field({ nullable: true })
+    moduloId?: number;
 }
 
 @ObjectType()
@@ -62,7 +63,7 @@ export class AulaResolver {
  
     @Query(() => AulaResponse)
     async verAula(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<AulaResponse> {
 
         const aulasRepository = getCustomRepository(AulasRepository);
@@ -77,7 +78,7 @@ export class AulaResolver {
     ): Promise<AulaResponse> {
 
         console.log(options);
-        const updateAula = new UpdateAulaService();
+        const updateAula = container.resolve(UpdateAulaService);
         const aula = await updateAula.execute(options);
         return { aula };
 
@@ -85,7 +86,7 @@ export class AulaResolver {
 
     @Mutation(() => Boolean)
     async deletarAula(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deleteAula = new DeleteAulaService();

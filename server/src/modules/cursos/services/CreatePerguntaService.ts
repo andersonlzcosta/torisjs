@@ -11,7 +11,7 @@ interface Request {
     alternativa4: string;
     resposta: number;
     justificativa: string;
-    moduloId: string;
+    moduloId: number;
 }
 
 class CreatePerguntaService {

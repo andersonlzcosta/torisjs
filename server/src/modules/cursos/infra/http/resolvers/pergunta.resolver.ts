@@ -5,52 +5,53 @@ import UpdatePerguntaService from '../../../services/UpdatePerguntaService';
 import DeletePerguntaService from '../../../services/DeletePerguntaService';
 import PerguntasRepository from "../../typeorm/repositories/PerguntasRepository";
 import { getCustomRepository } from "typeorm";
+import { container } from "tsyringe";
 
 // Preciso usar o DTO
 @InputType()
 class CriarModuloPerguntaInput {
-    @Field()
+    @Field({ nullable: true })
     ordem: number;
-    @Field()
+    @Field({ nullable: true })
     enunciado: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa1: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa2: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa3: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa4: string;
-    @Field()
+    @Field({ nullable: true })
     resposta: number;
-    @Field()
+    @Field({ nullable: true })
     justificativa: string;
-    @Field()
-    moduloId:string;
+    @Field({ nullable: true })
+    moduloId:number;
 }
 
 @InputType()
 class AtualizarModuloPerguntaInput {
     @Field()
-    perguntaId: string;
-    @Field()
+    perguntaId: number;
+    @Field({ nullable: true })
     ordem?: number;
-    @Field()
+    @Field({ nullable: true })
     enunciado?: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa1?: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa2?: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa3?: string;
-    @Field()
+    @Field({ nullable: true })
     alternativa4?: string;
-    @Field()
+    @Field({ nullable: true })
     resposta?: number;
-    @Field()
+    @Field({ nullable: true })
     justificativa?: string;
-    @Field()
-    moduloId?:string;
+    @Field({ nullable: true })
+    moduloId?:number;
 }
 
 @ObjectType()
@@ -74,7 +75,7 @@ export class ModuloPerguntaResolver {
  
     @Query(() => ModuloPerguntaResponse)
     async verModuloPergunta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<ModuloPerguntaResponse> {
 
         const perguntasRepository = getCustomRepository(PerguntasRepository);
@@ -88,8 +89,7 @@ export class ModuloPerguntaResolver {
         @Arg("options") options: AtualizarModuloPerguntaInput
     ): Promise<ModuloPerguntaResponse> {
 
-        console.log(options);
-        const updatePergunta = new UpdatePerguntaService();
+        const updatePergunta = container.resolve(UpdatePerguntaService);
         const pergunta = await updatePergunta.execute(options);
         return { pergunta };
 
@@ -97,7 +97,7 @@ export class ModuloPerguntaResolver {
 
     @Mutation(() => Boolean)
     async deletarModuloPergunta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deletePergunta = new DeletePerguntaService();
