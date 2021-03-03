@@ -35,7 +35,7 @@ export class NotificacaoResolver {
     }
 
     @Mutation(() => NotificacaoResponse)
-    async updateNotificacao(
+    async atualizarNotificacao(
         @Arg("options") options: AtualizarNotificacaoInput
     ): Promise<NotificacaoResponse> {
 
@@ -47,7 +47,7 @@ export class NotificacaoResolver {
  
     @Query(() => NotificacaoResponse)
     async verNotificacao(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<NotificacaoResponse> {
 
         const notificacoesRepository = getCustomRepository(NotificacoesRepository);

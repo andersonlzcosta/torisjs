@@ -4,7 +4,7 @@ import { InputType, Field } from "type-graphql";
 export class AtualizarNotificacaoInput {
     
     @Field()
-    notificacaoId: string;
+    notificacaoId: number;
     @Field({ nullable: true })
     conteudo?: string;
     @Field({ nullable: true })
@@ -12,6 +12,6 @@ export class AtualizarNotificacaoInput {
     @Field({ nullable: true })
     tipo?: string;
     @Field({ nullable: true })
-    userId?: string;
+    userId?: number;
     
 }

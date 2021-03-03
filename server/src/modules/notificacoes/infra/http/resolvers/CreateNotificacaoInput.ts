@@ -10,6 +10,6 @@ export class CriarNotificacaoInput {
     @Field()
     tipo: string;
     @Field()
-    userId: string;
+    userId: number;
     
 }

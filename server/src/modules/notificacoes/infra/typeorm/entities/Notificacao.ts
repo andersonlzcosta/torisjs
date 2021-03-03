@@ -13,11 +13,11 @@ class Notificacao {
     @Column()
     conteudo: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ default: false, type: "bool" })
     arquivada: boolean;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     tipo: string;
 
