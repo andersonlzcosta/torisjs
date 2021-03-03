@@ -4,7 +4,7 @@ import { InputType, Field } from "type-graphql";
 export class AtualizarAbrigoInput {
     
     @Field()
-    abrigoId: string;
+    abrigoId: number;
     @Field({ nullable: true })
     nome?: string;
     @Field({ nullable: true })

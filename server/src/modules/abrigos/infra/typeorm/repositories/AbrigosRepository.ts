@@ -12,7 +12,7 @@ class AbrigosRepository implements IAbrigosRepository {
     this.ormRepository = getRepository(Abrigo);
   }
 
-  public async findById(id: string): Promise<Abrigo | undefined> {
+  public async findById(id: number): Promise<Abrigo | undefined> {
 
     const abrigo = await this.ormRepository.findOne( id , { relations: ["profissionais"]});
     return abrigo;
@@ -22,7 +22,8 @@ class AbrigosRepository implements IAbrigosRepository {
   public async findAll(): Promise<Abrigo[]> {
 
     let abrigos: Abrigo[];
-    abrigos = await this.ormRepository.find();
+    abrigos = await this.ormRepository.find({ relations: ["profissionais"]});
+    console.log(abrigos);
     return abrigos;
 
   }
@@ -38,19 +39,19 @@ class AbrigosRepository implements IAbrigosRepository {
   public async create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao }: ICreateAbrigoDTO): Promise<Abrigo> {
 
     const abrigo = this.ormRepository.create({ nome, telefone1, telefone2, email1, email2, endereco, bairro, cidade, estado, classificacao, capacidade, faixaEtaria, lgbt, genero, pcd, observacao });
-    await this.ormRepository.save(abrigo);
-    return abrigo;
-
+    const newabrigo = await this.ormRepository.save(abrigo);
+    return newabrigo;
+    
   }
-
+  
   public async save(abrigo: Abrigo): Promise<Abrigo> {
-
+    
     return this.ormRepository.save(abrigo);
 
   }
 
   public async update(
-    abrigoId: string,
+    abrigoId: number,
     {
       nome,
       telefone1,
@@ -97,7 +98,7 @@ class AbrigosRepository implements IAbrigosRepository {
 
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: number): Promise<boolean> {
 
     await this.ormRepository.delete( id );
     return true;

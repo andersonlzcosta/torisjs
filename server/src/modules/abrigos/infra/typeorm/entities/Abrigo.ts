@@ -7,7 +7,7 @@ import User from '@modules/users/infra/typeorm/entities/User';
 class Abrigo {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
     @Field()
     @Column()
