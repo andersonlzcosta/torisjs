@@ -125,7 +125,7 @@ const Pergunta: React.FC = () => {
     if (!perguntaQl) {
       throw new Error('Pergunta não encontrada');
     }
-
+    console.log(perguntaQl.verForumPergunta.pergunta.id);
     createResposta({
       variables: {
         corpo: data.resposta,

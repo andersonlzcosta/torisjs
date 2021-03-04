@@ -25,7 +25,7 @@ mutation deletarPerguntaById($id: String!){
 }`;
 
 export const CREATE_RESPOSTA = gql`
-mutation createResposta($corpo: String!, $perguntaId: String!){
+mutation createResposta($corpo: String!, $perguntaId: Float!){
   criarForumResposta(options: {
     corpo: $corpo
     perguntaId: $perguntaId

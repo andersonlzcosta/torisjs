@@ -19,7 +19,7 @@ const Abrigo: React.FC = () => {
     <Container>
       <TopMenu />
 
-      <AbrigoForm id={id} headingText="editar abrigo" />
+      <AbrigoForm id={Number(id)} headingText="editar abrigo" />
 
       <Navbar />
       <NavbarDesktop />

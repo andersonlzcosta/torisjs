@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const VER_USUARIO = gql`
-query VerUsuario($id: String!){
+query VerUsuario($id: Float!){
   verUsuario(id: $id){
     user{
       id

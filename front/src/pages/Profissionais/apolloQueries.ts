@@ -21,7 +21,7 @@ mutation Register(
   $telefone1: String
   $telefone2: String
   $profissao: String
-  $abrigoId: String
+  $abrigoId: Float
 ){
   registrar(options:{
     email: $email
@@ -56,7 +56,7 @@ mutation Register(
 
 export const ATUALIZAR_USUARIO = gql`
 mutation Update(
-  $userId: String!
+  $userId: Float!
   $email: String!
   $nome: String
   $emailAlternativo: String
@@ -65,7 +65,7 @@ mutation Update(
   $telefone1: String
   $telefone2: String
   $profissao: String
-  $abrigoId: String
+  $abrigoId: Float
 ){
   updateUsuario(options:{
     userId: $userId
@@ -99,7 +99,7 @@ mutation Update(
 `;
 
 export const DELETAR_USUARIO = gql`
-  mutation Delete($id: String!){
+  mutation Delete($id: Float!){
     deletarUsuario(id: $id)
   }
 `;

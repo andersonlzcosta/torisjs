@@ -18,7 +18,7 @@ import Select from '../Select';
 import { GET_USERS, CRIAR_USUARIO, ATUALIZAR_USUARIO, DELETAR_USUARIO, GET_ABRIGOS } from '../../pages/Profissionais/apolloQueries';
 
 export interface IUserData {
-  id: string;
+  id: number;
   email: string;
   nome: string;
   password: string;
@@ -112,14 +112,13 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
   useQuery<IAbrigosQuery>(GET_ABRIGOS, {
     onCompleted(data) {
       if (data) {
-        setAbrigos([{ id: "", nome: "--selecione um abrigo--" }, ...data.verAbrigos]);
+        setAbrigos([{ id: "999999", nome: "--selecione um abrigo--" }, ...data.verAbrigos]);
       }
     }
   });
 
   const handleSubmit = useCallback(async (formData: any) => {
     setIsLoading(true);
-    console.log(formData);
     try {
       if (!formRef.current) {
         throw new Error('formRef invalid');
@@ -142,8 +141,12 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
 
       let parsedData = {} as any;
       Object.keys(formData).forEach(key => {
-        if (formData[key] !== "") {
-          parsedData[key] = formData[key];
+        if (formData[key] !== '') {
+          if (key === 'abrigoId') {
+            parsedData[key] = Number(formData[key]);
+          } else {
+            parsedData[key] = formData[key];
+          }
         }
       });
 

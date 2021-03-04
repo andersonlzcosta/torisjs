@@ -28,7 +28,7 @@ interface IAbrigoUsers {
 }
 
 export interface IAbrigosData {
-  id: string;
+  id: number;
   nome: string;
   telefone1: string;
   telefone2: string;
@@ -49,20 +49,14 @@ export interface IAbrigosData {
 }
 
 interface IAbrigoFormProps {
-  id?: string;
+  id?: number;
   headingText?: string;
 }
 
-interface IAbrigoResponse {
-  abrigo: IAbrigosData;
-}
-
 interface IVerAbrigoQuery {
-  verAbrigo: IAbrigoResponse;
-}
-
-interface IAtualizarAbrigoMutation {
-  atualizarAbrigo: IAbrigoResponse;
+  verAbrigo: {
+    abrigo: IAbrigosData;
+  }
 }
 
 interface IProfissionaisData {
@@ -116,7 +110,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
     }
   });
 
-  const [AtualizarAbrigo] = useMutation<IAtualizarAbrigoMutation>(UPDATE_ABRIGO, {
+  const [AtualizarAbrigo] = useMutation(UPDATE_ABRIGO, {
     refetchQueries: [{ query: GET_ABRIGOS }],
     onCompleted() {
       addToast({
@@ -256,7 +250,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       AdicionarProfissional({
         variables: {
           abrigoId: abrigoQl.verAbrigo.abrigo.id,
-          profissionalId: formData.profissionais
+          profissionalId: Number(formData.profissionais)
         }
       });
     }

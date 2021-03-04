@@ -21,7 +21,7 @@ export const GET_USERS = gql`
 `;
 
 export const GET_ABRIGO_BY_ID = gql`
-query getAbrigoById($id: String!) {
+query getAbrigoById($id: Float!) {
   verAbrigo(id: $id){
     abrigo{
       id
@@ -52,7 +52,7 @@ query getAbrigoById($id: String!) {
 
 export const UPDATE_ABRIGO = gql`
   mutation AtualizarAbrigo(
-      $id: String!
+      $id: Float!
       $nome: String
       $telefone1: String
       $telefone2: String
@@ -173,15 +173,15 @@ export const CRIAR_ABRIGO = gql`
 `;
 
 export const DELETAR_ABRIGO = gql`
-  mutation DeletarAbrigo($id: String!){
+  mutation DeletarAbrigo($id: Float!){
     deletarAbrigo(id: $id)
   }
 `;
 
 export const ADICIONAR_PROFISSIONAL = gql`
   mutation AdicionarProfissional(
-    $profissionalId: String!
-    $abrigoId: String!
+    $profissionalId: Float!
+    $abrigoId: Float!
   ){
     adicionarUsuarioAoAbrigo(
       abrigoId: $abrigoId

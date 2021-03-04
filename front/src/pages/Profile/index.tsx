@@ -20,7 +20,7 @@ interface IRouteParams {
 }
 
 interface IUserData {
-  id: string;
+  id: number;
   email: string;
   nome: string;
   password: string;
@@ -38,7 +38,7 @@ interface IUserData {
 }
 
 interface IUserManipulatedData {
-  id: string;
+  id: number;
   email: string;
   nome: string;
   password: string;
@@ -67,12 +67,11 @@ const Profile: React.FC = () => {
   const { addToast } = useToast();
 
   useQuery<IGETQueryResponse>(VER_USUARIO, {
-    variables: { id: id },
+    variables: { id: Number(id) },
     onCompleted(data) {
       const nascimento = new Date(data.verUsuario.user.nascimento);
       let abrigoId = "";
       if (data.verUsuario.user.abrigo) { abrigoId = data.verUsuario.user.abrigo.id }
-      console.log(abrigoId);
       setUser({
         ...data.verUsuario.user,
         nascimento: nascimento,
