@@ -9,8 +9,8 @@ class Notificacao {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     conteudo: string;
 
     @Field({ nullable: true })

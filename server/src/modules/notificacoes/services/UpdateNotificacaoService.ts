@@ -45,7 +45,6 @@ class UpdateNotificacaoService {
             }
         );
 
-        return notificacao;
     }
 }
 

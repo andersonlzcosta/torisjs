@@ -1,11 +1,17 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { container } from "tsyringe";
+
 import Modulo from '../../typeorm/entities/Modulo';
+
 import CreateModuloService from '../../../services/CreateModuloService';
 import UpdateModuloService from '../../../services/UpdateModuloService';
 import DeleteModuloService from '../../../services/DeleteModuloService';
+
+// import { CriarModuloInput } from "./CreateModuloInput";
+// import { AtualizarModuloInput } from "./UpdateModuloInput";
+
 import ModulosRepository from "../../typeorm/repositories/ModulosRepository";
 import { getCustomRepository } from "typeorm";
-import { container } from "tsyringe";
 
 // Preciso usar o DTO
 @InputType()
@@ -61,7 +67,6 @@ export class ModuloResolver {
         @Arg("options") options: AtualizarModuloInput
     ): Promise<ModuloResponse> {
 
-        console.log(options);
         const updateModulo = container.resolve(UpdateModuloService);
         const modulo = await updateModulo.execute(options);
         return { modulo };
