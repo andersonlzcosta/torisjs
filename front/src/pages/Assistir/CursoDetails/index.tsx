@@ -33,25 +33,25 @@ const CursoDetails: React.FC = () => {
   }
 
   const conteudoTotal = useMemo(() => {
-    if (curso) {
-      const aulasPorModulo = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
-      return aulasPorModulo.reduce((accumulator, currentValue) => accumulator + currentValue);
-    }
+    // if (curso) {
+    //   const aulasPorModulo = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
+    //   return aulasPorModulo.reduce((accumulator, currentValue) => accumulator + currentValue);
+    // }
   }, [curso]);
 
   const duracaoTotal = useMemo(() => {
-    if (curso) {
-      const allModules = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula'));
+    // if (curso) {
+    //   const allModules = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula'));
 
-      const eachModuleDuration = allModules.map(module =>
-        module.reduce((accumulator, currentValue) => {
-          const aula = currentValue.content_data as IAulasData;
-          return accumulator + aula.duracao;
-        }, 0)
-      );
+    //   const eachModuleDuration = allModules.map(module =>
+    //     module.reduce((accumulator, currentValue) => {
+    //       const aula = currentValue.content_data as IAulasData;
+    //       return accumulator + aula.duracao;
+    //     }, 0)
+    //   );
 
-      return eachModuleDuration.reduce((accumulator, currentValue) => accumulator + currentValue);
-    }
+    //   return eachModuleDuration.reduce((accumulator, currentValue) => accumulator + currentValue);
+    // }
   }, [curso]);
 
   useEffect(() => {
@@ -86,32 +86,33 @@ const CursoDetails: React.FC = () => {
           {curso.modulos.map(modulo => (
             <Modulo key={modulo.id}>
               <h4>{modulo.nome}</h4>
-              {modulo.content.map(content => {
-                if (content.content_is === 'aula') {
-                  let contentData: IAulasData = content.content_data as IAulasData;
-                  return (
-                    <Aula hasBeenWatched={false} key={contentData.id}>
-                      {/* <Link to={`/aula/${aula.id}`}> */}
-                      <Link to={`/aula/933`}>
-                        <h4>{contentData.nome}</h4>
-                      </Link>
-                      <span>{contentData.duracao} minutos</span>
-                    </Aula>
-                  )
-                }
+              { // modulo.content.map(content => {
+                // if (content.content_is === 'aula') {
+                //   let contentData: IAulasData = content.content_data as IAulasData;
+                //   return (
+                //     <Aula hasBeenWatched={false} key={contentData.id}>
+                //       {/* <Link to={`/aula/${aula.id}`}> */}
+                //       <Link to={`/aula/933`}>
+                //         <h4>{contentData.nome}</h4>
+                //       </Link>
+                //       <span>{contentData.duracao} minutos</span>
+                //     </Aula>
+                //   )
+                // }
 
-                if (content.content_is === 'pergunta') {
-                  let contentData: IPerguntasData = content.content_data as IPerguntasData;
-                  return (
-                    <Aula hasBeenWatched={false} key={contentData.id}>
-                      {/* <Link to={`/aula/${aula.id}`}> */}
-                      <Link to={`/curso-pergunta/${contentData.id}`}>
-                        <h4>{contentData.enunciado.substring(0, 50)}</h4>
-                      </Link>
-                    </Aula>
-                  )
-                }
-              })}
+                // if (content.content_is === 'pergunta') {
+                //   let contentData: IPerguntasData = content.content_data as IPerguntasData;
+                //   return (
+                //     <Aula hasBeenWatched={false} key={contentData.id}>
+                //       {/* <Link to={`/aula/${aula.id}`}> */}
+                //       <Link to={`/curso-pergunta/${contentData.id}`}>
+                //         <h4>{contentData.enunciado.substring(0, 50)}</h4>
+                //       </Link>
+                //     </Aula>
+                //   )
+                // }
+                // })
+              }
             </Modulo>
           ))}
         </CursoContent>
