@@ -37,14 +37,14 @@ export class ModuloResolver {
     @Mutation(() => ModuloResponse)
     async criarModulo(
         @Arg("options") options: CriarModuloInput
-      ): Promise<ModuloResponse> {
+    ): Promise<ModuloResponse> {
 
         const createModulo = new CreateModuloService();
         const modulo = await createModulo.execute(options);
         return { modulo };
 
     }
- 
+
     @Query(() => ModuloResponse)
     async verModulo(
         @Arg("id") id: number
@@ -72,9 +72,9 @@ export class ModuloResolver {
     async deletarModulo(
         @Arg("id") id: number
     ): Promise<boolean> {
-       
+
         const deleteModulo = new DeleteModuloService();
-        await deleteModulo.execute( { id } );
+        await deleteModulo.execute({ id });
         return true;
     }
 
@@ -83,6 +83,17 @@ export class ModuloResolver {
 
         const modulosRepository = getCustomRepository(ModulosRepository);
         const modulos = await modulosRepository.findAll();
+        return modulos;
+
+    }
+
+    @Query(() => [Modulo])
+    async verModulosPorCurso(
+        @Arg("cursoId") cursoId: number
+    ): Promise<Modulo[]> {
+
+        const modulosRepository = getCustomRepository(ModulosRepository);
+        const modulos = await modulosRepository.findAllByCurso(cursoId);
         return modulos;
 
     }
