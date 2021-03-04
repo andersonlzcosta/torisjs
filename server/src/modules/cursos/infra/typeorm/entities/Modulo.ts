@@ -16,15 +16,21 @@ class Modulo {
     nome: string;
 
     @Field(() => Curso, { nullable: true })
-    @ManyToOne(() => Curso, curso => curso.modulos)
+    @ManyToOne(() => Curso, curso => curso.modulos,  {
+        eager: true
+    })
     curso: Curso;
 
     @Field(() => [Aula], { nullable: true })
-    @OneToMany(() => Aula, aula => aula.modulo)
+    @OneToMany(() => Aula, aula => aula.modulo,  {
+        eager: true
+    })
     aulas?: Aula[];
 
     @Field(() => [Pergunta], { nullable: true })
-    @OneToMany(() => Pergunta, pergunta => pergunta.modulo)
+    @OneToMany(() => Pergunta, pergunta => pergunta.modulo,  {
+        eager: true
+    })
     perguntas?: Pergunta[];
 
     @Field(() => String)
