@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const CRIAR_MODULO = gql`
 mutation CriarModulo(
   $nome: String!
-  $cursoId: String!
+  $cursoId: Float!
 ){
   criarModulo(options: {
     nome: $nome
@@ -19,9 +19,9 @@ mutation CriarModulo(
 
 export const UPDATE_MODULO = gql`
 mutation AtualizaModulo(
-  $moduloId: String!
+  $moduloId: Float!
   $nome: String!
-  $cursoId: String!
+  $cursoId: Float!
 ){
   atualizarModulo(options: {
     moduloId: $moduloId

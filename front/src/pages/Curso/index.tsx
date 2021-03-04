@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@apollo/client';
 
 import { useToast } from '../../hooks/toast';
 import api from '../../services/api';
-import { VER_CURSO, DELETE_MODULO } from './apolloQueries';
+import { VER_CURSO, DELETE_MODULO, VER_MODULO_POR_CURSO, DELETE_AULA } from './apolloQueries';
 
 import CursoForm from '../../components/CursoForm';
 import AulaForm from '../../components/AulaForm';
@@ -25,20 +25,21 @@ interface IRouteParams {
 
 export interface IAulasData {
   id: number;
-  nome: string;
-  video_url: string;
-  duracao: number;
+  ordem?: number;
+  nome?: string;
+  video_url?: string;
+  duracao?: string;
 }
 
 export interface IPerguntasData {
   id: number;
-  enunciado: string;
-  escolha_1: string;
-  escolha_2: string;
-  escolha_3: string;
-  escolha_4: string;
-  resposta_certa: "1" | "2" | "3" | "4";
-  justificativa: string;
+  enunciado?: string;
+  alternativa1?: string;
+  alternativa2?: string;
+  alternativa3?: string;
+  alternativa4?: string;
+  resposta?: "1" | "2" | "3" | "4";
+  justificativa?: string;
 }
 
 export interface IModuloContent {
@@ -47,19 +48,32 @@ export interface IModuloContent {
 }
 
 export interface IModuloData {
-  id: string;
+  id: number;
   nome: string;
-  content: IModuloContent[]
   aulas: {
-    id: string;
+    id: number;
     nome: string;
     ordem: number;
+    video_url: string;
+    duracao: string;
   }[];
   perguntas: {
-    id: string;
+    id: number;
     enunciado: string;
     ordem: number;
+    alternativa1: string;
+    alternativa2: string;
+    alternativa3: string;
+    alternativa4: string;
+    resposta: "1" | "2" | "3" | "4";
+    justificativa: string;
   }[];
+}
+
+export interface IManipulatedModuloData {
+  id: number;
+  nome: string;
+  content: IModuloContent[];
 }
 
 export interface ICursoData {
@@ -72,12 +86,16 @@ export interface ICursoData {
 export interface ICursoGQL {
   verCurso: {
     curso: {
-      id: string;
+      id: number;
       nome: string;
       descricao: string;
       modulos: IModuloData[];
     }
   }
+}
+
+interface IModulosPorCursoQuery {
+  verModulosPorCurso: IModuloData[];
 }
 
 const Curso: React.FC = () => {
@@ -86,27 +104,93 @@ const Curso: React.FC = () => {
   const [isAulaFormVisible, setIsAulaFormVisible] = useState(false);
   const [isPerguntaFormVisible, setIsPerguntaFormVisible] = useState(false);
   const [isModuloPopupOpen, setIsModuloPopupOpen] = useState(false);
-  const [currentModuleId, setCurrentModuleId] = useState<string>();
+  const [isAulaPopupOpen, setIsAulaPopupOpen] = useState(false);
+  const [currentModuleId, setCurrentModuleId] = useState<number>(0);
 
   const [curso, setCurso] = useState<ICursoData>();
   const [selectedAula, setSelectedAula] = useState<IAulasData>();
   const [selectedPergunta, setSelectedPergunta] = useState<IPerguntasData>();
-  const [selectedModulo, setSelectedModulo] = useState<IModuloData>();
+  const [selectedModulo, setSelectedModulo] = useState<IManipulatedModuloData>();
+  const [ManipulatedModulos, setManipulatedModulos] = useState<IManipulatedModuloData[]>();
+  const [currentOrder, setCurrentOrder] = useState<number>(0);
 
   const { addToast } = useToast();
 
-  // VER CURSO
-  const { data: cursoData, refetch } = useQuery<ICursoGQL>(VER_CURSO, {
-    variables: { id: id }
+  // CURSO
+  const { data: cursoData } = useQuery<ICursoGQL>(VER_CURSO, {
+    variables: { id: Number(id) }
   });
-  // DELETAR MODULO
+
+  // MODULOS
+  const { data: modulosData, refetch: moduleRefetch } = useQuery<IModulosPorCursoQuery>(VER_MODULO_POR_CURSO, {
+    fetchPolicy: "no-cache",
+    variables: { cursoId: Number(id) },
+  });
+
+  const handleManipulateModules = (data: IModulosPorCursoQuery) => {
+    let manipulatedModulos = [] as IManipulatedModuloData[];
+    data.verModulosPorCurso.forEach(modulo => {
+      let moduloContent = [] as IModuloContent[];
+      modulo.aulas.forEach(aula => {
+        const manipulatedAula: IModuloContent = {
+          content_is: 'aula',
+          content_data: {
+            id: aula.id,
+            nome: aula.nome,
+            video_url: aula.video_url,
+            duracao: aula.duracao
+          }
+        }
+
+        moduloContent[aula.ordem] = manipulatedAula;
+      });
+
+      modulo.perguntas.forEach(pergunta => {
+        const manipulatedPergunta: IModuloContent = {
+          content_is: 'pergunta',
+          content_data: {
+            id: pergunta.id,
+            enunciado: pergunta.enunciado,
+            alternativa1: pergunta.alternativa1,
+            alternativa2: pergunta.alternativa2,
+            alternativa3: pergunta.alternativa3,
+            alternativa4: pergunta.alternativa4,
+            resposta: pergunta.resposta,
+            justificativa: pergunta.justificativa
+          }
+        }
+
+        moduloContent[pergunta.ordem] = manipulatedPergunta;
+      });
+
+      manipulatedModulos.push({
+        id: modulo.id,
+        nome: modulo.nome,
+        content: moduloContent,
+      });
+    });
+
+    setManipulatedModulos(manipulatedModulos);
+  }
+
+  // MODULO
+  const handleCreateNewModulo = () => {
+    setSelectedModulo({} as IManipulatedModuloData);
+    setIsModuleFormVisible(true);
+  }
+
+  const handleEditModulo = (modulo: IManipulatedModuloData) => {
+    setSelectedModulo(modulo);
+    setIsModuleFormVisible(true);
+  }
+
   const [DeletarModulo] = useMutation(DELETE_MODULO, {
     onCompleted() {
       addToast({
         title: "modulo deletado com sucesso",
         type: "success"
       });
-      refetch();
+      moduleRefetch();
     },
     onError() {
       addToast({
@@ -116,268 +200,97 @@ const Curso: React.FC = () => {
     }
   });
 
-  const handleDeleteModule = useCallback(async (moduleId: string) => {
+  const handleDeleteModule = (moduleId: number) => {
     DeletarModulo({
       variables: {
         id: moduleId
       }
     });
     setIsModuloPopupOpen(false);
-  }, []);
+  };
 
-  // AULA -> criar - ver - atualizar - deletar
+  // AULA
+  const handleAddNewAula = (order: number, moduleId: number) => {
+    setSelectedAula(undefined);
+    setIsAulaFormVisible(true);
+    setCurrentOrder(order);
+    setCurrentModuleId(moduleId);
+  };
 
-  // PERGUNTA -> criar - ver - atualizar - deletar
-
-  //delete pergunta
-  const handleDeleteContent = useCallback((idToRemove: number) => {
-    // if (curso) {
-    //   const updatedCurso = curso;
-    //   updatedCurso.modulos.forEach(modulo => {
-    //     modulo.content = modulo.content.filter(aula => aula.content_data.id !== idToRemove);
-    //   });
-    //   try {
-    //     api.put(`/cursos/${id}`, updatedCurso);
-    //     api.delete(`/cursoperguntas/${idToRemove}`);
-    //     setCurso(updatedCurso);
-    //     addToast({
-    //       title: 'curso atualizado',
-    //       type: 'success'
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //     addToast({
-    //       title: 'Erro ao deletar',
-    //       message: 'tente novamente',
-    //       type: 'success'
-    //     });
-    //   }
-    // }
-  }, [curso]);
-
-  const handleUpdateAula = useCallback((childAula: IAulasData) => {
-    // if (curso) {
-    //   let currentModule = curso.modulos.find(modulo => modulo.id === currentModuleId);
-    //   if (currentModule) {
-    //     let todoConteudo = currentModule.content.map(content => {
-    //       if (content.content_data.id === childAula.id) {
-    //         content.content_data = childAula;
-    //       }
-    //       return content;
-    //     });
-
-    //     const updatedModules = curso.modulos.map(modulo => {
-    //       if (currentModule && modulo.id === currentModule.id) {
-    //         modulo.content = todoConteudo;
-    //       }
-    //       return modulo;
-    //     });
-
-    //     const updatedCurso = { ...curso, modulos: updatedModules };
-
-    //     setSelectedAula(undefined);
-    //     setIsAulaFormVisible(false);
-
-    //     try {
-    //       api.put(`/cursos/${id}`, updatedCurso);
-    //       setCurso(updatedCurso);
-    //       addToast({
-    //         title: 'Curso atualizado',
-    //         type: 'success'
-    //       });
-    //     } catch (err) {
-    //       console.log(err);
-    //       addToast({
-    //         title: 'Erro ao atualizar curso',
-    //         message: 'tente novamente',
-    //         type: 'success'
-    //       });
-    //     }
-    //   }
-    // }
-  }, [curso, currentModuleId]);
-
-  const handleUpdatePergunta = useCallback((childPergunta: IPerguntasData) => {
-    // if (curso) {
-    //   let currentModule = curso.modulos.find(modulo => modulo.id === currentModuleId);
-    //   if (currentModule) {
-    //     let todoConteudo = currentModule.content.map(content => {
-    //       if (content.content_data.id === childPergunta.id) {
-    //         content.content_data = childPergunta;
-    //       }
-    //       return content;
-    //     });
-
-    //     const updatedModules = curso.modulos.map(modulo => {
-    //       if (currentModule && modulo.id === currentModule.id) {
-    //         modulo.content = todoConteudo;
-    //       }
-    //       return modulo;
-    //     });
-
-    //     const updatedCurso = { ...curso, modulos: updatedModules };
-
-    //     setSelectedPergunta(undefined);
-    //     setIsPerguntaFormVisible(false);
-
-    //     try {
-    //       api.put(`/cursos/${id}`, updatedCurso);
-    //       setCurso(updatedCurso);
-    //       addToast({
-    //         title: 'Curso atualizado',
-    //         type: 'success'
-    //       });
-    //     } catch (err) {
-    //       console.log(err);
-    //       addToast({
-    //         title: 'Erro ao atualizar curso',
-    //         message: 'tente novamente',
-    //         type: 'success'
-    //       });
-    //     }
-    //   }
-    // }
-  }, [curso, currentModuleId]);
-
-  const handleAddNewAula = useCallback(async (moduleId: string) => {
-    // if (curso) {
-
-    //   const newAula: IAulasData = {
-    //     id: Math.floor(Math.random() * Math.floor(1000)),
-    //     nome: '',
-    //     video_url: '',
-    //     duracao: 0
-    //   }
-    //   setSelectedAula(newAula);
-    //   setIsAulaFormVisible(true);
-    //   setCurrentModuleId(moduleId);
-
-    //   let updatedModules = curso.modulos.map(module => {
-    //     if (module.id === moduleId) {
-    //       module.content.push({ content_is: 'aula', content_data: newAula });
-    //     }
-    //     return module;
-    //   });
-
-    //   const updatedCurso = { ...curso, modulos: updatedModules };
-    //   await api.put(`/cursos/${id}`, updatedCurso);
-    // }
-  }, [curso]);
-
-  const handleAddNewPergunta = useCallback(async (moduleId: string) => {
-    // if (curso) {
-    //   const newPergunta: IPerguntasData = {
-    //     id: Math.floor(Math.random() * Math.floor(1000)),
-    //     enunciado: '',
-    //     escolha_1: '',
-    //     escolha_2: '',
-    //     escolha_3: '',
-    //     escolha_4: '',
-    //     resposta_certa: "1",
-    //     justificativa: ''
-    //   }
-    //   setSelectedPergunta(newPergunta);
-    //   setIsPerguntaFormVisible(true);
-    //   setCurrentModuleId(moduleId);
-
-    //   let updatedModules = curso.modulos.map(module => {
-    //     if (module.id === moduleId) {
-    //       module.content.push({ content_is: 'pergunta', content_data: newPergunta });
-    //     }
-    //     return module;
-    //   });
-
-    //   const updatedCurso = { ...curso, modulos: updatedModules };
-    //   await api.put(`/cursos/${id}`, updatedCurso);
-    // }
-  }, [curso]);
-
-  const handleEditAula = (aula: IAulasData, moduleId: string) => {
+  const handleEditAula = (aula: IAulasData, moduleId: number) => {
     setCurrentModuleId(moduleId);
     setSelectedAula(aula);
     setIsAulaFormVisible(true);
   }
 
-  const handleEditPergunta = (pergunta: IPerguntasData, moduleId: string) => {
+  const [DeletarAula] = useMutation(DELETE_AULA, {
+    onCompleted() {
+      addToast({
+        title: "aula deletada com sucesso",
+        type: "success"
+      });
+      moduleRefetch();
+    },
+    onError() {
+      addToast({
+        title: "erro ao deletar a aula",
+        type: "error"
+      });
+    }
+  });
+
+  const handleDeleteAula = (aulaId: number) => {
+    DeletarAula({
+      variables: {
+        id: aulaId,
+      }
+    });
+    setIsModuloPopupOpen(false);
+  }
+
+  // PERGUNTA -> criar - ver - atualizar - deletar
+
+  const handleUpdatePergunta = (childPergunta: IPerguntasData) => {
+  };
+
+  const handleAddNewPergunta = (moduleId: number) => {
+  };
+
+  const handleEditPergunta = (pergunta: IPerguntasData, moduleId: number) => {
     setCurrentModuleId(moduleId);
     setSelectedPergunta(pergunta);
     setIsPerguntaFormVisible(true);
   }
 
-  const handleEditModulo = (modulo: IModuloData) => {
-    setSelectedModulo(modulo);
-    setIsModuleFormVisible(true);
-  }
+  const handleMoveContent = useCallback(async (moduloId, index, isUp) => {
+    // let newPosition: number;
 
-  const handleCreateNewModulo = () => {
-    setSelectedModulo({} as IModuloData);
-    setIsModuleFormVisible(true);
-  }
+    // isUp ? newPosition = index - 1 : newPosition = index + 1;
 
-  const handleCreateModule = useCallback(async (moduleName: string) => {
-    // let modulos: IModuloData[] = [];
     // if (curso) {
-    //   modulos = [...curso.modulos, {
-    //     id: Math.floor(Math.random() * Math.floor(1000)),
-    //     nome: moduleName,
-    //     content: []
-    //   }];
-    //   const updatedCurso = { ...curso, modulos }
-
-    //   setCurso(updatedCurso);
-    //   await api.put(`/cursos/${id}`, updatedCurso);
-    //   setIsModuleFormVisible(false);
-    // }
-  }, [curso]);
-
-  const handleUpdateModule = useCallback(async (moduleId: string, moduleName: string) => {
-    // if (curso) {
-    //   const updatedModulos = curso.modulos.map(modulo => {
-    //     if (modulo.id === moduleId) {
-    //       modulo.nome = moduleName;
+    //   const updatedModulos = curso.modulos.filter(modulo => {
+    //     if (modulo.id === moduloId) {
+    //       modulo.content = arrayMove(modulo.content, index, newPosition);
     //     }
     //     return modulo;
     //   });
 
-    //   const updatedCurso = { ...curso, modulos: updatedModulos }
+    //   const updatedCurso = {
+    //     ...curso,
+    //     modulos: updatedModulos
+    //   }
+
     //   setCurso(updatedCurso);
 
     //   await api.put(`/cursos/${id}`, updatedCurso);
-    //   setIsModuleFormVisible(false);
     // }
-  }, [curso]);
-
-
-
-  const handleMoveContent = useCallback(async (moduloId, index, isUp) => {
-    let newPosition: number;
-
-    isUp ? newPosition = index - 1 : newPosition = index + 1;
-
-    if (curso) {
-      const updatedModulos = curso.modulos.filter(modulo => {
-        if (modulo.id === moduloId) {
-          modulo.content = arrayMove(modulo.content, index, newPosition);
-        }
-        return modulo;
-      });
-
-      const updatedCurso = {
-        ...curso,
-        modulos: updatedModulos
-      }
-
-      setCurso(updatedCurso);
-
-      await api.put(`/cursos/${id}`, updatedCurso);
-    }
   }, [curso, id]);
 
   useEffect(() => {
-    api.get(`/cursos/${id}`).then(response => {
-      setCurso(response.data);
-    });
-  }, []);
+    if (modulosData) {
+      handleManipulateModules(modulosData);
+    }
+  }, [modulosData]);
 
   return (
     <Container>
@@ -390,18 +303,18 @@ const Curso: React.FC = () => {
         <button className="alt" onClick={handleCreateNewModulo} >criar novo módulo</button>
 
         <ListaModulos>
-          {cursoData && cursoData.verCurso.curso.modulos && cursoData.verCurso.curso.modulos.map(modulo => (
+          {ManipulatedModulos && ManipulatedModulos.map(modulo => (
             <Modulo key={modulo.id}>
               <h3 onClick={() => handleEditModulo(modulo)}>{modulo.nome}</h3>
               <div>
-                <button className="alt" onClick={() => handleAddNewAula(modulo.id)}>nova aula</button>
+                <button className="alt" onClick={() => handleAddNewAula(modulo.content.length, modulo.id)}>nova aula</button>
                 <button className="alt" onClick={() => handleAddNewPergunta(modulo.id)}>nova pergunta</button>
                 <button className="delete" onClick={() => setIsModuloPopupOpen(true)}>deletar módulo<FiMinusCircle size={16} /></button>
                 <Popup isVisible={isModuloPopupOpen} onCancel={() => setIsModuloPopupOpen(false)} onFulfill={() => handleDeleteModule(modulo.id)} >
                   Tem certeza que deseja remover este módulo?
                 </Popup>
               </div>
-              {/* <AulasContainer>
+              <AulasContainer>
                 {modulo.content.map((content, index) => {
                   if (content.content_is === 'aula') {
                     let contentData: IAulasData = content.content_data as IAulasData;
@@ -413,7 +326,10 @@ const Curso: React.FC = () => {
                         </aside>
                         <label>aula</label>
                         <button onClick={() => handleEditAula(contentData, modulo.id)}>{contentData.nome}</button>
-                        <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
+                        <button onClick={() => setIsAulaPopupOpen(true)}><FiMinusCircle size={24} /></button>
+                        <Popup isVisible={isAulaPopupOpen} onCancel={() => setIsAulaPopupOpen(false)} onFulfill={() => handleDeleteAula(contentData.id)} >
+                          Tem certeza que deseja remover esta aula?
+                        </Popup>
                       </div>
                     )
                   }
@@ -428,23 +344,23 @@ const Curso: React.FC = () => {
                         </aside>
                         <label>pergunta</label>
                         <button onClick={() => handleEditPergunta(contentData, modulo.id)}>{contentData.enunciado}</button>
-                        <button onClick={() => handleDeleteContent(contentData.id)}><FiMinusCircle size={24} /></button>
+                        <button onClick={() => { }}><FiMinusCircle size={24} /></button>
                       </div>
                     )
                   }
 
                 })}
-              </AulasContainer> */}
+              </AulasContainer>
             </Modulo>
           ))}
         </ListaModulos>
 
         {isModuleFormVisible && (
-          <ModuleForm modulo={selectedModulo} cursoId={id} setVisibility={setIsModuleFormVisible} reloadCurso={refetch} />
+          <ModuleForm modulo={selectedModulo} cursoId={Number(id)} setVisibility={setIsModuleFormVisible} reloadModulo={moduleRefetch} />
         )}
 
         {isAulaFormVisible && (
-          <AulaForm aula={selectedAula} updateAula={handleUpdateAula} />
+          <AulaForm aula={selectedAula} reloadModulo={moduleRefetch} order={currentOrder} moduleId={currentModuleId} closeForm={() => setIsAulaFormVisible(false)} />
         )}
 
         {isPerguntaFormVisible && (
