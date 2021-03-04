@@ -1,8 +1,8 @@
 import { getCustomRepository } from "typeorm";
-import RespostasRepository from "../infra/typeorm/repositories/RepostasRepository";
+import RespostasRepository from "../infra/typeorm/repositories/RespostasRepository";
 
 interface Request {
-    id: string;
+    id: number;
 }
 
 class DeleteRespostaService {

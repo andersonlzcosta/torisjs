@@ -9,11 +9,11 @@ class Resposta {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     corpo: string;
 
-    @Field(() => Pergunta)
+    @Field(() => Pergunta, { nullable: true })
     @ManyToOne(() => Pergunta, pergunta => pergunta.respostas)
     pergunta: Pergunta;
 

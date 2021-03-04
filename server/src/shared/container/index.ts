@@ -23,6 +23,12 @@ import ModulosPerguntasRepository from '@modules/cursos/infra/typeorm/repositori
 import IModulosAulasRepository from '@modules/cursos/repositories/IAulasRepository';
 import ModulosAulasRepository from '@modules/cursos/infra/typeorm/repositories/AulasRepository';
 
+import IForumsPerguntasRepository from '@modules/forums/repositories/IPerguntasRepository';
+import ForumsPerguntasRepository from '@modules/forums/infra/typeorm/repositories/PerguntasRepository';
+
+import IForumsRespostasRepository from '@modules/forums/repositories/IRespostasRepository';
+import ForumsRespostasRepository from '@modules/forums/infra/typeorm/repositories/RespostasRepository';
+
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 
 container.registerSingleton<IAbrigosRepository>('AbrigosRepository', AbrigosRepository);
@@ -33,3 +39,6 @@ container.registerSingleton<ICursosRepository>('CursosRepository', CursosReposit
 container.registerSingleton<IModulosRepository>('ModulosRepository', ModulosRepository);
 container.registerSingleton<IModulosPerguntasRepository>('ModulosPerguntasRepository', ModulosPerguntasRepository);
 container.registerSingleton<IModulosAulasRepository>('ModulosAulasRepository', ModulosAulasRepository);
+
+container.registerSingleton<IForumsPerguntasRepository>('ForumsPerguntasRepository', ForumsPerguntasRepository);
+container.registerSingleton<IForumsRespostasRepository>('ForumsRespostasRepository', ForumsRespostasRepository);

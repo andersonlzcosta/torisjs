@@ -1,10 +1,10 @@
 import { getCustomRepository } from "typeorm";
 import Resposta from "../infra/typeorm/entities/Resposta";
-import RespostasRepository from "../infra/typeorm/repositories/RepostasRepository";
+import RespostasRepository from "../infra/typeorm/repositories/RespostasRepository";
 
 interface Request {
     corpo: string;
-    perguntaId: string;
+    perguntaId: number;
 }
 
 class CreateRespostaService {

@@ -1,33 +1,17 @@
-import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql";
+import { container } from "tsyringe";
+
 import Pergunta from '../../typeorm/entities/Pergunta';
+
 import CreatePerguntaService from '../../../services/CreatePerguntaService';
 import UpdatePerguntaService from '../../../services/UpdatePerguntaService';
 import DeletePerguntaService from '../../../services/DeletePerguntaService';
+
+import { AtualizarForumPerguntaInput } from "./UpdatePerguntaInput";
+import { CriarForumPerguntaInput } from "./CreatePerguntaInput";
+
 import PerguntasRepository from "../../typeorm/repositories/PerguntasRepository";
 import { getCustomRepository } from "typeorm";
-
-// Preciso usar o DTO
-@InputType()
-class CriarForumPerguntaInput {
-    @Field()
-    titulo: string;
-    @Field()
-    corpo: string;
-    @Field()
-    foiResolvido: boolean;
-}
-
-@InputType()
-class AtualizarForumPerguntaInput {
-    @Field()
-    perguntaId: string;
-    @Field()
-    titulo?: string;
-    @Field()
-    corpo?: string;
-    @Field()
-    foiResolvido?: boolean;
-}
 
 @ObjectType()
 class ForumPerguntaResponse {
@@ -50,7 +34,7 @@ export class ForumPerguntaResolver {
  
     @Query(() => ForumPerguntaResponse)
     async verForumPergunta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<ForumPerguntaResponse> {
 
         const perguntasRepository = getCustomRepository(PerguntasRepository);
@@ -64,7 +48,7 @@ export class ForumPerguntaResolver {
         @Arg("options") options: AtualizarForumPerguntaInput
     ): Promise<ForumPerguntaResponse> {
 
-        const updatePergunta = new UpdatePerguntaService();
+        const updatePergunta = container.resolve(UpdatePerguntaService);
         const pergunta = await updatePergunta.execute(options);
         return { pergunta };
 
@@ -72,7 +56,7 @@ export class ForumPerguntaResolver {
 
     @Mutation(() => Boolean)
     async deletarForumPergunta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deletePergunta = new DeletePerguntaService();
