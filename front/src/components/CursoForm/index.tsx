@@ -30,7 +30,7 @@ interface ICursoFormProps {
 
 const CursoForm: React.FC<ICursoFormProps> = ({ curso, headingText, updateCursosList }) => {
   const [heading, setHeading] = useState<string>();
-  const [cursoId, setCursoId] = useState<string>();
+  const [cursoId, setCursoId] = useState<number>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [initialData, setInitialData] = useState<ICursoFormData>();
 

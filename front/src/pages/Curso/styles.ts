@@ -81,8 +81,8 @@ export const Modulo = styled.div`
       white-space: nowrap;
 
       top: 0px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0%;
+      transform: translateX(-7%);
 
       transition: all .4s;
     }
@@ -95,6 +95,7 @@ export const Modulo = styled.div`
 
   > div{
     width: 100%;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;

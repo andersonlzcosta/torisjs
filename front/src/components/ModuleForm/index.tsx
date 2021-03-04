@@ -12,22 +12,22 @@ import Button from '../../components/Button';
 import { Container, Content } from './styles';
 
 interface IModuloData {
+  id: number;
   nome: string;
-  id: string;
 }
 
 interface IModuleFormProps {
-  cursoId: string;
+  cursoId: number;
   modulo?: IModuloData;
   setVisibility?: (v: boolean) => void;
-  reloadCurso?: () => void;
+  reloadModulo?: () => void;
 }
 
 interface IFormData {
   nome: string;
 }
 
-const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, cursoId, setVisibility, reloadCurso }) => {
+const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, cursoId, setVisibility, reloadModulo }) => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
 
@@ -37,7 +37,7 @@ const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, cursoId, setVisibility
         title: "modulo criado com sucesso",
         type: "success"
       });
-      reloadCurso && reloadCurso();
+      reloadModulo && reloadModulo();
       setVisibility && setVisibility(false);
     },
     onError() {
@@ -54,7 +54,7 @@ const ModuleForm: React.FC<IModuleFormProps> = ({ modulo, cursoId, setVisibility
         title: "modulo atualizado com sucesso",
         type: "success"
       });
-      reloadCurso && reloadCurso();
+      reloadModulo && reloadModulo();
       setVisibility && setVisibility(false);
     },
     onError() {

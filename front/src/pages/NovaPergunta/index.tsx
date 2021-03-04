@@ -45,7 +45,6 @@ const NovaPergunta: React.FC = () => {
 
   const handleSubmitPergunta = useCallback(async (data: IPerguntaData) => {
     setIsLoading(true);
-    console.log(data);
     try {
       if (!formRef.current) {
         throw new Error('formRef invalid');

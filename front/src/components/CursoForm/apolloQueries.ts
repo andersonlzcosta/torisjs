@@ -19,14 +19,14 @@ mutation CriarCurso(
 `;
 
 export const DELETAR_CURSO = gql`
-mutation DeletarCurso($id: String!){
+mutation DeletarCurso($id: Float!){
   deletarCurso(id: $id)
 }
 `;
 
 export const UPDATE_CURSO = gql`
 mutation AtualizarCurso(
-  $cursoId: String!
+  $cursoId: Float!
   $nome: String!
   $descricao: String!
 ){

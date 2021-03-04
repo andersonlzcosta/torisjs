@@ -1,35 +1,69 @@
 import React, { useRef } from 'react';
+import { useMutation } from '@apollo/client';
+import { Form } from '@unform/web';
 
-import { Container, Content } from './styles';
+import { CREATE_AULA, UPDATE_AULA } from './apolloQueries';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Form } from '@unform/web';
 
 import { FormHandles } from '@unform/core';
 import { IAulasData } from '../../pages/Curso';
+import { Container, Content } from './styles';
 
 interface IAulaFormProps {
   aula?: IAulasData;
-  updateAula: (aula: IAulasData) => void;
+  order: number;
+  moduleId: number;
+  reloadModulo: () => void;
+  closeForm: () => void;
 }
 
 interface ISubmittedData {
-  id: string;
   nome: string;
   video_url: string;
   duracao: string;
 }
 
-const AulaForm: React.FC<IAulaFormProps> = ({ aula, updateAula }) => {
+const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModulo, closeForm }) => {
   const formRef = useRef<FormHandles>(null);
 
+  const [CriarAula] = useMutation(CREATE_AULA, {
+    onCompleted() {
+      reloadModulo();
+      closeForm();
+    }
+  });
+
+  const [AtualizarAula] = useMutation(UPDATE_AULA, {
+    onCompleted() {
+      reloadModulo();
+      closeForm();
+    }
+  });
+
   const handleSubmit = (data: ISubmittedData) => {
-    updateAula({
-      id: parseInt(data.id),
-      nome: data.nome,
-      video_url: data.video_url,
-      duracao: parseInt(data.duracao)
-    });
+    if (!aula) {
+      CriarAula({
+        variables: {
+          ordem: order,
+          nome: data.nome,
+          video_url: data.video_url,
+          duracao: data.duracao,
+          moduloId: moduleId
+        }
+      })
+    } else {
+      AtualizarAula({
+        variables: {
+          aulaId: aula.id,
+          ordem: aula.ordem,
+          nome: data.nome,
+          video_url: data.video_url,
+          duracao: data.duracao,
+          moduloId: moduleId
+        }
+      });
+    }
   }
 
   return (

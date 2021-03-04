@@ -14,7 +14,7 @@ class CursosRepository implements ICursosRepository {
 
   public async findById(id: number): Promise<Curso | undefined> {
 
-    const curso = await this.ormRepository.findOne( id , { relations: ["modulos"]});
+    const curso = await this.ormRepository.findOne(id, { relations: ["modulos"] });
     return curso;
 
   }
@@ -28,12 +28,12 @@ class CursosRepository implements ICursosRepository {
   }
 
   public async save(curso: Curso): Promise<Curso> {
-    
+
     return this.ormRepository.save(curso);
 
   }
 
- public async create({ nome, descricao }: ICreateCursoDTO): Promise<Curso> {
+  public async create({ nome, descricao }: ICreateCursoDTO): Promise<Curso> {
 
     const curso = this.ormRepository.create({ nome, descricao });
     await this.ormRepository.save(curso);
@@ -43,7 +43,7 @@ class CursosRepository implements ICursosRepository {
 
   public async update(cursoId: number, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
 
-    await this.ormRepository.update( cursoId, { id: cursoId, nome, descricao });   
+    await this.ormRepository.update(cursoId, { id: cursoId, nome, descricao });
     const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["modulos"] });
     return curso;
 
@@ -51,7 +51,7 @@ class CursosRepository implements ICursosRepository {
 
   public async delete(id: number): Promise<boolean> {
 
-    await this.ormRepository.delete( id );
+    await this.ormRepository.delete(id);
     return true;
 
   }
