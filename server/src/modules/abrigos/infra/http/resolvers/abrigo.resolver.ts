@@ -2,16 +2,17 @@ import { Resolver, Query, Mutation, Field, ObjectType, Arg } from "type-graphql"
 import { container } from "tsyringe";
 
 import Abrigo from '../../typeorm/entities/Abrigo';
+
 import CreateAbrigoService from '../../../services/CreateAbrigoService';
 import UpdateAbrigoService from '../../../services/UpdateAbrigoService';
 import DeleteAbrigoService from "@modules/abrigos/services/DeleteAbrigoService";
 import FindAllAbrigosService from "@modules/abrigos/services/FindAllAbrigosService";
 
-import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
-import { getCustomRepository } from "typeorm";
-
 import { CriarAbrigoInput } from "./CreateAbrigoInput";
 import { AtualizarAbrigoInput } from "./UpdateAbrigoInput";
+
+import AbrigosRepository from "../../typeorm/repositories/AbrigosRepository";
+import { getCustomRepository } from "typeorm";
 
 
 @ObjectType()
@@ -49,7 +50,6 @@ export class AbrigoResolver {
         @Arg("options") options: AtualizarAbrigoInput
     ): Promise<AbrigoResponse> {
 
-        console.log(options);
         const updateAbrigo = container.resolve(UpdateAbrigoService);
         const abrigo = await updateAbrigo.execute(options);
         return { abrigo };

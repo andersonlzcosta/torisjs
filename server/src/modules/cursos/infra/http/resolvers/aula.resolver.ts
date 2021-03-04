@@ -1,11 +1,14 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { container } from "tsyringe";
+
 import Aula from '../../typeorm/entities/Aula';
+
 import CreateAulaService from '../../../services/CreateAulaService';
 import UpdateAulaService from '../../../services/UpdateAulaService';
 import DeleteAulaService from '../../../services/DeleteAulaService';
-import AulasRepository from "../../typeorm/repositories/AulasRepository";
+
 import { getCustomRepository } from "typeorm";
-import { container } from "tsyringe";
+import AulasRepository from "../../typeorm/repositories/AulasRepository";
 
 // Preciso usar o DTO
 @InputType()
@@ -77,7 +80,6 @@ export class AulaResolver {
         @Arg("options") options: AtualizarAulaInput
     ): Promise<AulaResponse> {
 
-        console.log(options);
         const updateAula = container.resolve(UpdateAulaService);
         const aula = await updateAula.execute(options);
         return { aula };

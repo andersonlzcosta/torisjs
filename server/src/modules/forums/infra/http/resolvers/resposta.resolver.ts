@@ -1,29 +1,17 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { container } from "tsyringe";
+
 import Resposta from '../../typeorm/entities/Resposta';
+
 import CreateRespostaService from '../../../services/CreateRespostaService';
 import UpdateRespostaService from '../../../services/UpdateRespostaService';
 import DeleteRespostaService from '../../../services/DeleteRespostaService';
-import RespostasRepository from "../../typeorm/repositories/RepostasRepository";
+
+import { CriarRespostaInput } from "./CreateRespostaInput";
+import { AtualizarRespostaInput } from "./UpdateRespostaInput";
+
+import RespostasRepository from "../../typeorm/repositories/RespostasRepository";
 import { getCustomRepository } from "typeorm";
-
-// Preciso usar o DTO
-@InputType()
-class CriarRespostaInput {
-    @Field()
-    corpo: string;
-    @Field()
-    perguntaId: string;
-}
-
-@InputType()
-class AtualizarRespostaInput {
-    @Field()
-    respostaId: string;
-    @Field()
-    corpo?: string;
-    @Field()
-    perguntaId?: string;
-}
 
 @ObjectType()
 class RespostaResponse {
@@ -46,7 +34,7 @@ export class ForumRespostaResolver {
  
     @Query(() => RespostaResponse)
     async verForumResposta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<RespostaResponse> {
 
         const respostasRepository = getCustomRepository(RespostasRepository);
@@ -60,8 +48,7 @@ export class ForumRespostaResolver {
         @Arg("options") options: AtualizarRespostaInput
     ): Promise<RespostaResponse> {
 
-        console.log(options);
-        const updateResposta = new UpdateRespostaService();
+        const updateResposta = container.resolve(UpdateRespostaService);
         const resposta = await updateResposta.execute(options);
         return { resposta };
 
@@ -69,7 +56,7 @@ export class ForumRespostaResolver {
 
     @Mutation(() => Boolean)
     async deletarForumResposta(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deleteResposta = new DeleteRespostaService();

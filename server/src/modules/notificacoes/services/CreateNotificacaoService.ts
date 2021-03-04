@@ -6,7 +6,7 @@ interface Request {
     conteudo?: string;
     arquivada?: boolean;
     tipo?: string;
-    userId?: string;
+    userId?: number;
 }
 
 @injectable()

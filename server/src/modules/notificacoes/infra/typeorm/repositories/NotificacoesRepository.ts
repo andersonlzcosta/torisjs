@@ -12,7 +12,7 @@ class NotificacoesRepository implements INotificacoesRepository {
         this.ormRepository = getRepository(Notificacao);
     }
   
-    public async findById(id: string): Promise<Notificacao | undefined> {
+    public async findById(id: number): Promise<Notificacao | undefined> {
     
         const notificacao = await this.ormRepository.findOne({ where: { id }, relations: ["user"]  });
         return notificacao;
@@ -22,7 +22,7 @@ class NotificacoesRepository implements INotificacoesRepository {
     public async findAll(): Promise<Notificacao[]> {
   
         let notificacoes: Notificacao[];
-        notificacoes = await this.ormRepository.find();
+        notificacoes = await this.ormRepository.find({ relations: ["user"] });
         return notificacoes;
   
     }
@@ -52,7 +52,7 @@ class NotificacoesRepository implements INotificacoesRepository {
   
     }
   
-    public async update(notificacaoId: string, { 
+    public async update(notificacaoId: number, { 
       conteudo,
       arquivada,
       tipo,
@@ -69,12 +69,12 @@ class NotificacoesRepository implements INotificacoesRepository {
           user: { id: userId }
         }
       );   
-      const notificacao = await this.ormRepository.findOne({ where: { id: notificacaoId }, relations: ["users"] });
+      const notificacao = await this.ormRepository.findOne({ where: { id: notificacaoId }, relations: ["user"] });
       return notificacao;
   
     }
   
-    public async delete(id: string): Promise<boolean> {
+    public async delete(id: number): Promise<boolean> {
   
       await this.ormRepository.delete( id );
       return true;
