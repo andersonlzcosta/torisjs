@@ -2,7 +2,7 @@ import { getCustomRepository } from "typeorm";
 import CursosRepository from "../infra/typeorm/repositories/CursosRepository";
 
 interface Request {
-    id: string;
+    id: number;
 }
 
 class DeleteCursoService {

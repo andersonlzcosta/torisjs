@@ -2,7 +2,7 @@ import { getCustomRepository } from "typeorm";
 import ModulosRepository from "../infra/typeorm/repositories/ModulosRepository";
 
 interface Request {
-    id: string;
+    id: number;
 }
 
 class DeleteModuloService {

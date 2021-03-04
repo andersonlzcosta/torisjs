@@ -6,7 +6,7 @@
     "username": "abrigando",
     "password": "osdesabrigados",
     "database": "rede_abrigo",
-    "synchronize": true,
+    "synchronize": false,
     "entities": [
         "./src/modules/**/infra/typeorm/entities/*.ts"
     ],

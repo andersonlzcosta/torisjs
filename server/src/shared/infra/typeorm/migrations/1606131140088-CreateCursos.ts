@@ -9,24 +9,28 @@ export class CreateCursos1606131140088 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'integer',
                         isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: 'increment' 
                     },
                     {
                         name: 'nome',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'descricao',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
-                        name: 'created_at',
+                        name: 'createdAt',
                         type: 'timestamp',
                         default: 'now()',
                     },
                     {
-                        name: 'updated_at',
+                        name: 'updatedAt',
                         type: 'timestamp',
                         default: 'now()',
                     },

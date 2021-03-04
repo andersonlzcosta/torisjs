@@ -12,9 +12,9 @@ class ModulosRepository implements IModulosRepository {
     this.ormRepository = getRepository(Modulo);
   }
 
-  public async findById(id: string): Promise<Modulo | undefined> {
+  public async findById(id: number): Promise<Modulo | undefined> {
 
-    const modulo = await this.ormRepository.findOne( id , { relations: ["curso"]});
+    const modulo = await this.ormRepository.findOne( id , { relations: ["curso", "aulas", "perguntas"] });
     return modulo;
 
   }
@@ -42,7 +42,7 @@ class ModulosRepository implements IModulosRepository {
 
   }
 
-  public async update(moduloId: string, { nome, cursoId }: IUpdateModuloDTO): Promise<Modulo | undefined> {
+  public async update(moduloId: number, { nome, cursoId }: IUpdateModuloDTO): Promise<Modulo | undefined> {
 
     await this.ormRepository.update( moduloId, { id: moduloId, nome, curso: { id: cursoId } });   
     const modulo = await this.ormRepository.findOne({ where: { id: moduloId }, relations: ["curso"] });
@@ -50,7 +50,7 @@ class ModulosRepository implements IModulosRepository {
 
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: number): Promise<boolean> {
 
     await this.ormRepository.delete( id );
     return true;

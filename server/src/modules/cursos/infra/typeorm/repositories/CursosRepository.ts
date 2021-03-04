@@ -12,7 +12,7 @@ class CursosRepository implements ICursosRepository {
     this.ormRepository = getRepository(Curso);
   }
 
-  public async findById(id: string): Promise<Curso | undefined> {
+  public async findById(id: number): Promise<Curso | undefined> {
 
     const curso = await this.ormRepository.findOne( id , { relations: ["modulos"]});
     return curso;
@@ -41,7 +41,7 @@ class CursosRepository implements ICursosRepository {
 
   }
 
-  public async update(cursoId: string, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
+  public async update(cursoId: number, { nome, descricao }: IUpdateCursoDTO): Promise<Curso | undefined> {
 
     await this.ormRepository.update( cursoId, { id: cursoId, nome, descricao });   
     const curso = await this.ormRepository.findOne({ where: { id: cursoId }, relations: ["modulos"] });
@@ -49,7 +49,7 @@ class CursosRepository implements ICursosRepository {
 
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: number): Promise<boolean> {
 
     await this.ormRepository.delete( id );
     return true;

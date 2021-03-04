@@ -9,28 +9,33 @@ export class CreateForumRespostas1606305831244 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'integer',
                         isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: 'increment' 
                     },
                     {
                         name: 'corpo',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'perguntaId',
-                        type: 'varchar',
+                        type: 'integer',
+                        isNullable: true
                     },
                     {
                         name: 'userId',
-                        type: 'varchar',
+                        type: 'integer',
+                        isNullable: true
                     },
                     {
-                        name: 'created_at',
+                        name: 'createdAt',
                         type: 'timestamp',
                         default: 'now()',
                     },
                     {
-                        name: 'updated_at',
+                        name: 'updatedAt',
                         type: 'timestamp',
                         default: 'now()',
                     },

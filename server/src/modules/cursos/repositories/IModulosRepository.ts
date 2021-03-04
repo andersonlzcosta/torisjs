@@ -3,10 +3,10 @@ import ICreateModuloDTO from '../dtos/ICreateModuloDTO';
 import IUpdateModuloDTO from '../dtos/IUpdateModuloDTO';
 
 export default interface IModulosRepository {
-    findById(id: string): Promise<Modulo | undefined>;
+    findById(id: number): Promise<Modulo | undefined>;
     findAll(): Promise<Modulo[]>;
     save(modulo: Modulo): Promise<Modulo>;
     create(data: ICreateModuloDTO): Promise<Modulo | undefined>;
-    update(moduloId: string, data: IUpdateModuloDTO): Promise<Modulo | undefined>;
-    delete(id: string): Promise<Boolean>;
+    update(moduloId: number, data: IUpdateModuloDTO): Promise<Modulo | undefined>;
+    delete(id: number): Promise<Boolean>;
 }

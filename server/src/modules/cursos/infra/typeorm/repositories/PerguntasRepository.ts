@@ -12,7 +12,7 @@ class PerguntasRepository implements IPerguntasRepository {
     this.ormRepository = getRepository(Pergunta);
   }
 
-  public async findById(id: string): Promise<Pergunta | undefined> {
+  public async findById(id: number): Promise<Pergunta | undefined> {
 
     const pergunta = await this.ormRepository.findOne( id , { relations: ["modulo"]});
     return pergunta;
@@ -42,7 +42,7 @@ class PerguntasRepository implements IPerguntasRepository {
 
   }
 
-  public async update(perguntaId: string, { ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, moduloId  }: IUpdatePerguntaDTO): Promise<Pergunta | undefined> {
+  public async update(perguntaId: number, { ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, moduloId  }: IUpdatePerguntaDTO): Promise<Pergunta | undefined> {
 
     await this.ormRepository.update( perguntaId, { id: perguntaId, ordem, enunciado, alternativa1, alternativa2, alternativa3, alternativa4, resposta, justificativa, modulo: { id: moduloId } });   
     const pergunta = await this.ormRepository.findOne({ where: { id: perguntaId }, relations: ["modulo"] });
@@ -50,7 +50,7 @@ class PerguntasRepository implements IPerguntasRepository {
 
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: number): Promise<boolean> {
 
     await this.ormRepository.delete( id );
     return true;

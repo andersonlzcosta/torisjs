@@ -13,5 +13,5 @@ export default interface ICreateUserDTO {
     telefone1?: string;
     telefone2?: string;
     profissao?: string;
-    abrigoId?: string;
+    abrigoId?: number;
 }

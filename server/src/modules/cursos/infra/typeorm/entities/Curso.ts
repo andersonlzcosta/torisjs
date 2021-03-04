@@ -7,17 +7,17 @@ import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 class Curso {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     nome: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     descricao: string;
 
-    @Field(() => [Modulo])
+    @Field(() => [Modulo], { nullable: true })
     @OneToMany(() => Modulo, modulo => modulo.curso)
     modulos?: Modulo[];
     

@@ -5,23 +5,24 @@ import UpdateCursoService from '../../../services/UpdateCursoService';
 import DeleteCursoService from '../../../services/DeleteCursoService';
 import CursosRepository from "../../typeorm/repositories/CursosRepository";
 import { getCustomRepository } from "typeorm";
+import { container } from "tsyringe";
 
 // Preciso usar o DTO
 @InputType()
 class CriarCursoInput {
     @Field()
     nome: string;
-    @Field()
+    @Field({ nullable: true })
     descricao: string;
 }
 
 @InputType()
 class AtualizarCursoInput {
     @Field()
-    cursoId: string;
-    @Field()
+    cursoId: number;
+    @Field({ nullable: true })
     nome?: string;
-    @Field()
+    @Field({ nullable: true })
     descricao?: string;
 }
 
@@ -46,7 +47,7 @@ export class CursoResolver {
  
     @Query(() => CursoResponse)
     async verCurso(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<CursoResponse> {
 
         const cursosRepository = getCustomRepository(CursosRepository);
@@ -60,7 +61,7 @@ export class CursoResolver {
         @Arg("options") options: AtualizarCursoInput
     ): Promise<CursoResponse> {
 
-        const updateCurso = new UpdateCursoService();
+        const updateCurso = container.resolve(UpdateCursoService);
         const curso = await updateCurso.execute(options);
         return { curso };
 
@@ -68,7 +69,7 @@ export class CursoResolver {
 
     @Mutation(() => Boolean)
     async deletarCurso(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deleteCurso = new DeleteCursoService();

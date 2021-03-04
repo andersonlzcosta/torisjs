@@ -3,8 +3,8 @@ import User from "../infra/typeorm/entities/User";
 import IUsersRepository from "../repositories/IUsersRepository";
 
 interface Request {
-    userId: string;
-    abrigoId: string;
+    userId: number;
+    abrigoId: number;
 }
 
 @injectable()

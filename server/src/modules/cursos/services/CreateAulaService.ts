@@ -8,7 +8,7 @@ interface Request {
     descricao: string;
     video_url: string;
     duracao: string;
-    moduloId:string;
+    moduloId: number;
 }
 
 class CreateAulaService {

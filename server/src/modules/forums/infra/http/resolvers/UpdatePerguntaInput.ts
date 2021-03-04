@@ -1,17 +1,13 @@
 import { InputType, Field } from "type-graphql";
 
 @InputType()
-export class AtualizarNotificacaoInput {
-    
-    @Field()
-    notificacaoId: number;
+export class AtualizarForumPerguntaInput {
     @Field({ nullable: true })
-    conteudo?: string;
+    perguntaId: number;
     @Field({ nullable: true })
-    arquivada?: boolean;
+    titulo?: string;
     @Field({ nullable: true })
-    tipo?: string;
+    corpo?: string;
     @Field({ nullable: true })
-    userId?: number;
-    
+    foiResolvido?: boolean;
 }

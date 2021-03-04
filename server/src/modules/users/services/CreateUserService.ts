@@ -13,7 +13,7 @@ interface Request {
     telefone1?: string;
     telefone2?: string;
     profissao?: string;
-    abrigoId?: string;
+    abrigoId?: number;
 }
 
 @injectable()
@@ -26,7 +26,18 @@ class CreateUserService {
             private hashProvider: IHashProvider,
         ) { }
     
-        public async execute({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: Request): Promise<User | undefined> {
+        public async execute({ 
+                                nome, 
+                                email, 
+                                emailAlternativo, 
+                                nascimento, 
+                                cargo, 
+                                telefone1, 
+                                telefone2, 
+                                profissao, 
+                                password, 
+                                abrigoId 
+                            }: Request): Promise<User | undefined> {
 
         const encryptedPassword = await this.hashProvider.generateHash(password);
 

@@ -8,18 +8,18 @@ import Resposta from '@modules/forums/infra/typeorm/entities/Resposta';
 class Pegunta {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     titulo: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     corpo: string;
 
-    @Field()
-    @Column({ default: false, type: "bool" })
+    @Field({ nullable: true })
+    @Column({ default: false, type: "bool", nullable: true})
     foiResolvido: boolean;
 
     @Field(() => [Resposta])

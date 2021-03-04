@@ -7,13 +7,13 @@ import Pergunta from '@modules/forums/infra/typeorm/entities/Pergunta';
 class Resposta {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     corpo: string;
 
-    @Field(() => Pergunta)
+    @Field(() => Pergunta, { nullable: true })
     @ManyToOne(() => Pergunta, pergunta => pergunta.respostas)
     pergunta: Pergunta;
 

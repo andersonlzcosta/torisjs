@@ -1,28 +1,35 @@
 import { Resolver, Query, Mutation, Field, ObjectType, Arg, InputType } from "type-graphql";
+import { container } from "tsyringe";
+
 import Modulo from '../../typeorm/entities/Modulo';
+
 import CreateModuloService from '../../../services/CreateModuloService';
 import UpdateModuloService from '../../../services/UpdateModuloService';
 import DeleteModuloService from '../../../services/DeleteModuloService';
+
+// import { CriarModuloInput } from "./CreateModuloInput";
+// import { AtualizarModuloInput } from "./UpdateModuloInput";
+
 import ModulosRepository from "../../typeorm/repositories/ModulosRepository";
 import { getCustomRepository } from "typeorm";
 
 // Preciso usar o DTO
 @InputType()
 class CriarModuloInput {
-    @Field()
+    @Field({ nullable: true })
     nome: string;
-    @Field()
-    cursoId: string;
+    @Field({ nullable: true })
+    cursoId: number;
 }
 
 @InputType()
 class AtualizarModuloInput {
     @Field()
-    moduloId: string;
-    @Field()
+    moduloId: number;
+    @Field({ nullable: true })
     nome?: string;
-    @Field()
-    cursoId?: string;
+    @Field({ nullable: true })
+    cursoId?: number;
 }
 
 @ObjectType()
@@ -46,7 +53,7 @@ export class ModuloResolver {
  
     @Query(() => ModuloResponse)
     async verModulo(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<ModuloResponse> {
 
         const modulosRepository = getCustomRepository(ModulosRepository);
@@ -60,8 +67,7 @@ export class ModuloResolver {
         @Arg("options") options: AtualizarModuloInput
     ): Promise<ModuloResponse> {
 
-        console.log(options);
-        const updateModulo = new UpdateModuloService();
+        const updateModulo = container.resolve(UpdateModuloService);
         const modulo = await updateModulo.execute(options);
         return { modulo };
 
@@ -69,7 +75,7 @@ export class ModuloResolver {
 
     @Mutation(() => Boolean)
     async deletarModulo(
-        @Arg("id") id: string
+        @Arg("id") id: number
     ): Promise<boolean> {
        
         const deleteModulo = new DeleteModuloService();

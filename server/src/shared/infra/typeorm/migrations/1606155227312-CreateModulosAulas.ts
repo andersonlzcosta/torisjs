@@ -9,36 +9,48 @@ export class CreateAulas1606155159742 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'integer',
                         isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: 'increment' 
                     },
                     {
                         name: 'ordem',
                         type: 'int',
+                        isNullable: true
                     },
                     {
                         name: 'nome',
                         type: 'varchar',
+                        isNullable: true
+                    },
+                    {
+                        name: 'descricao',
+                        type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'video_url',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'duracao',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'moduloId',
-                        type: 'varchar',
+                        type: 'integer',
+                        isNullable: true
                     },
                     {
-                        name: 'created_at',
+                        name: 'createdAt',
                         type: 'timestamp',
                         default: 'now()',
                     },
                     {
-                        name: 'updated_at',
+                        name: 'updatedAt',
                         type: 'timestamp',
                         default: 'now()',
                     },

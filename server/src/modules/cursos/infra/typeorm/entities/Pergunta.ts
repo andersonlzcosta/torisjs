@@ -7,41 +7,41 @@ import Modulo from '@modules/cursos/infra/typeorm/entities/Modulo';
 class Pergunta {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column({ type: "int" })
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     ordem: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     enunciado: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     alternativa1: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     alternativa2: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     alternativa3: string;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     alternativa4: string;
 
-    @Field()
-    @Column({ type: "int" })
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     resposta: number;
     
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     justificativa: string;
 
-    @Field(() => Modulo)
+    @Field(() => Modulo, { nullable: true })
     @ManyToOne(() => Modulo, modulo => modulo.perguntas)
     modulo: Modulo;
     

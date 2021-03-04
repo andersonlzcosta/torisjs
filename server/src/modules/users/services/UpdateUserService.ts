@@ -3,7 +3,7 @@ import User from "../infra/typeorm/entities/User";
 import UsersRepository from "../infra/typeorm/repositories/UsersRepository";
 
 interface Request {
-    userId: string;
+    userId: number;
     nome?: string;
     email?: string;
     emailAlternativo?: string;
@@ -14,7 +14,7 @@ interface Request {
     profissao?: string;
     old_password?: string;
     password?: string;
-    abrigoId?: string;
+    abrigoId?: number;
 }
 
 class UpdateProfileService {
@@ -23,9 +23,23 @@ class UpdateProfileService {
         const usersRepository = getCustomRepository(UsersRepository);
         const user = await usersRepository.findById(userId);
         if (!user) {
-            throw new Error('user not found on updateProfileService');
+            throw new Error('user not found to update');
         }
         if (!(user.password == old_password)) { password = user.password };
+
+        if (user) {
+            if (!nome) nome = user.nome;
+            if (!email) email = user.email;
+            if (!emailAlternativo) emailAlternativo = user.emailAlternativo;
+            if (!nascimento) nascimento = user.nascimento;
+            if (!cargo) cargo = user.cargo;
+            if (!telefone1) telefone1 = user.telefone1;
+            if (!telefone2) telefone2 = user.telefone2;
+            if (!profissao) profissao = user.profissao;
+            if (!password) password = user.password;
+            if (!abrigoId && user.abrigo) abrigoId = user.abrigo.id;
+        }
+            
         return usersRepository.update(userId, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId });
 
     }

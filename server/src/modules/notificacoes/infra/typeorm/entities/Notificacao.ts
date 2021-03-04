@@ -7,17 +7,17 @@ import User from '@modules/users/infra/typeorm/entities/User';
 class Notificacao {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: string;
+    id: number;
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     conteudo: string;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ default: false, type: "bool" })
     arquivada: boolean;
 
-    @Field()
+    @Field({ nullable: true })
     @Column({ nullable: true })
     tipo: string;
 

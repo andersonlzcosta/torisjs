@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import IAbrigosRepository from "../repositories/IAbrigosRepository";
 
 interface Request {
-    id: string;
+    id: number;
 }
 
 @injectable()

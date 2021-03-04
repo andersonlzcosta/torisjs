@@ -9,52 +9,63 @@ export class CreatePergunta1606155176524 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'integer',
                         isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: 'increment' 
                     },
                     {
                         name: 'ordem',
                         type: 'int',
+                        isNullable: true
                     },
                     {
                         name: 'enunciado',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'alternativa1',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'alternativa2',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'alternativa3',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'alternativa4',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'resposta',
                         type: 'int',
+                        isNullable: true
                     },
                     {
                         name: 'justificativa',
                         type: 'varchar',
+                        isNullable: true
                     },
                     {
                         name: 'moduloId',
-                        type: 'varchar',
+                        type: 'integer',
+                        isNullable: true
                     },
                     {
-                        name: 'created_at',
+                        name: 'createdAt',
                         type: 'timestamp',
                         default: 'now()',
                     },
                     {
-                        name: 'updated_at',
+                        name: 'updatedAt',
                         type: 'timestamp',
                         default: 'now()',
                     },

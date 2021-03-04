@@ -22,5 +22,5 @@ export class CreateUserInput {
     @Field({ nullable: true })
     profissao?: string;
     @Field({ nullable: true })
-    abrigoId?: string;
+    abrigoId?: number;
 }

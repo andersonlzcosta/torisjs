@@ -1,4 +1,4 @@
 export default interface IUpdateRespostaDTO {
     corpo?: string;
-    perguntaId?: string;
+    perguntaId?: number;
 }

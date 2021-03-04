@@ -12,7 +12,7 @@ class AulasRepository implements IAulasRepository {
     this.ormRepository = getRepository(Aula);
   }
 
-  public async findById(id: string): Promise<Aula | undefined> {
+  public async findById(id: number): Promise<Aula | undefined> {
 
     const aula = await this.ormRepository.findOne( id , { relations: ["modulo"]});
     return aula;
@@ -41,7 +41,7 @@ class AulasRepository implements IAulasRepository {
     return aula;
   }
 
-  public async update(aulaId: string, { ordem, nome, descricao, video_url, duracao, moduloId }: IUpdateAulaDTO): Promise<Aula | undefined> {
+  public async update(aulaId: number, { ordem, nome, descricao, video_url, duracao, moduloId }: IUpdateAulaDTO): Promise<Aula | undefined> {
 
     await this.ormRepository.update( aulaId, { id: aulaId, ordem, nome, descricao, video_url, duracao, modulo: { id: moduloId } });   
     const aula = await this.ormRepository.findOne({ where: { id: aulaId }, relations: ["modulo"] });
@@ -49,7 +49,7 @@ class AulasRepository implements IAulasRepository {
 
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: number): Promise<boolean> {
 
     await this.ormRepository.delete( id );
     return true;

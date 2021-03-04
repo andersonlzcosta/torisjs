@@ -3,7 +3,7 @@ import Abrigo from "../infra/typeorm/entities/Abrigo";
 import IAbrigosRepository from "../repositories/IAbrigosRepository";
 
 interface Request {
-    abrigoId: string;
+    abrigoId: number;
     nome?: string;
     telefone1?: string;
     telefone2?: string;
@@ -48,6 +48,27 @@ class UpdateAbrigoService {
         pcd,
         observacao        
     }: Request): Promise<Abrigo | undefined> {
+        
+        const abrigo = await this.abrigosRepository.findById(abrigoId);
+        
+        if (abrigo) {
+            if (!nome) nome = abrigo.nome;
+            if (!telefone1) telefone1 = abrigo.telefone1;
+            if (!telefone2) telefone2 = abrigo.telefone2;
+            if (!email1) email1 = abrigo.email1;
+            if (!email2) email2 = abrigo.email2;
+            if (!endereco) endereco = abrigo.endereco;
+            if (!bairro) bairro = abrigo.bairro;
+            if (!cidade) cidade = abrigo.cidade;
+            if (!estado) estado = abrigo.estado;
+            if (!classificacao) classificacao = abrigo.classificacao;
+            if (!capacidade) capacidade = abrigo.capacidade;
+            if (!faixaEtaria) faixaEtaria = abrigo.faixaEtaria;
+            if (!lgbt) lgbt = abrigo.lgbt;
+            if (!genero) genero = abrigo.genero;
+            if (!pcd) pcd = abrigo.pcd;
+            if (!observacao) observacao = abrigo.observacao;
+        }
 
         return this.abrigosRepository.update(
             abrigoId, 
