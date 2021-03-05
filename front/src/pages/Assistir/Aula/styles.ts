@@ -32,15 +32,29 @@ export const AulaContainer = styled.div`
     margin-bottom: 15px;
   }
 
+  h3{
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #fff;
+    padding-left: 40px;
+  }
+
   > div{
     max-height: 500px;
   }
 
   span{
     width: 100%;
-    padding-left: 40px;
-    font-size: 20px;
+    margin-left: 40px;
+    font-size: 15px;
+    font-weight: 700;
     margin-bottom: 30px;
+    letter-spacing: 2px;
+    background-color: #fff;
+    padding: 3px 10px;
+    text-transform: lowercase;
+    border-radius: 30px;
   }
 
   button.voltar{

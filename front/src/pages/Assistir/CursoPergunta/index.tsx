@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import api from '../../../services/api';
+import { useQuery } from '@apollo/client';
+import { Form } from '@unform/web';
+
+import { VER_PERGUNTA } from '../apolloQueries';
 
 import Navbar from '../../../components/Navbar';
 import NavbarDesktop from '../../../components/NavbarDesktop';
 import TopMenu from '../../../components/TopMenu';
 
 import { Container, PerguntaContainer } from './styles';
-import { Form } from '@unform/web';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 
@@ -16,44 +18,45 @@ interface IRouteParams {
 }
 
 interface IPergunta {
-  id: number;
-  enunciado: string;
-  escolha_1: string;
-  escolha_2: string;
-  escolha_3: string;
-  escolha_4: string;
-  resposta_certa: number;
-  justificativa: string;
+  verModuloPergunta: {
+    pergunta: {
+      id: number;
+      enunciado: string;
+      alternativa1: string;
+      alternativa2: string;
+      alternativa3: string;
+      alternativa4: string;
+      resposta: number;
+      justificativa: string;
+    }
+  }
 }
 
 const CursoPergunta: React.FC = () => {
   const { id } = useParams<IRouteParams>();
-  const [pergunta, setPergunta] = useState<IPergunta>();
-  const [selectedAnswer, setSelectedAnswer] = useState<number>();
+  const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
   const [showJustificativa, setShowJustificativa] = useState(false);
   const [message, setMessage] = useState<string>();
   const { goBack } = useHistory();
 
-  const handleSubmit = useCallback(() => {
-    if (pergunta && selectedAnswer) {
-      if (selectedAnswer === pergunta.resposta_certa) {
+  const { data: pergunta } = useQuery<IPergunta>(VER_PERGUNTA, {
+    variables: { id: Number(id) }
+  });
+
+  const handleSubmit = () => {
+    if (pergunta) {
+      if (Number(selectedAnswer) === pergunta.verModuloPergunta.pergunta.resposta) {
         setMessage('resposta certa!');
       } else {
         setMessage('resposta errada :(');
       }
     }
     setShowJustificativa(true);
-  }, [selectedAnswer, pergunta]);
+  };
 
-  const handleSelectAnswer = useCallback((event) => {
+  const handleSelectAnswer = (event: any) => {
     setSelectedAnswer(event.target.value);
-  }, []);
-
-  useEffect(() => {
-    api.get(`/cursoperguntas/${id}`).then(response => {
-      setPergunta(response.data);
-    });
-  }, []);
+  };
 
   return (
     <Container>
@@ -63,28 +66,37 @@ const CursoPergunta: React.FC = () => {
         <PerguntaContainer>
           <button className="voltar" onClick={goBack}>Voltar</button>
           <h1>Pergunta</h1>
-          <p>{pergunta.enunciado}</p>
+          <p>{pergunta.verModuloPergunta.pergunta.enunciado}</p>
 
           <h2>Selecione uma opção</h2>
           <Form onSubmit={handleSubmit} onChange={handleSelectAnswer}>
-            <div>
-              <Input type="radio" name="escolha_1" inputName="resposta" value="1" />
-              <label>{pergunta.escolha_1}</label>
-            </div>
-            <div>
-              <Input type="radio" name="escolha_2" inputName="resposta" value="2" />
-              <label>{pergunta.escolha_2}</label>
-            </div>
+            {pergunta.verModuloPergunta.pergunta.alternativa1 && (
+              <div>
+                <Input type="radio" name="alternativa1" inputName="resposta" value="1" />
+                <label>{pergunta.verModuloPergunta.pergunta.alternativa1}</label>
+              </div>
+            )}
 
-            <div>
-              <Input type="radio" name="escolha_3" inputName="resposta" value="3" />
-              <label>{pergunta.escolha_3}</label>
-            </div>
+            {pergunta.verModuloPergunta.pergunta.alternativa2 && (
+              <div>
+                <Input type="radio" name="alternativa2" inputName="resposta" value="2" />
+                <label>{pergunta.verModuloPergunta.pergunta.alternativa2}</label>
+              </div>
+            )}
 
-            <div>
-              <Input type="radio" name="escolha_4" inputName="resposta" value="4" />
-              <label>{pergunta.escolha_4}</label>
-            </div>
+            {pergunta.verModuloPergunta.pergunta.alternativa3 && (
+              <div>
+                <Input type="radio" name="alternativa3" inputName="resposta" value="3" />
+                <label>{pergunta.verModuloPergunta.pergunta.alternativa3}</label>
+              </div>
+            )}
+
+            {pergunta.verModuloPergunta.pergunta.alternativa4 && (
+              <div>
+                <Input type="radio" name="alternativa4" inputName="resposta" value="4" />
+                <label>{pergunta.verModuloPergunta.pergunta.alternativa4}</label>
+              </div>
+            )}
 
             {!showJustificativa && (
               <Button type="submit">enviar resposta</Button>
@@ -97,7 +109,7 @@ const CursoPergunta: React.FC = () => {
             )}
 
             {showJustificativa && (
-              <p>{pergunta.justificativa}</p>
+              <p>{pergunta.verModuloPergunta.pergunta.justificativa}</p>
             )}
           </aside>
 

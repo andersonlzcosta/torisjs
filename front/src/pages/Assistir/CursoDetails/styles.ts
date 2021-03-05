@@ -61,6 +61,7 @@ export const Modulo = styled.div`
 `;
 
 export const Aula = styled.div<IAulaProps>`
+  display: flex;
   width: 100%;
   border-radius: 53px;
   background: #fad552;
@@ -111,52 +112,13 @@ export const Aula = styled.div<IAulaProps>`
   h4{
     font-weight: 400;
     margin: 0px;
+    span{
+      display: block;
+      margin-left: 0;
+    }
   }
 
   div + div{
     margin-top: 20px;
-  }
-`;
-
-export const Popup = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 20;
-  background: #fff;
-
-  div{
-    max-width: 500px;
-    width: 90%;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
-
-  h4{
-    width: 100%;
-    text-align: center;
-    font-weight: 400;
-    font-size: 30px;
-    margin: 0 0 50px 0;
-  }
-
-  button{
-    width: 45%;
-    background: green;
-    
-    &:hover{
-      background: ${shade(.2, 'green')}
-    }
-
-    &.cancel{
-      background: #dd4c37;
-      &:hover{
-        background: ${shade(.2, '#dd4c37')}
-      }
-    }
-    
   }
 `;
