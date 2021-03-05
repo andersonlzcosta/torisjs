@@ -5,8 +5,7 @@ import { FiArrowDown, FiArrowUp, FiMinusCircle } from 'react-icons/fi';
 import { useMutation, useQuery } from '@apollo/client';
 
 import { useToast } from '../../hooks/toast';
-import api from '../../services/api';
-import { VER_CURSO, DELETE_MODULO, VER_MODULO_POR_CURSO, DELETE_AULA } from './apolloQueries';
+import { VER_CURSO, DELETE_MODULO, VER_MODULO_POR_CURSO, DELETE_AULA, DELETE_MODULO_PERGUNTA, ATUALIZAR_ORDEM_AULA, ATUALIZAR_ORDEM_PERGUNTA } from './apolloQueries';
 
 import CursoForm from '../../components/CursoForm';
 import AulaForm from '../../components/AulaForm';
@@ -27,12 +26,14 @@ export interface IAulasData {
   id: number;
   ordem?: number;
   nome?: string;
+  descricao?: string;
   video_url?: string;
   duracao?: string;
 }
 
 export interface IPerguntasData {
   id: number;
+  ordem?: number;
   enunciado?: string;
   alternativa1?: string;
   alternativa2?: string;
@@ -53,6 +54,7 @@ export interface IModuloData {
   aulas: {
     id: number;
     nome: string;
+    descricao: string;
     ordem: number;
     video_url: string;
     duracao: string;
@@ -105,6 +107,7 @@ const Curso: React.FC = () => {
   const [isPerguntaFormVisible, setIsPerguntaFormVisible] = useState(false);
   const [isModuloPopupOpen, setIsModuloPopupOpen] = useState(false);
   const [isAulaPopupOpen, setIsAulaPopupOpen] = useState(false);
+  const [isPerguntaPopupVisible, setIsPerguntaPopupVisible] = useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<number>(0);
 
   const [curso, setCurso] = useState<ICursoData>();
@@ -137,6 +140,8 @@ const Curso: React.FC = () => {
           content_data: {
             id: aula.id,
             nome: aula.nome,
+            ordem: aula.ordem,
+            descricao: aula.descricao,
             video_url: aula.video_url,
             duracao: aula.duracao
           }
@@ -150,6 +155,7 @@ const Curso: React.FC = () => {
           content_is: 'pergunta',
           content_data: {
             id: pergunta.id,
+            ordem: pergunta.ordem,
             enunciado: pergunta.enunciado,
             alternativa1: pergunta.alternativa1,
             alternativa2: pergunta.alternativa2,
@@ -245,15 +251,15 @@ const Curso: React.FC = () => {
         id: aulaId,
       }
     });
-    setIsModuloPopupOpen(false);
+    setIsAulaPopupOpen(false);
   }
 
-  // PERGUNTA -> criar - ver - atualizar - deletar
-
-  const handleUpdatePergunta = (childPergunta: IPerguntasData) => {
-  };
-
-  const handleAddNewPergunta = (moduleId: number) => {
+  // PERGUNTA
+  const handleAddNewPergunta = (order: number, moduleId: number) => {
+    setSelectedPergunta(undefined);
+    setIsPerguntaFormVisible(true);
+    setCurrentOrder(order);
+    setCurrentModuleId(moduleId);
   };
 
   const handleEditPergunta = (pergunta: IPerguntasData, moduleId: number) => {
@@ -262,29 +268,101 @@ const Curso: React.FC = () => {
     setIsPerguntaFormVisible(true);
   }
 
-  const handleMoveContent = useCallback(async (moduloId, index, isUp) => {
-    // let newPosition: number;
+  const [DeletarPergunta] = useMutation(DELETE_MODULO_PERGUNTA, {
+    onCompleted() {
+      addToast({
+        title: "Pergunta deletada com sucesso",
+        type: "success"
+      });
+      moduleRefetch();
+    },
+    onError() {
+      addToast({
+        title: "erro ao deletar a pergunta",
+        type: "error"
+      });
+    }
+  });
 
-    // isUp ? newPosition = index - 1 : newPosition = index + 1;
+  const handleDeletePergunta = (perguntaId: number) => {
+    DeletarPergunta({
+      variables: {
+        id: perguntaId,
+      }
+    });
+    setIsPerguntaPopupVisible(false);
+  }
 
-    // if (curso) {
-    //   const updatedModulos = curso.modulos.filter(modulo => {
-    //     if (modulo.id === moduloId) {
-    //       modulo.content = arrayMove(modulo.content, index, newPosition);
-    //     }
-    //     return modulo;
-    //   });
+  // MOVE INDEX
+  const [AtualizarOrdemAula] = useMutation(ATUALIZAR_ORDEM_AULA);
+  const [AtualizarOrdemPergunta] = useMutation(ATUALIZAR_ORDEM_PERGUNTA);
 
-    //   const updatedCurso = {
-    //     ...curso,
-    //     modulos: updatedModulos
-    //   }
+  const handleMoveContent = async (
+    moduleId: number,
+    ordem: number | undefined,
+    isUp: boolean,
+    moduloLength: number
+  ) => {
+    if (ordem) {
+      let newOrder: number;
+      isUp ? newOrder = ordem - 1 : newOrder = ordem + 1;
 
-    //   setCurso(updatedCurso);
+      if (newOrder !== 0 && newOrder < moduloLength) {
+        if (ManipulatedModulos) {
+          const modulo = ManipulatedModulos.find(modulo => modulo.id === moduleId);
+          if (modulo) {
+            const elements = modulo.content.filter(content =>
+              content.content_data.ordem === ordem || content.content_data.ordem === newOrder
+            );
 
-    //   await api.put(`/cursos/${id}`, updatedCurso);
-    // }
-  }, [curso, id]);
+            for (let index = 0; index < elements.length; index++) {
+              const e = elements[index];
+              if (e.content_data.ordem === ordem) {
+                if (e.content_is === 'aula') {
+                  await AtualizarOrdemAula({
+                    variables: {
+                      aulaId: e.content_data.id,
+                      ordem: newOrder,
+                      moduloId: moduleId
+                    }
+                  });
+                } else {
+                  await AtualizarOrdemPergunta({
+                    variables: {
+                      perguntaId: e.content_data.id,
+                      ordem: newOrder,
+                      moduloId: moduleId
+                    }
+                  });
+                }
+              } else {
+                if (e.content_is === 'aula') {
+                  await AtualizarOrdemAula({
+                    variables: {
+                      aulaId: e.content_data.id,
+                      ordem: ordem,
+                      moduloId: moduleId
+                    }
+                  });
+                } else {
+                  await AtualizarOrdemPergunta({
+                    variables: {
+                      perguntaId: e.content_data.id,
+                      ordem: ordem,
+                      moduloId: moduleId
+                    }
+                  });
+                }
+              }
+            }
+
+            moduleRefetch();
+          }
+        }
+      }
+
+    }
+  };
 
   useEffect(() => {
     if (modulosData) {
@@ -308,21 +386,21 @@ const Curso: React.FC = () => {
               <h3 onClick={() => handleEditModulo(modulo)}>{modulo.nome}</h3>
               <div>
                 <button className="alt" onClick={() => handleAddNewAula(modulo.content.length, modulo.id)}>nova aula</button>
-                <button className="alt" onClick={() => handleAddNewPergunta(modulo.id)}>nova pergunta</button>
+                <button className="alt" onClick={() => handleAddNewPergunta(modulo.content.length, modulo.id)}>nova pergunta</button>
                 <button className="delete" onClick={() => setIsModuloPopupOpen(true)}>deletar módulo<FiMinusCircle size={16} /></button>
                 <Popup isVisible={isModuloPopupOpen} onCancel={() => setIsModuloPopupOpen(false)} onFulfill={() => handleDeleteModule(modulo.id)} >
                   Tem certeza que deseja remover este módulo?
                 </Popup>
               </div>
               <AulasContainer>
-                {modulo.content.map((content, index) => {
+                {modulo.content.map(content => {
                   if (content.content_is === 'aula') {
                     let contentData: IAulasData = content.content_data as IAulasData;
                     return (
-                      <div key={contentData.id}>
+                      <div key={contentData.nome}>
                         <aside>
-                          <button onClick={() => handleMoveContent(modulo.id, index, true)}><FiArrowUp size={14} /></button>
-                          <button onClick={() => handleMoveContent(modulo.id, index, false)}><FiArrowDown size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, contentData.ordem, true, modulo.content.length)}><FiArrowUp size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, contentData.ordem, false, modulo.content.length)}><FiArrowDown size={14} /></button>
                         </aside>
                         <label>aula</label>
                         <button onClick={() => handleEditAula(contentData, modulo.id)}>{contentData.nome}</button>
@@ -337,14 +415,17 @@ const Curso: React.FC = () => {
                   if (content.content_is === 'pergunta') {
                     let contentData: IPerguntasData = content.content_data as IPerguntasData;
                     return (
-                      <div key={contentData.id}>
+                      <div key={contentData.enunciado}>
                         <aside>
-                          <button onClick={() => handleMoveContent(modulo.id, index, true)}><FiArrowUp size={14} /></button>
-                          <button onClick={() => handleMoveContent(modulo.id, index, false)}><FiArrowDown size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, contentData.ordem, true, modulo.content.length)}><FiArrowUp size={14} /></button>
+                          <button onClick={() => handleMoveContent(modulo.id, contentData.ordem, false, modulo.content.length)}><FiArrowDown size={14} /></button>
                         </aside>
                         <label>pergunta</label>
                         <button onClick={() => handleEditPergunta(contentData, modulo.id)}>{contentData.enunciado}</button>
-                        <button onClick={() => { }}><FiMinusCircle size={24} /></button>
+                        <button onClick={() => setIsPerguntaPopupVisible(true)}><FiMinusCircle size={24} /></button>
+                        <Popup isVisible={isPerguntaPopupVisible} onCancel={() => setIsPerguntaPopupVisible(false)} onFulfill={() => handleDeletePergunta(contentData.id)} >
+                          Tem certeza que deseja remover esta aula?
+                        </Popup>
                       </div>
                     )
                   }
@@ -360,11 +441,23 @@ const Curso: React.FC = () => {
         )}
 
         {isAulaFormVisible && (
-          <AulaForm aula={selectedAula} reloadModulo={moduleRefetch} order={currentOrder} moduleId={currentModuleId} closeForm={() => setIsAulaFormVisible(false)} />
+          <AulaForm
+            aula={selectedAula}
+            reloadModulo={moduleRefetch}
+            order={currentOrder}
+            moduleId={currentModuleId}
+            closeForm={() => setIsAulaFormVisible(false)}
+          />
         )}
 
         {isPerguntaFormVisible && (
-          <CursoPerguntaForm pergunta={selectedPergunta} updatePergunta={handleUpdatePergunta} />
+          <CursoPerguntaForm
+            pergunta={selectedPergunta}
+            reloadModulo={moduleRefetch}
+            order={currentOrder}
+            moduleId={currentModuleId}
+            closeForm={() => setIsPerguntaFormVisible(false)}
+          />
         )}
 
       </CursoContent>
