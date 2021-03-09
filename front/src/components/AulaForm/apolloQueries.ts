@@ -34,6 +34,7 @@ mutation AtualizarAula(
   $aulaId: Float!
   $ordem: Float
   $nome: String
+  $descricao: String
   $video_url: String
   $duracao: String
   $moduloId: Float
@@ -42,6 +43,7 @@ mutation AtualizarAula(
     aulaId: $aulaId
     ordem: $ordem
     nome: $nome
+    descricao: $descricao
     video_url: $video_url
     duracao: $duracao
     moduloId: $moduloId
@@ -50,6 +52,7 @@ mutation AtualizarAula(
       id
       ordem
       nome
+      descricao
       video_url
       duracao
     }

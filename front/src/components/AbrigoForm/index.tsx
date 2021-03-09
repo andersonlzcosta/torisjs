@@ -121,7 +121,6 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
       history.push('/abrigos/todos');
     },
     onError(err) {
-      console.log(err);
       addToast({
         title: "Erro ao atualizar",
         message: "Tente novamente",

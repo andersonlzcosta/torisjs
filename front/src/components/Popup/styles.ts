@@ -38,17 +38,20 @@ export const Content = styled.div`
     text-align: center;
   }
 
-  button{
+  button.popup-button{
     width: 48%;
     background: #dd4c37;
     margin: 0 5px;
+    color: #fff;
+    height: auto;
+    padding: 13px 35px;
 
     &:hover{
       background: ${shade(.2, '#dd4c37')};
     }
   }
   
-  button:last-child{
+  button.popup-button:last-child{
     background: green;
 
     &:hover{

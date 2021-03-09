@@ -1,5 +1,19 @@
 import { gql } from '@apollo/client';
 
+export const VER_CURSOS = gql`
+query VerCursos{
+  verCursos{
+    id
+    nome
+    descricao
+    modulos{
+      id
+      nome
+    }
+  }
+}
+`;
+
 export const VER_CURSO = gql`
 query VerCurso($id: Float!){
   verCurso(id: $id){
@@ -15,14 +29,6 @@ query VerCurso($id: Float!){
 }
 `;
 
-export const DELETE_MODULO = gql`
-mutation DeletarModulo(
-  $id: Float!
-){
-  deletarModulo(id: $id)
-}
-`;
-
 export const VER_MODULO_POR_CURSO = gql`
 query VerModulosPorCurso($cursoId: Float!){
   verModulosPorCurso(cursoId: $cursoId){
@@ -30,16 +36,16 @@ query VerModulosPorCurso($cursoId: Float!){
     nome
     aulas{
       id
+      ordem
       nome
       descricao
-      ordem
       video_url
       duracao
     }
     perguntas{
       id
-      enunciado
       ordem
+      enunciado
       alternativa1
       alternativa2
       alternativa3
@@ -51,33 +57,9 @@ query VerModulosPorCurso($cursoId: Float!){
 }
 `;
 
-export const DELETE_AULA = gql`
-mutation DeletarAula(
-  $id: Float!
-){
-  deletarAula(id: $id)
-}
-`;
-
-export const DELETE_MODULO_PERGUNTA = gql`
-mutation DeletarPergunta(
-  $id: Float!
-){
-  deletarModuloPergunta(id: $id)
-}
-`;
-
-export const ATUALIZAR_ORDEM_AULA = gql`
-mutation AtualizarOrdemAula(
-  $aulaId: Float!
-  $ordem: Float
-  $moduloId: Float
-){
-  atualizarAula(options: {
-    aulaId: $aulaId
-    ordem: $ordem
-    moduloId: $moduloId
-  }){
+export const VER_AULA = gql`
+query VerAula($id: Float!){
+  verAula(id: $id){
     aula{
       id
       ordem
@@ -90,17 +72,9 @@ mutation AtualizarOrdemAula(
 }
 `;
 
-export const ATUALIZAR_ORDEM_PERGUNTA = gql`
-mutation AtualizarOrdemPergunta(
-  $perguntaId: Float!
-  $moduloId: Float
-  $ordem: Float
-){
-  atualizarModuloPergunta(options:{
-    perguntaId: $perguntaId
-    moduloId: $moduloId
-    ordem: $ordem
-  }){
+export const VER_PERGUNTA = gql`
+query VerModuloPergunta($id: Float!){
+  verModuloPergunta(id: $id){
     pergunta{
       id
       ordem

@@ -1,31 +1,57 @@
 import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import getValidationErrors from '../../utils/getValidationErrors';
-
-
-import { Container } from './styles';
-import logo from '../../images/redeabrigo-logo-completo.png';
-
-import Input from '../../components/Input';
-import Button from '../../components/Button';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
+import getValidationErrors from '../../utils/getValidationErrors';
+import { LOGIN } from './apolloQueries';
+
+import { Container } from './styles';
+import logo from '../../images/redeabrigo-logo-completo.png';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
 interface credentialsData {
   email: string;
-  password: string;
+  senha: string;
+}
+
+interface ILoginResponse {
+  iniciarSessao: {
+    token: string;
+    user: {
+      id: string;
+    }
+  }
 }
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
-  const { signIn } = useAuth();
+  const { assignSession } = useAuth();
   const { addToast } = useToast();
+
+  const [IniciarSessao] = useLazyQuery<ILoginResponse>(LOGIN, {
+    onCompleted(data) {
+      assignSession({
+        token: data.iniciarSessao.token,
+        user: data.iniciarSessao.user
+      });
+      history.push('/dashboard');
+    },
+    onError() {
+      addToast({
+        title: "email ou senha inválido",
+        type: "error"
+      });
+    }
+  });
 
   const handleSubmit = useCallback(async (formData: credentialsData) => {
     try {
@@ -35,17 +61,16 @@ const SignIn: React.FC = () => {
       formRef.current.setErrors({});
       const schema = Yup.object().shape({
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
-        password: Yup.string().required('Senha Obrigatória'),
+        senha: Yup.string().required('Senha Obrigatória'),
       });
 
       await schema.validate(formData, {
         abortEarly: false,
       });
 
-      await signIn({ email: formData.email, password: formData.password });
-
-      history.push('/dashboard');
-
+      IniciarSessao({
+        variables: { email: formData.email, senha: formData.senha }
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -63,7 +88,6 @@ const SignIn: React.FC = () => {
           type: 'error'
         });
       }
-
     }
   }, []);
 
@@ -73,7 +97,7 @@ const SignIn: React.FC = () => {
 
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Input name="email" placeholder="E-mail" />
-        <Input name="password" type="password" placeholder="Senha" />
+        <Input name="senha" type="password" placeholder="Senha" />
         <Button type="submit">Entrar</Button>
       </Form>
 

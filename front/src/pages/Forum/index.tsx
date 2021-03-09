@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiMinusCircle } from 'react-icons/fi';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import api from '../../services/api';
 import TopMenu from '../../components/TopMenu';
 import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
 import Search from '../../components/Search';
 import { GET_FORUM_PERGUNTAS } from './apolloQueries';
 
-import { Container, Content, PerguntasList, Pergunta, Status, Filter, FilterDataOverlay, ActiveCategoriesList, Category } from './styles';
+import { Container, Content, PerguntasList, Pergunta, NoPergunta, Status, Filter, FilterDataOverlay, ActiveCategoriesList, Category } from './styles';
 
 interface IPerguntaData {
   id: number;
@@ -37,10 +36,6 @@ const Forum: React.FC = () => {
   let query = useLocation().search;
 
   const { data: perguntas } = useQuery<IPerguntasQuery>(GET_FORUM_PERGUNTAS);
-
-  const searchPerguntas = useCallback(async (query) => {
-
-  }, []);
 
   const handleToggleFilter = (selectedCategory: IForumCategory) => {
     if (categories) {
@@ -71,6 +66,7 @@ const Forum: React.FC = () => {
     }
   }
 
+  console.log(parsedPerguntas);
   useEffect(() => {
     handleSetPerguntas();
   }, [perguntas]);
@@ -79,8 +75,7 @@ const Forum: React.FC = () => {
     <Container>
       <TopMenu />
 
-      <Search searchTitle="pesquise no fórum" loadList={searchPerguntas} />
-      <Filter>
+      {/* <Filter>
         <button onClick={() => setShowFilters(true)}>filtro por categorias</button>
         <ActiveCategoriesList>
           {categories && categories.map(category => category.selected && (
@@ -90,7 +85,7 @@ const Forum: React.FC = () => {
             </div>
           ))}
         </ActiveCategoriesList>
-        {/* <FilterDataOverlay isVisible={!!showFilters}>
+        <FilterDataOverlay isVisible={!!showFilters}>
           <div>
             <button className="voltar" onClick={() => setShowFilters(false)}>voltar</button>
             <h2>Lista de categorias</h2>
@@ -99,8 +94,8 @@ const Forum: React.FC = () => {
               <Category key={category.id} onClick={() => handleToggleFilter(category)} isSelected={category.selected}>{category.name}</Category>
             ))}
           </div>
-        </FilterDataOverlay> */}
-      </Filter>
+        </FilterDataOverlay>
+      </Filter> */}
       <Content>
 
         <PerguntasList>
@@ -114,6 +109,12 @@ const Forum: React.FC = () => {
               <Status isResolved={!!pergunta.foiResolvido} />
             </Pergunta>
           ))}
+
+          {parsedPerguntas && (
+            <NoPergunta>
+              Nenhuma pergunta foi encontrada.
+            </NoPergunta>
+          )}
         </PerguntasList>
       </Content>
 

@@ -1,49 +1,92 @@
 import React, { useRef } from 'react';
-import api from '../../services/api';
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import { useMutation } from '@apollo/client';
+
+import { CREATE_MODULO_PERGUNTA, UPDATE_MODULO_PERGUNTA } from './apolloQueries';
 
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Form } from '@unform/web';
 
-import { FormHandles } from '@unform/core';
 import { IPerguntasData } from '../../pages/Curso';
 import Select from '../Select';
 
 interface IPerguntaFormProps {
   pergunta?: IPerguntasData;
-  updatePergunta: (pergunta: IPerguntasData) => void;
+  order: number;
+  moduleId: number;
+  reloadModulo: () => void;
+  closeForm: () => void;
 }
 
 interface ISubmittedData {
   id: string;
   enunciado: string;
-  escolha_1: string;
-  escolha_2: string;
-  escolha_3: string;
-  escolha_4: string;
-  resposta_certa: "1" | "2" | "3" | "4";
+  alternativa1: string;
+  alternativa2: string;
+  alternativa3: string;
+  alternativa4: string;
+  resposta: "1" | "2" | "3" | "4";
   justificativa: string;
 }
 
-const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({ pergunta, updatePergunta }) => {
+const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({
+  pergunta,
+  order,
+  moduleId,
+  reloadModulo,
+  closeForm
+}) => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = (data: ISubmittedData) => {
-    const pergunta = {
-      id: parseInt(data.id),
-      enunciado: data.enunciado,
-      escolha_1: data.escolha_1,
-      escolha_2: data.escolha_2,
-      escolha_3: data.escolha_3,
-      escolha_4: data.escolha_4,
-      resposta_certa: data.resposta_certa,
-      justificativa: data.justificativa
+  const [CriarPergunta] = useMutation(CREATE_MODULO_PERGUNTA, {
+    onCompleted() {
+      reloadModulo();
+      closeForm();
     }
+  });
 
-    updatePergunta(pergunta);
+  const [AtualizarPergunta] = useMutation(UPDATE_MODULO_PERGUNTA, {
+    onCompleted() {
+      reloadModulo();
+      closeForm();
+    }
+  })
 
-    api.post('/cursoperguntas', pergunta);
+  const handleSubmit = (data: ISubmittedData) => {
+    if (!pergunta) {
+      let correctOrder;
+      order === 0 ? correctOrder = 1 : correctOrder = order
+      CriarPergunta({
+        variables: {
+          moduloId: moduleId,
+          ordem: correctOrder,
+          enunciado: data.enunciado,
+          alternativa1: data.alternativa1,
+          alternativa2: data.alternativa2,
+          alternativa3: data.alternativa3,
+          alternativa4: data.alternativa4,
+          resposta: Number(data.resposta),
+          justificativa: data.justificativa
+        }
+      });
+    } else {
+      AtualizarPergunta({
+        variables: {
+          perguntaId: pergunta.id,
+          moduloId: moduleId,
+          ordem: pergunta.ordem,
+          enunciado: data.enunciado,
+          alternativa1: data.alternativa1,
+          alternativa2: data.alternativa2,
+          alternativa3: data.alternativa3,
+          alternativa4: data.alternativa4,
+          resposta: Number(data.resposta),
+          justificativa: data.justificativa
+        }
+      });
+    }
   }
 
   return (
@@ -57,27 +100,27 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({ pergunta, updatePergu
 
           <div className="full-width">
             <label>escolha 1</label>
-            <Input name="escolha_1" className="alt line-bottom" />
+            <Input name="alternativa1" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>escolha 2</label>
-            <Input name="escolha_2" className="alt line-bottom" />
+            <Input name="alternativa2" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>escolha 3</label>
-            <Input name="escolha_3" className="alt line-bottom" />
+            <Input name="alternativa3" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>escolha 4</label>
-            <Input name="escolha_4" className="alt line-bottom" />
+            <Input name="alternativa4" className="alt line-bottom" />
           </div>
 
           <div className="full-width">
             <label>qual é a resposta certa?</label>
-            <Select name="resposta_certa" options={[
+            <Select name="resposta" options={[
               { value: "1", label: "1" },
               { value: "2", label: "2" },
               { value: "3", label: "3" },

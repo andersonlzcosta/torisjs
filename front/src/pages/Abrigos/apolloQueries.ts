@@ -9,3 +9,17 @@ export const GET_ABRIGOS = gql`
   }
 }
 `;
+
+export const SEARCH_ABRIGOS = gql`
+query ProcurarAbrigos(
+  $nome: String!
+){
+  procurarAbrigos(
+    nome: $nome
+  ){
+    id,
+    nome,
+    endereco
+  }
+}
+`;

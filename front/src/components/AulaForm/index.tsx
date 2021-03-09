@@ -21,6 +21,7 @@ interface IAulaFormProps {
 interface ISubmittedData {
   nome: string;
   video_url: string;
+  descricao: string;
   duracao: string;
 }
 
@@ -43,10 +44,13 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModul
 
   const handleSubmit = (data: ISubmittedData) => {
     if (!aula) {
+      let correctOrder;
+      order === 0 ? correctOrder = 1 : correctOrder = order
       CriarAula({
         variables: {
-          ordem: order,
+          ordem: correctOrder,
           nome: data.nome,
+          descricao: data.descricao,
           video_url: data.video_url,
           duracao: data.duracao,
           moduloId: moduleId
@@ -58,6 +62,7 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModul
           aulaId: aula.id,
           ordem: aula.ordem,
           nome: data.nome,
+          descricao: data.descricao,
           video_url: data.video_url,
           duracao: data.duracao,
           moduloId: moduleId
@@ -73,6 +78,11 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModul
           <div className="full-width">
             <label>nome da aula</label>
             <Input name="nome" className="alt line-bottom" />
+          </div>
+
+          <div className="full-width">
+            <label>descrição</label>
+            <Input name="descricao" className="alt line-bottom" />
           </div>
 
           <div className="full-width">

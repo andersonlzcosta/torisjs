@@ -16,8 +16,8 @@ const Popup: React.FC<IPopupProps> = ({ isVisible, onCancel, onFulfill, children
           {children}
         </p>
         <div>
-          <button onClick={onCancel}>cancelar</button>
-          <button onClick={onFulfill}>continuar</button>
+          <button onClick={onCancel} className="popup-button">cancelar</button>
+          <button onClick={onFulfill} className="popup-button">continuar</button>
         </div>
       </Content>
     </Container>

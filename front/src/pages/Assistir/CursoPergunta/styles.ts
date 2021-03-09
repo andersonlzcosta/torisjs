@@ -40,9 +40,11 @@ export const PerguntaContainer = styled.div`
 
   form{
     padding-left: 40px;
+    align-items: flex-start;
   }
 
   div{
+    display: flex;
     width: 100%;
     max-width: 600px;
     flex-direction: row;
@@ -57,7 +59,7 @@ export const PerguntaContainer = styled.div`
   }
 
   div + div{
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   label{

@@ -105,7 +105,7 @@ export const Modulo = styled.div`
       margin: 0;
     }
 
-    button + button{
+    > button + button{
       margin-left: 10px!important;
     }
 

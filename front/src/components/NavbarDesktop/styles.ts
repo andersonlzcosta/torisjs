@@ -5,7 +5,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 100%;
   position: fixed;
   top: 0;
@@ -14,6 +14,7 @@ export const Container = styled.div`
   left: 0;
   width: 350px;
   background: #67A4DD;
+  padding: 130px 0 30px;
 
   @media(max-width: 950px){
     display: none;
@@ -23,12 +24,34 @@ export const Container = styled.div`
 export const Menu = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 100%;
   width: 90%;
   align-items: flex-end;
-  padding-right: 5%;
+  align-self: flex-end;
+  padding: 0px 5% 30px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+    display: none;
+    transition: all .3s;
+  }
+
+  &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px #c6e0ff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #4892d8;
+  }
+
+  &:hover{
+    &::-webkit-scrollbar {
+      display: block;
+      width: 5px;
+    }
+  }
 
   img{
     max-width: 70px;
@@ -43,7 +66,7 @@ export const Menu = styled.div`
     padding-right: 10px;
   }
 
-  a{
+  a, button{
     ${DefaultBackground}
     text-align: right;
     padding: 2px 20px;
@@ -62,5 +85,8 @@ export const Menu = styled.div`
     margin-top: 20px;
   }
 
+  button:hover{
+    background:#fff;
+  }
 
 `;

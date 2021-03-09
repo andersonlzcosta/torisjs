@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import api from '../../services/api';
-import { gql, useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
-import { Container, Estatisticas, Content, AbrigosList, Abrigo } from './styles';
+import { GET_ABRIGOS, SEARCH_ABRIGOS } from './apolloQueries';
+import { Container, AbrigosList, Abrigo } from './styles';
 
-import Plus from '../../images/plus.svg'
 import TopMenu from '../../components/TopMenu';
 import Tabs from '../../components/Tabs';
 import Navbar from '../../components/Navbar';
@@ -13,7 +12,6 @@ import NavbarDesktop from '../../components/NavbarDesktop';
 import Search from '../../components/Search';
 import AbrigoForm from '../../components/AbrigoForm';
 
-import { GET_ABRIGOS } from './apolloQueries';
 
 interface IAbrigosData {
   id: string;
@@ -25,16 +23,30 @@ interface IAbrigosQuery {
   verAbrigos: IAbrigosData[];
 }
 
+interface ISearchAbrigosQuery {
+  procurarAbrigos: IAbrigosData[];
+}
+
 const Abrigos: React.FC = () => {
+  const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
-  const [abrigos, setAbrigos] = useState<IAbrigosData[]>();
-  let query = new URLSearchParams(useLocation().search);
+
+  const [ProcurarAbrigos, { data: abrigosSearch }] = useLazyQuery<ISearchAbrigosQuery>(SEARCH_ABRIGOS, {
+    variables: { nome: "" }
+  });
 
   const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
 
-  const searchAbrigos = useCallback(async (query) => {
-
+  const searchAbrigos = useCallback((query) => {
+    ProcurarAbrigos({
+      variables: { nome: query }
+    });
+    setShowSearch(true);
   }, []);
+
+  useEffect(() => {
+    setShowSearch(false);
+  }, [abrigosQl]);
 
   return (
     <Container>
@@ -50,7 +62,15 @@ const Abrigos: React.FC = () => {
         <>
           <Search searchTitle="abrigos cadastrados" loadList={searchAbrigos} />
           <AbrigosList>
-            {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
+            {!showSearch && abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
+              <Abrigo key={abrigo.id}>
+                <Link to={`/abrigo/${abrigo.id}`}>
+                  <h3>{abrigo.nome}</h3>
+                  <strong>{abrigo.endereco}</strong>
+                </Link>
+              </Abrigo>
+            ))}
+            {showSearch && abrigosSearch && abrigosSearch.procurarAbrigos.map(abrigo => (
               <Abrigo key={abrigo.id}>
                 <Link to={`/abrigo/${abrigo.id}`}>
                   <h3>{abrigo.nome}</h3>

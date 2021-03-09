@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import api from '../../../services/api';
+import { useQuery } from '@apollo/client';
+
+import { VER_CURSO, VER_MODULO_POR_CURSO } from '../apolloQueries';
 
 import TopMenu from '../../../components/TopMenu';
 import NavbarDesktop from '../../../components/NavbarDesktop';
 import Navbar from '../../../components/Navbar';
+import Popup from '../../../components/Popup';
 
-import { Container, CursoContent, Modulo, Aula, Popup } from './styles';
+import { Container, CursoContent, Modulo, Aula } from './styles';
 import { useToast } from '../../../hooks/toast';
 import { IAulasData, ICursoData, IPerguntasData } from '../../Curso';
 
@@ -14,13 +17,122 @@ interface IRouteParams {
   id: string;
 }
 
+interface IModuloContent {
+  content_is: 'aula' | 'pergunta';
+  content_data: IAulasData | IPerguntasData;
+}
+
+interface IModuloData {
+  id: number;
+  nome: string;
+  aulas: {
+    id: number;
+    nome: string;
+    descricao: string;
+    ordem: number;
+    video_url: string;
+    duracao: string;
+  }[];
+  perguntas: {
+    id: number;
+    enunciado: string;
+    ordem: number;
+    alternativa1: string;
+    alternativa2: string;
+    alternativa3: string;
+    alternativa4: string;
+    resposta: "1" | "2" | "3" | "4";
+    justificativa: string;
+  }[];
+}
+
+interface IManipulatedModuloData {
+  id: number;
+  nome: string;
+  content: IModuloContent[];
+}
+
+interface ICursoGQL {
+  verCurso: {
+    curso: {
+      id: number;
+      nome: string;
+      descricao: string;
+      modulos: IModuloData[];
+    }
+  }
+}
+
+export interface IModulosPorCursoQuery {
+  verModulosPorCurso: IModuloData[];
+}
+
 const CursoDetails: React.FC = () => {
   const { id } = useParams<IRouteParams>();
   const [curso, setCurso] = useState<ICursoData>();
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
+  const [ManipulatedModulos, setManipulatedModulos] = useState<IManipulatedModuloData[]>();
 
   const { addToast } = useToast();
+
+  // CURSO
+  const { data: cursoData } = useQuery<ICursoGQL>(VER_CURSO, {
+    variables: { id: Number(id) }
+  });
+
+  // MODULOS
+  const { data: modulosData } = useQuery<IModulosPorCursoQuery>(VER_MODULO_POR_CURSO, {
+    fetchPolicy: "no-cache",
+    variables: { cursoId: Number(id) },
+  });
+
+  const handleManipulateModules = (data: IModulosPorCursoQuery) => {
+    let manipulatedModulos = [] as IManipulatedModuloData[];
+    data.verModulosPorCurso.forEach(modulo => {
+      let moduloContent = [] as IModuloContent[];
+      modulo.aulas.forEach(aula => {
+        const manipulatedAula: IModuloContent = {
+          content_is: 'aula',
+          content_data: {
+            id: aula.id,
+            nome: aula.nome,
+            descricao: aula.descricao,
+            video_url: aula.video_url,
+            duracao: aula.duracao
+          }
+        }
+
+        moduloContent[aula.ordem] = manipulatedAula;
+      });
+
+      modulo.perguntas.forEach(pergunta => {
+        const manipulatedPergunta: IModuloContent = {
+          content_is: 'pergunta',
+          content_data: {
+            id: pergunta.id,
+            enunciado: pergunta.enunciado,
+            alternativa1: pergunta.alternativa1,
+            alternativa2: pergunta.alternativa2,
+            alternativa3: pergunta.alternativa3,
+            alternativa4: pergunta.alternativa4,
+            resposta: pergunta.resposta,
+            justificativa: pergunta.justificativa
+          }
+        }
+
+        moduloContent[pergunta.ordem] = manipulatedPergunta;
+      });
+
+      manipulatedModulos.push({
+        id: modulo.id,
+        nome: modulo.nome,
+        content: moduloContent,
+      });
+    });
+
+    setManipulatedModulos(manipulatedModulos);
+  }
 
   const handlePopupFulfill = () => {
     setIsPopupVisible(false);
@@ -33,42 +145,40 @@ const CursoDetails: React.FC = () => {
   }
 
   const conteudoTotal = useMemo(() => {
-    // if (curso) {
-    //   const aulasPorModulo = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
-    //   return aulasPorModulo.reduce((accumulator, currentValue) => accumulator + currentValue);
-    // }
-  }, [curso]);
+    if (ManipulatedModulos) {
+      const aulasPorModulo = ManipulatedModulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
+      return aulasPorModulo.reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+  }, [ManipulatedModulos]);
 
   const duracaoTotal = useMemo(() => {
-    // if (curso) {
-    //   const allModules = curso.modulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula'));
+    if (ManipulatedModulos) {
+      const allModules = ManipulatedModulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula'));
 
-    //   const eachModuleDuration = allModules.map(module =>
-    //     module.reduce((accumulator, currentValue) => {
-    //       const aula = currentValue.content_data as IAulasData;
-    //       return accumulator + aula.duracao;
-    //     }, 0)
-    //   );
+      const eachModuleDuration = allModules.map(module =>
+        module.reduce((accumulator, currentValue) => {
+          const aula = currentValue.content_data as IAulasData;
+          return accumulator + Number(aula.duracao);
+        }, 0)
+      );
 
-    //   return eachModuleDuration.reduce((accumulator, currentValue) => accumulator + currentValue);
-    // }
-  }, [curso]);
+      return eachModuleDuration.reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+  }, [ManipulatedModulos]);
 
   useEffect(() => {
-    api.get(`/cursos/${id}`).then(response => {
-      setCurso(response.data);
-    });
-  }, []);
+    modulosData && handleManipulateModules(modulosData);
+  }, [modulosData]);
 
   return (
     <Container>
       <TopMenu />
 
-      {curso && !isSubscribed && (
+      {cursoData && !isSubscribed && (
         <CursoContent>
-          <h3>{curso.nome}</h3>
-          <p>{curso.descricao}</p>
-          <span>{curso.modulos.length} módulo(s)</span>
+          <h3>{cursoData.verCurso.curso.nome}</h3>
+          <p>{cursoData.verCurso.curso.descricao}</p>
+          <span>{cursoData.verCurso.curso.modulos.length} módulo(s)</span>
           <span>{conteudoTotal} aula(s)</span>
           <span>duração total de {duracaoTotal} minutos</span>
 
@@ -76,57 +186,53 @@ const CursoDetails: React.FC = () => {
         </CursoContent>
       )}
 
-      {curso && isSubscribed && (
+      {cursoData && isSubscribed && (
         <CursoContent>
-          <h3>{curso.nome}</h3>
-          <p>{curso.descricao}</p>
-          <span>{curso.modulos.length} módulo(s)</span>
+          <h3>{cursoData.verCurso.curso.nome}</h3>
+          <p>{cursoData.verCurso.curso.descricao}</p>
+          <span>{cursoData.verCurso.curso.modulos.length} módulo(s)</span>
           <span>{conteudoTotal} aula(s)</span>
           <span>duração total de {duracaoTotal} minutos</span>
-          {curso.modulos.map(modulo => (
+          {ManipulatedModulos && ManipulatedModulos.map(modulo => (
             <Modulo key={modulo.id}>
               <h4>{modulo.nome}</h4>
-              { // modulo.content.map(content => {
-                // if (content.content_is === 'aula') {
-                //   let contentData: IAulasData = content.content_data as IAulasData;
-                //   return (
-                //     <Aula hasBeenWatched={false} key={contentData.id}>
-                //       {/* <Link to={`/aula/${aula.id}`}> */}
-                //       <Link to={`/aula/933`}>
-                //         <h4>{contentData.nome}</h4>
-                //       </Link>
-                //       <span>{contentData.duracao} minutos</span>
-                //     </Aula>
-                //   )
-                // }
+              {modulo.content.map(content => {
+                if (content.content_is === 'aula') {
+                  let contentData: IAulasData = content.content_data as IAulasData;
+                  return (
+                    <Aula hasBeenWatched={false} key={contentData.id}>
+                      <Link to={`/aula/${contentData.id}`}>
+                        <h4>{contentData.nome}<span>{contentData.descricao}</span></h4>
+                      </Link>
+                      <span>{contentData.duracao} minutos</span>
+                    </Aula>
+                  )
+                }
 
-                // if (content.content_is === 'pergunta') {
-                //   let contentData: IPerguntasData = content.content_data as IPerguntasData;
-                //   return (
-                //     <Aula hasBeenWatched={false} key={contentData.id}>
-                //       {/* <Link to={`/aula/${aula.id}`}> */}
-                //       <Link to={`/curso-pergunta/${contentData.id}`}>
-                //         <h4>{contentData.enunciado.substring(0, 50)}</h4>
-                //       </Link>
-                //     </Aula>
-                //   )
-                // }
-                // })
+                if (content.content_is === 'pergunta') {
+                  let contentData: IPerguntasData = content.content_data as IPerguntasData;
+                  return (
+                    <Aula hasBeenWatched={false} key={contentData.id}>
+                      <Link to={`/curso-pergunta/${contentData.id}`}>
+                        <h4>{contentData.enunciado && contentData.enunciado.substring(0, 50)}</h4>
+                      </Link>
+                    </Aula>
+                  )
+                }
+              })
               }
             </Modulo>
           ))}
         </CursoContent>
       )}
 
-      {isPopupVisible && (
-        <Popup>
-          <div>
-            <h4>Ao continuar, você terá 30 dias para concluir o curso. Separe um tempo para assistir as aulas, e em caso de dúvidas você pode pedir ajuda no fórum.</h4>
-            <button className="cancel" onClick={() => setIsPopupVisible(false)}>cancelar</button>
-            <button onClick={handlePopupFulfill}>continuar</button>
-          </div>
-        </Popup>
-      )}
+      <Popup
+        isVisible={isPopupVisible}
+        onCancel={() => setIsPopupVisible(false)}
+        onFulfill={handlePopupFulfill}
+      >
+        Ao continuar, você terá 30 dias para concluir o curso. Separe um tempo para assistir as aulas, e em caso de dúvidas você pode pedir ajuda no fórum.
+      </Popup>
 
       <Navbar />
       <NavbarDesktop />
