@@ -134,3 +134,7 @@ export const Abrigo = styled.div`
   }
 `;
 
+export const NoAbrigo = styled.div`
+  ${DefaultBackground}
+  font-size: 24px;
+`;
