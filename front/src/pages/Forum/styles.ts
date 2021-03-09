@@ -77,6 +77,11 @@ export const Pergunta = styled.div`
   }
 `;
 
+export const NoPergunta = styled.div`
+  ${DefaultBackground}
+  font-size: 24px;
+`;
+
 export const Status = styled.span<IStatusProps>`
   width: 40px;
   height: 20px;
