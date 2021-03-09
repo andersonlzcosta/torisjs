@@ -5,7 +5,7 @@ import Lupa from '../../images/lupa.svg';
 
 interface ISearchProps {
   searchTitle: string;
-  loadList: (query: string | undefined) => void;
+  loadList: (query: string) => void;
 }
 
 const Search: React.FC<ISearchProps> = ({ searchTitle, loadList }) => {
@@ -17,7 +17,9 @@ const Search: React.FC<ISearchProps> = ({ searchTitle, loadList }) => {
 
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
-    loadList(inputValue);
+    if (inputValue) {
+      loadList(inputValue);
+    }
   }, [loadList, inputValue]);
 
   const handleClearInput = useCallback(() => {
