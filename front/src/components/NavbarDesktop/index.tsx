@@ -1,14 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 import { Container, Menu } from './styles';
 import TopMenu from '../TopMenu';
 import logo from '../../images/logo.svg';
 
 const NavbarDesktop: React.FC = () => {
+  const { signOut } = useAuth();
+
   return (
     <Container>
       <TopMenu isDesktop={true} />
       <Menu>
+        <button onClick={signOut}>Log Out</button>
         <img src={logo} alt="logo da rede abrigo" />
 
         <label>início</label>
