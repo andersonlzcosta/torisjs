@@ -10,6 +10,20 @@ export const GET_USERS = gql`
 }
 `;
 
+export const SEARCH_USERS = gql`
+query ProcurarUsuarios(
+  $nome: String!
+){
+  procurarUsuarios(
+    nome: $nome
+  ){
+    id
+    nome
+    profissao
+  }
+}
+`;
+
 export const CRIAR_USUARIO = gql`
 mutation Register(
   $email: String!
