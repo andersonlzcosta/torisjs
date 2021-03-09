@@ -1,84 +1,65 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import api from '../../services/api';
-import { useToast } from '../../hooks/toast';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { Form } from '@unform/web';
+import { useMutation, useQuery } from '@apollo/client';
+import { FiMinusCircle } from 'react-icons/fi';
 
-import { Container, CreateNotification, InputContainer, ViewNotifications, SingleNotification } from './styles';
+import { CREATE_NOTIFICATION, VIEW_NOTIFICATIONS } from './apolloQueries';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
+
+import { Container, CreateNotification, ViewNotifications, SingleNotification } from './styles';
 
 import TopMenu from '../../components/TopMenu';
 import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
 
-import { Form } from '@unform/web';
-import Input from '../../components/Input';
-import Textarea from '../../components/Textarea';
 import Button from '../../components/Button';
-import { FiMinusCircle } from 'react-icons/fi';
+import Textarea from '../../components/Textarea';
+import Select from '../../components/Select';
 
 interface ISubmittedData {
-  message: string;
+  conteudo: string;
+  tipo: string;
 }
 
 interface INotification {
-  id: number;
-  message: string;
-  type: string
+  verNotificacoes: {
+    id: number;
+    conteudo: string;
+    arquivada: boolean;
+    tipo: string;
+  }[]
 }
 
 const Notification: React.FC = () => {
-  const [selectedType, setSelectedType] = useState();
-  const [notifications, setNotifications] = useState<INotification[]>();
-
   const history = useHistory();
   const { addToast } = useToast();
+  const { user } = useAuth();
 
-  const handleSubmit = useCallback((data: ISubmittedData) => {
-    const notification = {
-      id: Math.floor(Math.random() * Math.floor(1000)),
-      type: selectedType,
-      message: data.message
-    }
-
-    try {
-      api.post('/notifications', notification);
+  const [CriarNotificacao] = useMutation(CREATE_NOTIFICATION, {
+    onCompleted() {
       addToast({
-        title: "Notificação enviada!",
+        title: "Notificação enviada",
         type: "success"
       });
-
+      refetch();
       history.push('/dashboard');
-    } catch (error) {
-      addToast({
-        title: "Ocorreu um erro",
-        type: "success",
-        message: "tente novamente"
-      });
     }
+  });
 
-  }, [selectedType]);
+  const handleSubmit = (data: ISubmittedData) => {
+    CriarNotificacao({
+      variables: {
+        conteudo: data.conteudo,
+        arquivada: false,
+        tipo: data.tipo,
+        userId: user.id
+      }
+    })
+  };
 
-  const handleChange = useCallback((event) => {
-    setSelectedType(event.target.value);
-  }, []);
-
-  // const handleDelete = (notificationId: number) => {
-  //   if (notifications) {
-  //     const updatedNotifications = notifications.filter(notification => notification.id !== notificationId);
-  //     api.delete(`/notifications/${notificationId}`);
-  //     setNotifications(updatedNotifications);
-  //     addToast({
-  //       title: "Notificação deletada",
-  //       type: "success"
-  //     });
-  //   }
-  // }
-
-  useEffect(() => {
-    api.get('/notifications').then(response => {
-      setNotifications(response.data);
-      console.log(response.data);
-    });
-  }, []);
+  const { data: notificationsQl, refetch } = useQuery<INotification>(VIEW_NOTIFICATIONS);
 
   return (
     <Container>
@@ -87,9 +68,9 @@ const Notification: React.FC = () => {
       {location.pathname === '/notifications/all' && (
         <ViewNotifications>
           <h2>todas as notificações</h2>
-          {notifications && notifications.map(notification => (
-            <SingleNotification key={notification.id} type={notification.type} >
-              <p>{notification.message}</p>
+          {notificationsQl && notificationsQl.verNotificacoes.map(notification => (
+            <SingleNotification key={notification.id} type={notification.tipo} >
+              <p>{notification.conteudo}</p>
               {/* <button onClick={() => handleDelete(notification.id)}><FiMinusCircle size={20} /></button> */}
             </SingleNotification>
           ))}
@@ -102,18 +83,13 @@ const Notification: React.FC = () => {
           <h2>criar nova notificação</h2>
           <Form onSubmit={handleSubmit}>
             <label>sua mensagem</label>
-            <Textarea name="message"></Textarea>
+            <Textarea name="conteudo"></Textarea>
 
             <label style={{ marginTop: 20 }}>escolha o tipo de notificação</label>
-            <InputContainer>
-              <Input type="radio" name="warning" inputName="messageType" value="warning" onChange={handleChange} />
-              <label>aviso</label>
-            </InputContainer>
-
-            <InputContainer>
-              <Input type="radio" name="news" inputName="messageType" value="news" onChange={handleChange} />
-              <label>notícia</label>
-            </InputContainer>
+            <Select name="tipo" options={[
+              { value: "news", label: "Notícia" },
+              { value: "warning", label: "Aviso" },
+            ]} />
 
             <Button type="submit">enviar</Button>
           </Form>
