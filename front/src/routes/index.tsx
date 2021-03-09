@@ -1,5 +1,7 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+
+import Route from './route';
 
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
@@ -7,6 +9,7 @@ import Dashboard from '../pages/Dashboard';
 import Profissionais from '../pages/Profissionais';
 import Abrigos from '../pages/Abrigos';
 import Profile from '../pages/Profile';
+import MyProfile from '../pages/MyProfile';
 import Abrigo from '../pages/Abrigo';
 import Cursos from '../pages/Cursos';
 import Curso from '../pages/Curso';
@@ -25,27 +28,29 @@ const Routes: React.FC = () => {
     <Switch>
       <Route path="/" exact component={SignIn} />
       <Route path="/cadastro" exact component={SignUp} />
-      <Route path="/dashboard" component={Dashboard} />
 
-      <Route path="/profissionais" component={Profissionais} />
-      <Route path="/user/:id" component={Profile} />
+      <Route path="/dashboard" component={Dashboard} isPrivate />
 
-      <Route path="/abrigos" component={Abrigos} />
-      <Route path="/abrigo/:id" component={Abrigo} />
+      <Route path="/profissionais" component={Profissionais} isPrivate />
+      <Route path="/user/:id" component={Profile} isPrivate />
+      <Route path="/myprofile" component={MyProfile} isPrivate />
 
-      <Route path="/cursos" component={Cursos} />
-      <Route path="/curso/:id" component={Curso} />
+      <Route path="/abrigos" component={Abrigos} isPrivate />
+      <Route path="/abrigo/:id" component={Abrigo} isPrivate />
 
-      <Route path="/assistir" component={VerCursos} />
-      <Route path="/detalhes/:id" component={CursoDetails} />
-      <Route path="/aula/:id" component={Aula} />
-      <Route path="/curso-pergunta/:id" component={CursoPergunta} />
+      <Route path="/cursos" component={Cursos} isPrivate />
+      <Route path="/curso/:id" component={Curso} isPrivate />
 
-      <Route path="/forum" component={Forum} />
-      <Route path="/pergunta/:id" component={Pergunta} />
-      <Route path="/novapergunta" component={NovaPergunta} />
+      <Route path="/assistir" component={VerCursos} isPrivate />
+      <Route path="/detalhes/:id" component={CursoDetails} isPrivate />
+      <Route path="/aula/:id" component={Aula} isPrivate />
+      <Route path="/curso-pergunta/:id" component={CursoPergunta} isPrivate />
 
-      <Route path="/notifications" component={Notification} />
+      <Route path="/forum" component={Forum} isPrivate />
+      <Route path="/pergunta/:id" component={Pergunta} isPrivate />
+      <Route path="/novapergunta" component={NovaPergunta} isPrivate />
+
+      <Route path="/notifications" component={Notification} isPrivate />
     </Switch>
   );
 }
