@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import User from "../infra/typeorm/entities/User";
+import User, { Credencial } from "../infra/typeorm/entities/User";
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
@@ -7,6 +7,7 @@ interface Request {
     email: string;
     password: string;
     nome?: string;
+    credencial?: Credencial;
     emailAlternativo?: string;
     nascimento?: Date;
     cargo?: string;
@@ -28,6 +29,7 @@ class CreateUserService {
     
         public async execute({ 
                                 nome, 
+                                credencial, 
                                 email, 
                                 emailAlternativo, 
                                 nascimento, 
@@ -43,6 +45,7 @@ class CreateUserService {
 
         const user = await this.usersRepository.create({
             nome,
+            credencial, 
             email,
             emailAlternativo,
             nascimento,

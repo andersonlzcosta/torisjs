@@ -1,4 +1,5 @@
 import { InputType, Field } from "type-graphql";
+import { Credencial } from "../../typeorm/entities/User";
 
 @InputType()
 export class CreateUserInput {
@@ -9,6 +10,8 @@ export class CreateUserInput {
     password: string;
     @Field({ nullable: true })
     nome?: string;
+    @Field(() => Credencial, { nullable: true })
+    credencial?: Credencial;
     @Field({ nullable: true })
     emailAlternativo?: string;
     @Field({ nullable: true })
