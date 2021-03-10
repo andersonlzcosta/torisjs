@@ -7,8 +7,8 @@ export default interface IUsersRepository {
     findAll(): Promise<User[]>;
     findByEmail(email: string): Promise<User | undefined>;
     findByName(nome: string): Promise<User[]>;
-    create(data: ICreateUserDTO): Promise<User | undefined>;
     save(user: User): Promise<User>;
+    create(data: ICreateUserDTO): Promise<User | undefined>;
     update(userId: number, data: IUpdateUserDTO): Promise<User | undefined>;
     updateAbrigo(userId: number, abrigoId: number): Promise<User | undefined>;
     delete(id: number): Promise<Boolean>;

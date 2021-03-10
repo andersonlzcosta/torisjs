@@ -30,7 +30,7 @@ class Aula {
     duracao: string;
 
     @Field(() => Modulo, { nullable: true })
-    @ManyToOne(() => Modulo, modulo => modulo.aulas)
+    @ManyToOne(() => Modulo, modulo => modulo.aulas, { nullable: true })
     modulo: Modulo;
     
     @Field(() => String)

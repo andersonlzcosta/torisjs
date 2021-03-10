@@ -37,18 +37,37 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
-    const newUser = this.ormRepository.create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
-    await this.ormRepository.save(newUser);
-    const newUserId = newUser.id;
-    const user = await this.ormRepository.findOne({ where: { id : newUserId }, relations: ["abrigo", "notificacoes"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
-    return user;
-
-  }
-
   public async save(user: User): Promise<User> {
 
     return this.ormRepository.save(user);
+
+  }
+
+  public async create({ nome,
+                        email,
+                        emailAlternativo,
+                        nascimento,
+                        cargo,
+                        telefone1,
+                        telefone2,
+                        profissao,
+                        password,
+                        abrigoId }: ICreateUserDTO): Promise<User | undefined> {
+    const newUser = this.ormRepository.create({ nome,
+                                                email,
+                                                emailAlternativo,
+                                                nascimento,
+                                                cargo,
+                                                telefone1,
+                                                telefone2,
+                                                profissao,
+                                                password,
+                                                abrigo: { id: abrigoId } });
+    await this.ormRepository.save(newUser);
+    console.log(newUser);
+    const newUserId = newUser.id;
+    const user = await this.ormRepository.findOne({ where: { id : newUserId }, relations: ["abrigo", "notificacoes"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
+    return user;
 
   }
 
