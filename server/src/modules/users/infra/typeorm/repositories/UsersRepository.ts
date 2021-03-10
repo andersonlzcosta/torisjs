@@ -44,6 +44,7 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async create({ nome,
+                        credencial,
                         email,
                         emailAlternativo,
                         nascimento,
@@ -54,6 +55,7 @@ class UsersRepository implements IUsersRepository {
                         password,
                         abrigoId }: ICreateUserDTO): Promise<User | undefined> {
     const newUser = this.ormRepository.create({ nome,
+                                                credencial,
                                                 email,
                                                 emailAlternativo,
                                                 nascimento,
@@ -64,16 +66,14 @@ class UsersRepository implements IUsersRepository {
                                                 password,
                                                 abrigo: { id: abrigoId } });
     await this.ormRepository.save(newUser);
-    console.log(newUser);
-    const newUserId = newUser.id;
-    const user = await this.ormRepository.findOne({ where: { id : newUserId }, relations: ["abrigo", "notificacoes"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
+    const user = await this.ormRepository.findOne({ where: { id : newUser.id }, relations: ["abrigo", "notificacoes"] });
     return user;
 
   }
 
-  public async update(userId: number, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
+  public async update(userId: number, { nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
 
-    await this.ormRepository.update(userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
+    await this.ormRepository.update(userId, { id: userId, nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo", "notificacoes"] });
     return user;
 
