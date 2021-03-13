@@ -37,24 +37,43 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: ICreateUserDTO): Promise<User | undefined> {
-    const newUser = this.ormRepository.create({ nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
-    await this.ormRepository.save(newUser);
-    const newUserId = newUser.id;
-    const user = await this.ormRepository.findOne({ where: { id : newUserId }, relations: ["abrigo", "notificacoes"] }); // need this line to return all fields from Abrigo, maybe eager loader would solve it
-    return user;
-
-  }
-
   public async save(user: User): Promise<User> {
 
     return this.ormRepository.save(user);
 
   }
 
-  public async update(userId: number, { nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
+  public async create({ nome,
+                        credencial,
+                        email,
+                        emailAlternativo,
+                        nascimento,
+                        cargo,
+                        telefone1,
+                        telefone2,
+                        profissao,
+                        password,
+                        abrigoId }: ICreateUserDTO): Promise<User | undefined> {
+    const newUser = this.ormRepository.create({ nome,
+                                                credencial,
+                                                email,
+                                                emailAlternativo,
+                                                nascimento,
+                                                cargo,
+                                                telefone1,
+                                                telefone2,
+                                                profissao,
+                                                password,
+                                                abrigo: { id: abrigoId } });
+    await this.ormRepository.save(newUser);
+    const user = await this.ormRepository.findOne({ where: { id : newUser.id }, relations: ["abrigo", "notificacoes"] });
+    return user;
 
-    await this.ormRepository.update(userId, { id: userId, nome, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
+  }
+
+  public async update(userId: number, { nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
+
+    await this.ormRepository.update(userId, { id: userId, nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo", "notificacoes"] });
     return user;
 

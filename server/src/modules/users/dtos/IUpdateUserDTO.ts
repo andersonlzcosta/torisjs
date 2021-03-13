@@ -1,5 +1,8 @@
+import { Credencial } from "../infra/typeorm/entities/User";
+
 export default interface IUpdateUserDTO {
     nome?: string;
+    credencial?: Credencial;
     email?: string;
     emailAlternativo?: string;
     nascimento?: Date;
