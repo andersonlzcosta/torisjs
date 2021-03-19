@@ -5,6 +5,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
+import { credencial } from '../../hooks/auth';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
@@ -26,6 +27,10 @@ interface ILoginResponse {
     token: string;
     user: {
       id: string;
+      credencial: credencial;
+      abrigo: {
+        id: number;
+      }
     }
   }
 }

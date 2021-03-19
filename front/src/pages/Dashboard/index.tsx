@@ -1,44 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useAuth } from '../../hooks/auth';
-import api from '../../services/api';
 
 import Navbar from '../../components/Navbar';
 import NavbarDesktop from '../../components/NavbarDesktop';
 import TopMenu from '../../components/TopMenu';
 
 import { Container, NotificationContainer, DashboardContent, User, AbrigosList, Abrigo } from './styles';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import Perfil from '../../images/perfil-avatar.png'
 import { FiMinusCircle } from 'react-icons/fi';
-import { useToast } from '../../hooks/toast';
 
-import { gql, useQuery } from '@apollo/client';
-
-interface INotificacao {
-  id: number;
-  type: string;
-  message: string;
-}
-
-interface IUser {
-  id: number;
-  nome: string;
-  idade: string;
-  profissao: string;
-  archivedNotifications: number[];
-}
-
-const GET_USERS = gql`
-query VerUsuarios{
-  verUsuarios{
-    id,
-    nome,
-    email,
-    profissao
-  }
-}
-`;
+import { useQuery } from '@apollo/client';
+import { GET_ABRIGOS, GET_USERS, VIEW_NOTIFICATIONS } from './apolloQueries';
 
 interface IProfissionaisData {
   id: string;
@@ -50,94 +24,45 @@ interface IProfissionaisQuery {
   verUsuarios: IProfissionaisData[];
 }
 
-const GET_ABRIGOS = gql`
-{
-  verAbrigos{
-    id,
-    nome,
-    endereco
-  }
-}
-`;
-
-interface IAbrigosData {
-  id: string;
-  nome: string;
-  endereco: string;
-}
-
 interface IAbrigosQuery {
-  verAbrigos: IAbrigosData[];
+  verAbrigos: {
+    id: string;
+    nome: string;
+    endereco: string;
+  }[];
+}
+
+interface INotification {
+  verNotificacoes: {
+    id: number;
+    conteudo: string;
+    arquivada: boolean;
+    tipo: string;
+  }[]
 }
 
 const Dashboard: React.FC = () => {
-  const [activeNotifications, setActiveNotifications] = useState<INotificacao[]>();
-  const [archivedNotifications, setArchivedNotifications] = useState<number[]>();
-  const [thisUser, setThisUser] = useState<IUser>();
-
   const { user } = useAuth();
-  const { addToast } = useToast();
 
-  /// GET ALL USERS
   const { data: profissionaisQl } = useQuery<IProfissionaisQuery>(GET_USERS);
-
-  /// GET ALL ABRIGOS
   const { data: abrigosQl } = useQuery<IAbrigosQuery>(GET_ABRIGOS);
-
-
-  const handleDelete = useCallback((notificationId: number) => {
-    if (activeNotifications && archivedNotifications && thisUser) {
-      const updatedNotifications = activeNotifications.filter(notification => notification.id !== notificationId);
-
-      setActiveNotifications(updatedNotifications);
-
-      const updatedArchive = [...archivedNotifications, notificationId]
-      setArchivedNotifications(updatedArchive);
-
-      api.put(`/users/${user.id}`, {
-        nome: thisUser.nome,
-        idade: thisUser.idade,
-        profissao: thisUser.profissao,
-        archivedNotifications: updatedArchive
-      });
-
-      addToast({
-        title: "Notificação arquivada!",
-        type: "success"
-
-      });
-    }
-  }, [activeNotifications, archivedNotifications, thisUser]);
-
-  useEffect(() => {
-    // Promise.all([
-    //   api.get('/notifications'),
-    //   api.get(`/users/${user.id}`)
-    // ]).then(responses => {
-    //   const todasNotificacoes: INotificacao[] = responses[0].data;
-    //   const userData: IUser = responses[1].data;
-    //   const updatedActiveNotifications = todasNotificacoes.filter(notificacao => !userData.archivedNotifications.includes(notificacao.id));
-    //   setActiveNotifications(updatedActiveNotifications);
-    //   if (userData.archivedNotifications) {
-    //     setArchivedNotifications(userData.archivedNotifications);
-    //   }
-    //   setThisUser(userData);
-    // });
-  }, [user]);
+  const { data: notificationsQl } = useQuery<INotification>(VIEW_NOTIFICATIONS);
 
   return (
     <Container>
       <TopMenu />
-      <DashboardContent>
 
-        {activeNotifications && <h2>notificações recentes</h2>}
-        {activeNotifications && activeNotifications.map(notification => (
-          <NotificationContainer key={notification.id} type={notification.type}>
-            <p>{notification.message}</p>
-            <button onClick={() => handleDelete(notification.id)}><FiMinusCircle size={20} /></button>
+      {user.credencial === "AbrigoAdmin" && user.abrigo && <Redirect to={`/abrigo/${user.abrigo.id}`} />}
+      {user.credencial === "AbrigoAdmin" && !user.abrigo && <Redirect to="/abrigos/novo" />}
+      {user.credencial === "Aluno" && <Redirect to="/Assistir" />}
+
+      <DashboardContent>
+        {notificationsQl && notificationsQl.verNotificacoes.length > 0 && <h2>notificações recentes</h2>}
+        {notificationsQl && notificationsQl.verNotificacoes.map(notification => (
+          <NotificationContainer key={notification.id} type={notification.tipo}>
+            <p>{notification.conteudo}</p>
           </NotificationContainer>
         ))}
-
 
         {profissionaisQl && <h2>últimos profissionais cadastrados</h2>}
         {profissionaisQl && profissionaisQl.verUsuarios.map(profissional => (
@@ -152,7 +77,6 @@ const Dashboard: React.FC = () => {
           </User>
         ))}
 
-
         <AbrigosList>
           {abrigosQl && <h2>últimos abrigos cadastrados</h2>}
           {abrigosQl && abrigosQl.verAbrigos.map(abrigo => (
@@ -164,8 +88,8 @@ const Dashboard: React.FC = () => {
             </Abrigo>
           ))}
         </AbrigosList>
-
       </DashboardContent>
+
       <Navbar />
       <NavbarDesktop />
     </Container>

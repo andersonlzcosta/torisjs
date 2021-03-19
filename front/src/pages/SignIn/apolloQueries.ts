@@ -12,6 +12,10 @@ query IniciarSessao(
     token
     user{
       id
+      credencial
+      abrigo{
+        id
+      }
     }
   }
 }

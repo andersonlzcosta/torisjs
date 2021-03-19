@@ -30,7 +30,7 @@ export const Menu = styled.div`
   align-items: flex-end;
   align-self: flex-end;
   padding: 0px 5% 30px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 1px;
