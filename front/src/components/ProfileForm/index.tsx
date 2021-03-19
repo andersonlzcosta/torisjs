@@ -16,6 +16,7 @@ import Popup from '../Popup';
 import { useToast } from '../../hooks/toast';
 import Select from '../Select';
 import { GET_USERS, CRIAR_USUARIO, ATUALIZAR_USUARIO, DELETAR_USUARIO, GET_ABRIGOS } from '../../pages/Profissionais/apolloQueries';
+import { credencial } from '../../hooks/auth';
 
 export interface IUserData {
   id: number;
@@ -31,7 +32,6 @@ export interface IUserData {
   profissao: string;
   abrigoId: string;
 }
-
 
 interface IProfileFormProps {
   inheritedUser?: IUserData;
@@ -112,7 +112,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
   useQuery<IAbrigosQuery>(GET_ABRIGOS, {
     onCompleted(data) {
       if (data) {
-        setAbrigos([{ id: "999999", nome: "--selecione um abrigo--" }, ...data.verAbrigos]);
+        setAbrigos([{ id: "", nome: "--selecione um abrigo--" }, ...data.verAbrigos]);
       }
     }
   });
@@ -144,9 +144,17 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         if (formData[key] !== '') {
           if (key === 'abrigoId') {
             parsedData[key] = Number(formData[key]);
-          } else {
-            parsedData[key] = formData[key];
+            return
           }
+          if (formData[key] === 'Admin') {
+            parsedData[key] = credencial.Admin
+            return
+          }
+          if (formData[key] === 'AbrigoAdmin') {
+            parsedData[key] = credencial.AbrigoAdmin
+            return
+          }
+          parsedData[key] = formData[key];
         }
       });
 
@@ -156,6 +164,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           variables: parsedData
         });
       } else {
+        console.log(parsedData);
         await Register({
           variables: parsedData
         });
@@ -199,6 +208,15 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           <div className="full-width">
             <label>nome</label>
             <Input name="nome" className="alt" />
+          </div>
+
+          <div className="full-width">
+            <label>tipo de usuário</label>
+            <Select name="credencial" options={[
+              { value: 'Aluno', label: 'Aluno' },
+              { value: 'AbrigoAdmin', label: 'Administrador de Abrigo' },
+              { value: 'Admin', label: 'Administrador da Plataforma' },
+            ]} />
           </div>
 
           <div className="half-width">

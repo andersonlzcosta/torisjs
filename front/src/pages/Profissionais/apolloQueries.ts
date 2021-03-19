@@ -29,6 +29,7 @@ mutation Register(
   $email: String!
   $password: String!
   $nome: String
+  $credencial: Credencial
   $emailAlternativo: String
   $nascimento: DateTime
   $cargo: String
@@ -41,6 +42,7 @@ mutation Register(
     email: $email
     password: $password
     nome: $nome
+    credencial: $credencial
     emailAlternativo: $emailAlternativo
     nascimento: $nascimento
     cargo: $cargo
@@ -52,6 +54,7 @@ mutation Register(
     user{
       id
       nome
+      credencial
       email
       emailAlternativo
       nascimento

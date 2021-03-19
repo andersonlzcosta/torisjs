@@ -10,7 +10,7 @@ import { useAbrigo } from '../../hooks/AbrigoHook';
 import { useToast } from '../../hooks/toast';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import Perfil from '../../images/perfil.jpg';
+import Perfil from '../../images/perfil-avatar.png';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Textarea from '../../components/Textarea';
