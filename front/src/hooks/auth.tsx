@@ -1,7 +1,17 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 
+export enum credencial {
+  Admin = "Admin",
+  AbrigoAdmin = "AbrigoAdmin",
+  Aluno = "Aluno"
+}
+
 interface User {
   id: string;
+  credencial: credencial;
+  abrigo: {
+    id: number;
+  }
 }
 
 interface AuthState {
