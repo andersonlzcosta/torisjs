@@ -128,7 +128,7 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         nome: Yup.string().required('O nome é obrigatório'),
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
         emailAlternativo: Yup.string().email('Use um email válido'),
-        password: Yup.string(),
+        password: Yup.string().required('a senha é obrigatoria'),
         cargo: Yup.string(),
         profissao: Yup.string(),
         abrigoId: Yup.string(),
@@ -164,7 +164,6 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           variables: parsedData
         });
       } else {
-        console.log(parsedData);
         await Register({
           variables: parsedData
         });
