@@ -6,7 +6,6 @@ WORKDIR /var/www/server
 
 COPY package*.json ./
 RUN npm install
-RUN yarn typeorm migration:run
 
 COPY . .
 
