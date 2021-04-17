@@ -29,6 +29,9 @@ import ForumsPerguntasRepository from '@modules/forums/infra/typeorm/repositorie
 import IForumsRespostasRepository from '@modules/forums/repositories/IRespostasRepository';
 import ForumsRespostasRepository from '@modules/forums/infra/typeorm/repositories/RespostasRepository';
 
+import IForumsCategoriasRepository from '@modules/forums/repositories/ICategoriasRepository';
+import ForumsCategoriasRepository from '@modules/forums/infra/typeorm/repositories/CategoriasRepository';
+
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 
 container.registerSingleton<IAbrigosRepository>('AbrigosRepository', AbrigosRepository);
@@ -42,3 +45,4 @@ container.registerSingleton<IModulosAulasRepository>('ModulosAulasRepository', M
 
 container.registerSingleton<IForumsPerguntasRepository>('ForumsPerguntasRepository', ForumsPerguntasRepository);
 container.registerSingleton<IForumsRespostasRepository>('ForumsRespostasRepository', ForumsRespostasRepository);
+container.registerSingleton<IForumsCategoriasRepository>('ForumsCategoriasRepository', ForumsCategoriasRepository);
