@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import Resposta from '@modules/forums/infra/typeorm/entities/Resposta';
-// import Categoria from '@modules/forums/infra/typeorm/entities/Categoria';
+import Categoria from '@modules/forums/infra/typeorm/entities/Categoria';
 
 @ObjectType()
 @Entity('forum_perguntas')
@@ -22,8 +22,11 @@ class Pegunta {
     @Column({ default: false, type: "bool", nullable: true})
     foiResolvido: boolean;
 
-    @Field(() => [Resposta])
-    @OneToMany(() => Resposta, resposta => resposta.pergunta)
+    @Field(() => [Resposta], { nullable: true })
+    @OneToMany(() => Resposta, resposta => resposta.pergunta,  {
+        eager: true,
+        nullable: true
+    })
     respostas?: Resposta[];
 
     // @Field(() => [Categoria])

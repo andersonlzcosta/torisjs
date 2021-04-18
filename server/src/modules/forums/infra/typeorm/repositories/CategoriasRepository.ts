@@ -14,7 +14,8 @@ class CategoriasRepository implements ICategoriasRepository {
 
   public async findById(id: number): Promise<Categoria | undefined> {
 
-    const categoria = await this.ormRepository.findOne( id , { relations: ["perguntas"] });
+    // const categoria = await this.ormRepository.findOne( id , { relations: ["perguntas"] });
+    const categoria = await this.ormRepository.findOne( id );
     return categoria;
 
   }
@@ -22,7 +23,8 @@ class CategoriasRepository implements ICategoriasRepository {
   public async findAll(): Promise<Categoria[]> {
 
     let categorias: Categoria[];
-    categorias = await this.ormRepository.find({ relations: ["perguntas"] });
+    // categorias = await this.ormRepository.find({ relations: ["perguntas"] });
+    categorias = await this.ormRepository.find();
     return categorias;
 
   }
@@ -44,7 +46,8 @@ class CategoriasRepository implements ICategoriasRepository {
   public async update(categoriaId: number, { nome }: IUpdateCategoriaDTO): Promise<Categoria | undefined> {
 
     await this.ormRepository.update( categoriaId, { id: categoriaId, nome });   
-    const categoria = await this.ormRepository.findOne({ where: { id: categoriaId }, relations: ["perguntas"] });
+    // const categoria = await this.ormRepository.findOne({ where: { id: categoriaId }, relations: ["perguntas"] });
+    const categoria = await this.ormRepository.findOne({ where: { id: categoriaId } });
     return categoria;
 
   }

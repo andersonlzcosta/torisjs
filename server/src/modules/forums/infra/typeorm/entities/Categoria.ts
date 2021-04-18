@@ -13,9 +13,9 @@ class Categoria {
     @Column({ nullable: true })
     nome: string;
     
-    @Field(() => [Pergunta], { nullable: true })
-    @ManyToMany(() => Pergunta, pergunta => pergunta.categorias, { nullable: true })
-    perguntas?: Pergunta[];
+    // @Field(() => [Pergunta], { nullable: true })
+    // @ManyToMany(() => Pergunta, pergunta => pergunta.categorias, { nullable: true })
+    // perguntas?: Pergunta[];
     
     @Field(() => String)
     @CreateDateColumn()
