@@ -27,30 +27,30 @@ import { ForumPerguntaResolver } from "@modules/forums/infra/http/resolvers/perg
 import { ForumRespostaResolver } from "@modules/forums/infra/http/resolvers/resposta.resolver";
 import { ForumCategoriaResolver } from "@modules/forums/infra/http/resolvers/categoria.resolver";
 
-const app = express();
+(async () => {
+  const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(errors());
+  app.use(cors());
+  app.use(express.json());
+  app.use(errors());
 
-app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
-  if (err instanceof AppError) {
-    return response.status(err.statusCode).json({
+  app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
+    if (err instanceof AppError) {
+      return response.status(err.statusCode).json({
+        status: 'error',
+        message: err.message,
+      });
+    }
+
+    console.error(err);
+
+    return response.status(500).json({
       status: 'error',
-      message: err.message,
+      message: 'Internal Server Error',
     });
-  }
-
-  console.error(err);
-
-  return response.status(500).json({
-    status: 'error',
-    message: 'Internal Server Error',
   });
-});
 
-const apolloServer = new ApolloServer({
-  schema: buildSchema({
+  const apolloServerSchema = await buildSchema({
     resolvers: [
       UserResolver,
       UserSessionResolver,
@@ -65,23 +65,27 @@ const apolloServer = new ApolloServer({
       ForumCategoriaResolver
     ],
     validate: false,
-  }),
-  context: ({ req, res }) => ({
-    req,
-    res,
-  }),
-});
+  })
+  
+  const apolloServer = new ApolloServer({
+    schema: apolloServerSchema,
+    context: ({ req, res }) => ({
+      req,
+      res,
+    }),
+  });
 
-apolloServer.applyMiddleware({
-  app,
-  cors: false,
-});
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
 
 
-app.get('/', (_, response) => {
-  return response.json({ message: 'go to /api' });
-});
+  app.get('/', (_, response) => {
+    return response.json({ message: 'go to /api' });
+  });
 
-app.listen(process.env.PORT || 2000, () => {
-  console.log('Server started on port 2000');
-});
+  app.listen(process.env.PORT || 2000, () => {
+    console.log('Server started on port 2000');
+  });
+})()

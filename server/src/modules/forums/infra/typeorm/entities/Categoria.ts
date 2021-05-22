@@ -1,6 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-import Pergunta from '@modules/forums/infra/typeorm/entities/Pergunta';
 
 @ObjectType()
 @Entity('forum_categorias')

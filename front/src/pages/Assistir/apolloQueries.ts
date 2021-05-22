@@ -67,6 +67,18 @@ query VerAula($id: Float!){
       descricao
       video_url
       duracao
+      modulo{
+        id
+        nome
+        aulas{
+          id
+          ordem
+        }
+        perguntas{
+          id
+          ordem
+        }
+      }
     }
   }
 }
@@ -85,6 +97,18 @@ query VerModuloPergunta($id: Float!){
       alternativa4
       resposta
       justificativa
+      modulo{
+        id
+        nome
+        aulas{
+          id
+          ordem
+        }
+        perguntas{
+          id
+          ordem
+        }
+      }
     }
   }
 }

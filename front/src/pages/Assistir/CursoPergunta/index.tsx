@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Form } from '@unform/web';
 
@@ -21,6 +21,7 @@ interface IPergunta {
   verModuloPergunta: {
     pergunta: {
       id: number;
+      ordem: number;
       enunciado: string;
       alternativa1: string;
       alternativa2: string;
@@ -28,8 +29,69 @@ interface IPergunta {
       alternativa4: string;
       resposta: number;
       justificativa: string;
+      modulo: {
+        id: number;
+        nome: string;
+        aulas: {
+          id: number;
+          ordem: number;
+        }[]
+        perguntas: {
+          id: number;
+          ordem: number;
+        }[]
+      }
     }
   }
+}
+
+interface IProximaAulaButtonProps {
+  ordem: number;
+  modulo: {
+    aulas: {
+      id: number;
+      ordem: number;
+    }[]
+    perguntas: {
+      id: number;
+      ordem: number;
+    }[]
+  }
+}
+
+interface IAtividade {
+  id: number;
+  ordem: number;
+  type: string;
+}
+
+const ProximaAulaButton: React.FC<IProximaAulaButtonProps> = ({ordem, modulo}) => {
+  const atividades : IAtividade[] = [];
+  modulo.aulas.map(aula => {
+    atividades.push({
+      ...aula,
+      type: 'aula'
+    })
+  })
+  modulo.perguntas.map(pergunta => {
+    atividades.push({
+      ...pergunta,
+      type: 'curso-pergunta'
+    })
+  })
+  atividades.sort((a, b) => a.ordem - b.ordem)
+  const proximaAula = atividades[ordem]
+
+  return (
+    proximaAula && (
+      <>
+        <h2>Próxima etapa</h2>
+        <Link to={`/${proximaAula.type}/${proximaAula.id}`}>
+          <button className="proxima">clique para assistir a próxima aula / pergunta</button>
+        </Link>
+      </>
+    ) || <></>
+  )
 }
 
 const CursoPergunta: React.FC = () => {
@@ -113,8 +175,9 @@ const CursoPergunta: React.FC = () => {
             )}
           </aside>
 
-          <h2>Próxima etapa</h2>
-          <button className="proxima">clique para assistir a próxima aula / pergunta</button>
+          <ProximaAulaButton
+            ordem={pergunta.verModuloPergunta.pergunta.ordem}
+            modulo={pergunta.verModuloPergunta.pergunta.modulo} />
         </PerguntaContainer>
       )}
 
