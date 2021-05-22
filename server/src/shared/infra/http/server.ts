@@ -25,6 +25,7 @@ import { ModuloPerguntaResolver } from "@modules/cursos/infra/http/resolvers/per
 
 import { ForumPerguntaResolver } from "@modules/forums/infra/http/resolvers/pergunta.resolver";
 import { ForumRespostaResolver } from "@modules/forums/infra/http/resolvers/resposta.resolver";
+import { ForumCategoriaResolver } from "@modules/forums/infra/http/resolvers/categoria.resolver";
 
 const app = express();
 
@@ -60,7 +61,8 @@ const apolloServer = new ApolloServer({
       AulaResolver,
       ModuloPerguntaResolver,
       ForumPerguntaResolver,
-      ForumRespostaResolver
+      ForumRespostaResolver,
+      ForumCategoriaResolver
     ],
     validate: false,
   }),
