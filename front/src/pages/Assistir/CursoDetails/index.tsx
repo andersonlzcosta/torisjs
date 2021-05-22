@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import Moment from 'moment';
 
 import { VER_CURSO, VER_MODULO_POR_CURSO } from '../apolloQueries';
 
@@ -144,6 +145,12 @@ const CursoDetails: React.FC = () => {
     });
   }
 
+  const handleShowPopup = (cursoData : ICursoGQL) => {
+    setIsPopupVisible(true);
+    const subscriptionDate = Moment(new Date()).format('DD MM YYYY hh:mm:ss')
+    localStorage.setItem(`inscricao-curso-${cursoData.verCurso.curso.id}`, subscriptionDate);
+  }
+
   const conteudoTotal = useMemo(() => {
     if (ManipulatedModulos) {
       const aulasPorModulo = ManipulatedModulos.map(modulo => modulo.content.filter(content => content.content_is === 'aula').length);
@@ -170,6 +177,18 @@ const CursoDetails: React.FC = () => {
     modulosData && handleManipulateModules(modulosData);
   }, [modulosData]);
 
+  useEffect(() => {
+    console.log(cursoData)
+    if (cursoData) {
+      const currentSubscription = localStorage.getItem(`inscricao-curso-${cursoData.verCurso.curso.id}`);
+      
+      if (currentSubscription) {
+        const subscriptionDate = Moment(currentSubscription, 'DD MM YYYY hh:mm:ss');
+        setIsSubscribed(true);
+      }
+    }
+  }, [cursoData]);
+
   return (
     <Container>
       <TopMenu />
@@ -182,7 +201,7 @@ const CursoDetails: React.FC = () => {
           <span>{conteudoTotal} aula(s)</span>
           <span>duração total de {duracaoTotal} minutos</span>
 
-          <button onClick={() => setIsPopupVisible(true)}>quero me inscrever</button>
+          <button onClick={() => handleShowPopup(cursoData)}>quero me inscrever</button>
         </CursoContent>
       )}
 
