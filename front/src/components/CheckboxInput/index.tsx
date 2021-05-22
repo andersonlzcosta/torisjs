@@ -28,6 +28,7 @@ const CheckboxInput: React.FC<Props> = ({ name, options, ...rest }) => {
     <Container>
       <label htmlFor={options.id} key={options.id}>
         <BoxInput
+          id={options.id}
           defaultChecked={defaultValue}
           ref={inputRef}
           value={options.value}
