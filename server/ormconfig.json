@@ -1,9 +1,10 @@
 {
     "name": "default",
-    "type": "mysql",
-    "host": "localhost",
-    "username": "user",
-    "password": "password",
+    "type": "postgres",
+    "host": "db",
+    "port": 5432,
+    "username": "abrigando",
+    "password": "osdesabrigados",
     "database": "rede_abrigo",
     "synchronize": false,
     "entities": [
