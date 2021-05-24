@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import { useMutation } from '@apollo/client';
@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 
 import { IPerguntasData } from '../../pages/Curso';
 import Select from '../Select';
+import Popup from '../Popup';
 
 interface IPerguntaFormProps {
   pergunta?: IPerguntasData;
@@ -39,6 +40,7 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({
   closeForm
 }) => {
   const formRef = useRef<FormHandles>(null);
+  const [isErrorFormVisible, setIsErrorFormVisible] = useState(false);
 
   const [CriarPergunta] = useMutation(CREATE_MODULO_PERGUNTA, {
     onCompleted() {
@@ -55,37 +57,61 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({
   })
 
   const handleSubmit = (data: ISubmittedData) => {
-    if (!pergunta) {
-      let correctOrder;
-      order === 0 ? correctOrder = 1 : correctOrder = order
-      CriarPergunta({
-        variables: {
-          moduloId: moduleId,
-          ordem: correctOrder,
-          enunciado: data.enunciado,
-          alternativa1: data.alternativa1,
-          alternativa2: data.alternativa2,
-          alternativa3: data.alternativa3,
-          alternativa4: data.alternativa4,
-          resposta: Number(data.resposta),
-          justificativa: data.justificativa
-        }
-      });
+    let alternativasPreenchidas = 0
+    if (data.alternativa1) {
+      alternativasPreenchidas++;
+    }
+    
+    if (data.alternativa2) {
+      alternativasPreenchidas++;
+    }
+
+    if (data.alternativa3) {
+      alternativasPreenchidas++;
+    }
+
+    if (data.alternativa4) {
+      alternativasPreenchidas++;
+    }
+
+    if (!data.enunciado) {
+      setIsErrorFormVisible(true);
+    } else if (alternativasPreenchidas < 4) {
+      setIsErrorFormVisible(true);
     } else {
-      AtualizarPergunta({
-        variables: {
-          perguntaId: pergunta.id,
-          moduloId: moduleId,
-          ordem: pergunta.ordem,
-          enunciado: data.enunciado,
-          alternativa1: data.alternativa1,
-          alternativa2: data.alternativa2,
-          alternativa3: data.alternativa3,
-          alternativa4: data.alternativa4,
-          resposta: Number(data.resposta),
-          justificativa: data.justificativa
-        }
-      });
+      if (!pergunta) {
+        let correctOrder;
+        order === 0 ? correctOrder = 1 : correctOrder = order
+        
+        CriarPergunta({
+          variables: {
+            moduloId: moduleId,
+            ordem: correctOrder,
+            enunciado: data.enunciado,
+            alternativa1: data.alternativa1,
+            alternativa2: data.alternativa2,
+            alternativa3: data.alternativa3,
+            alternativa4: data.alternativa4,
+            resposta: Number(data.resposta),
+            justificativa: data.justificativa
+          }
+        });
+      } else {
+        AtualizarPergunta({
+          variables: {
+            perguntaId: pergunta.id,
+            moduloId: moduleId,
+            ordem: pergunta.ordem,
+            enunciado: data.enunciado,
+            alternativa1: data.alternativa1,
+            alternativa2: data.alternativa2,
+            alternativa3: data.alternativa3,
+            alternativa4: data.alternativa4,
+            resposta: Number(data.resposta),
+            justificativa: data.justificativa
+          }
+        });
+      }
     }
   }
 
@@ -138,6 +164,12 @@ const CursoPerguntaForm: React.FC<IPerguntaFormProps> = ({
           <Button type="submit">salvar pergunta</Button>
         </Form>
       </Content>
+      <Popup
+        isVisible={isErrorFormVisible}
+        onCancel={() => setIsErrorFormVisible(false)}
+        onFulfill={() => setIsErrorFormVisible(false)}>
+        Por favor, preencha todos os campos do formulário
+      </Popup>
     </Container>
   );
 }

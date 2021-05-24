@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useMutation } from '@apollo/client';
 import { Form } from '@unform/web';
 
@@ -9,6 +9,7 @@ import Button from '../../components/Button';
 import { FormHandles } from '@unform/core';
 import { IAulasData } from '../../pages/Curso';
 import { Container, Content } from './styles';
+import Popup from '../Popup';
 
 interface IAulaFormProps {
   aula?: IAulasData;
@@ -27,6 +28,7 @@ interface ISubmittedData {
 
 const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModulo, closeForm }) => {
   const formRef = useRef<FormHandles>(null);
+  const [isErrorFormVisible, setIsErrorFormVisible] = useState(false);
 
   const [CriarAula] = useMutation(CREATE_AULA, {
     onCompleted() {
@@ -43,31 +45,39 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModul
   });
 
   const handleSubmit = (data: ISubmittedData) => {
-    if (!aula) {
-      let correctOrder;
-      order === 0 ? correctOrder = 1 : correctOrder = order
-      CriarAula({
-        variables: {
-          ordem: correctOrder,
-          nome: data.nome,
-          descricao: data.descricao,
-          video_url: data.video_url,
-          duracao: data.duracao,
-          moduloId: moduleId
-        }
-      })
+    if (!data.nome) {
+      setIsErrorFormVisible(true);
+    } else if (!data.descricao) {
+      setIsErrorFormVisible(true);
+    } else if (!data.video_url) {
+      setIsErrorFormVisible(true);
     } else {
-      AtualizarAula({
-        variables: {
-          aulaId: aula.id,
-          ordem: aula.ordem,
-          nome: data.nome,
-          descricao: data.descricao,
-          video_url: data.video_url,
-          duracao: data.duracao,
-          moduloId: moduleId
-        }
-      });
+      if (!aula) {
+        let correctOrder;
+        order === 0 ? correctOrder = 1 : correctOrder = order
+        CriarAula({
+          variables: {
+            ordem: correctOrder,
+            nome: data.nome,
+            descricao: data.descricao,
+            video_url: data.video_url,
+            duracao: data.duracao,
+            moduloId: moduleId
+          }
+        })
+      } else {
+        AtualizarAula({
+          variables: {
+            aulaId: aula.id,
+            ordem: aula.ordem,
+            nome: data.nome,
+            descricao: data.descricao,
+            video_url: data.video_url,
+            duracao: data.duracao,
+            moduloId: moduleId
+          }
+        });
+      }
     }
   }
 
@@ -100,6 +110,12 @@ const AulaForm: React.FC<IAulaFormProps> = ({ aula, order, moduleId, reloadModul
           <Button type="submit">salvar aula</Button>
         </Form>
       </Content>
+      <Popup
+        isVisible={isErrorFormVisible}
+        onCancel={() => setIsErrorFormVisible(false)}
+        onFulfill={() => setIsErrorFormVisible(false)}>
+        Por favor, preencha todos os campos do formulário
+      </Popup>
     </Container>
   );
 }
