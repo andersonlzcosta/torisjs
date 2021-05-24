@@ -62,7 +62,8 @@ const SignUp: React.FC = () => {
         variables: {
           nome: formData.nome,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          credencial: 'Aluno',
         }
       });
     } catch (err) {
