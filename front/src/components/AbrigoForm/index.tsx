@@ -367,7 +367,7 @@ const AbrigoForm: React.FC<IAbrigoFormProps> = ({ id, headingText }) => {
             <Input type="number" className="bigger alt number" name="capacidade" />
           </div>
 
-          <CheckboxInput name="lgbt" options={{ id: 'lgbt', value: 'lgbt', label: 'aceita população LGBTQI+' }} />
+          <CheckboxInput name="lgbt" options={{ id: 'lgbt', value: 'lgbt', label: 'atende população LGBTQI+' }} />
 
           <CheckboxInput name="pcd" options={{ id: 'pdc', value: 'pdc', label: 'Exclusivamente para crianças e adolescentes com deficiência' }} />
 
