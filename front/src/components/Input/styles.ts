@@ -50,10 +50,10 @@ export const Container = styled.div<inputProps>`
 
 export const Error = styled(Tooltip)`
   position: absolute;
-  top: 17px;
-  right: 20px;
-  height: 20px;
-  width: 20px!important;
+  top: 3px;
+  right: 3px;
+  height: 16px;
+  width: 16px!important;
 
   svg{
     margin-right: 0;
