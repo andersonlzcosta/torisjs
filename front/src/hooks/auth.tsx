@@ -8,6 +8,7 @@ export enum credencial {
 
 interface User {
   id: string;
+  nome: string;
   credencial: credencial;
   abrigo: {
     id: number;
