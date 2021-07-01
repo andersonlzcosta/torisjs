@@ -38,7 +38,7 @@ const Search: React.FC<ISearchProps> = ({ searchTitle, loadList }) => {
             <button type="reset">limpar</button>
           )}
         </form>
-        <p>pesquise por nome, endereço ou responsável</p>
+        <p>pesquise por nome</p>
       </SearchBox>
     </Container>
   );
