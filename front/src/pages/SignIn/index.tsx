@@ -27,6 +27,7 @@ interface ILoginResponse {
     token: string;
     user: {
       id: string;
+      nome: string;
       credencial: credencial;
       abrigo: {
         id: number;
@@ -106,8 +107,8 @@ const SignIn: React.FC = () => {
         <Button type="submit">Entrar</Button>
       </Form>
 
-      <aside>ainda não possui login?</aside>
-      <Link to="/cadastro">Cadastre-se</Link>
+      <aside>tem interesse em participar da formação?</aside>
+      <a href="https://www.redeabrigo.org/faca-parte/" target="_blank">Faça Parte</a>
       <a href="https://www.redeabrigo.org/" target="_blank">Sobre a Rede Abrigo</a>
     </Container>
   );

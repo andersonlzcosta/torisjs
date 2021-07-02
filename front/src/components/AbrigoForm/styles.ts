@@ -56,16 +56,17 @@ export const Content = styled.div`
 
     input{
       background: none;
-      padding: 0px;
-      /* border: none;
-      border-bottom: 1px solid #0B4385; */
+      padding: 1px 10px;
       color: #0B4385;
       border-radius: 0;
-      letter-spacing: 0px;
+      letter-spacing: .5px;
       width: 100%;
       font-weight: 300;
-      font-size: 17px;
-      margin: 4px 0 0;
+      font-size: 14px;
+      margin: 1px 0 0;
+      border-radius: 20px;
+      border: 1px solid #d2deff;
+      background: #f0f4ff;
     }
 
     > div{
@@ -88,15 +89,18 @@ export const Content = styled.div`
 
     label{
       margin: 0;
+      font-size: 12px;
+      padding-left: 10px;
     }
 
     select{
-      font-size: 16px;
+      font-size: 14px;
       border-radius: 20px;
-      padding: 2px 10px;
+      padding: 1px 10px;
       outline: none;
       margin: 3px 0 0 -5px;
-      border-width: 2px;
+      border: 1px solid #d2deff;
+      background: #f0f4ff;
     }
 
     textarea{
