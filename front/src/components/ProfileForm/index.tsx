@@ -10,6 +10,7 @@ import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Content } from './styles';
 import Input from '../../components/Input';
+// import InputMasked from '../../components/InputMasked';
 import Button from '../../components/Button';
 import DatePicker from '../Datepicker';
 import Popup from '../Popup';
@@ -129,10 +130,10 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
         email: Yup.string().required('E-mail é obrigatório').email('Use um e-mail válido'),
         emailAlternativo: Yup.string().email('Use um email válido'),
         password: Yup.string().required('a senha é obrigatoria'),
-        cargo: Yup.string(),
-        profissao: Yup.string(),
+        cargo: Yup.string().required('O cargo é obrigatório'),
+        profissao: Yup.string().required('A profissão é obrigatória'),
         abrigoId: Yup.string(),
-        nascimento: Yup.date(),
+        nascimento: Yup.date().required('Esta data é obrigatória'),
       });
 
       await schema.validate(formData, {
@@ -212,8 +213,8 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           <div className="full-width">
             <label>tipo de usuário</label>
             <Select name="credencial" options={[
-              { value: 'Aluno', label: 'Aluno' },
-              { value: 'AbrigoAdmin', label: 'Administrador de Abrigo' },
+              { value: 'Aluno', label: 'Profissional' },
+              // { value: 'AbrigoAdmin', label: 'Administrador de Abrigo' },
               { value: 'Admin', label: 'Administrador da Plataforma' },
             ]} />
           </div>
@@ -234,18 +235,9 @@ const ProfileForm: React.FC<IProfileFormProps> = ({ inheritedUser, headingText, 
           </div>
 
           <div className="half-width">
-            <label>email alternativo</label>
-            <Input className="alt" name="emailAlternativo" />
-          </div>
-
-          <div className="half-width">
             <label>telefone</label>
+            {/* <InputMasked mask="(99) 99999-9999" className="alt" name="telefone1" /> */}
             <Input className="alt" name="telefone1" type="number" />
-          </div>
-
-          <div className="half-width">
-            <label>telefone 2</label>
-            <Input className="alt" name="telefone2" type="number" />
           </div>
 
           <div className="half-width">

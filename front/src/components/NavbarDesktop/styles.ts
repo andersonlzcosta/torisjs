@@ -40,6 +40,7 @@ export const Menu = styled.div`
 
   &::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px #c6e0ff;
+      box-shadow: inset 0 0 6px #c6e0ff;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -89,4 +90,8 @@ export const Menu = styled.div`
     background:#fff;
   }
 
+`;
+
+export const UserName = styled.label`
+  margin-bottom: 5px;
 `;

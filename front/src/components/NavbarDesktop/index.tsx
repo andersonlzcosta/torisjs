@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth';
-import { Container, Menu } from './styles';
+import { Container, Menu, UserName } from './styles';
 import TopMenu from '../TopMenu';
 import logo from '../../images/logo.svg';
 
@@ -12,6 +12,7 @@ const NavbarDesktop: React.FC = () => {
     <Container>
       <TopMenu isDesktop={true} />
       <Menu>
+        <UserName>Olá {user.nome}</UserName>
         <button onClick={signOut}>Log Out</button>
         <img src={logo} alt="logo da rede abrigo" />
 
@@ -21,15 +22,12 @@ const NavbarDesktop: React.FC = () => {
             <Link to="/dashboard">Painel de Controle</Link>
 
             <label>usuários</label>
+            <Link to="/profissionais/todos">ver todos</Link>
             <Link to="/profissionais/novo">criar novo</Link>
 
             <label>abrigos</label>
             <Link to="/abrigos/todos">ver todos</Link>
             <Link to="/abrigos/novo">criar novo</Link>
-
-            <label>profissionais</label>
-            <Link to="/profissionais/todos">ver todos</Link>
-            <Link to="/profissionais/novo">criar novo</Link>
 
             <label>editar cursos</label>
             <Link to="/cursos/todos">ver todos</Link>

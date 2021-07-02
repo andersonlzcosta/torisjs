@@ -1,18 +1,19 @@
 import React, { InputHTMLAttributes, useRef, useEffect, useCallback, useState } from 'react';
+import ReactInputMask, {Props} from 'react-input-mask';
 import { Container, Error } from './styles';
 import { FiAlertCircle } from 'react-icons/fi';
 
 import { useField } from '@unform/core';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Props {
   name: string;
   inputName?: string;
   containerStyle?: object;
   className?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, inputName, containerStyle, className, ...rest }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+const InputMasked: React.FC<InputProps> = ({ name, inputName, containerStyle, className, ...rest }) => {
+  const inputRef = useRef(null);
   const { fieldName, registerField, error, defaultValue } = useField(name);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -20,13 +21,6 @@ const Input: React.FC<InputProps> = ({ name, inputName, containerStyle, classNam
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
-  }, []);
-
-  const handleInputBlur = useCallback(() => {
-    setIsFocused(false);
-    if (inputRef.current) {
-      setIsFilled(!!inputRef.current.value);
-    }
   }, []);
 
   useEffect(() => {
@@ -39,11 +33,10 @@ const Input: React.FC<InputProps> = ({ name, inputName, containerStyle, classNam
 
   return (
     <Container style={containerStyle} className={className} isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
-      <input
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        defaultValue={defaultValue}
+      <ReactInputMask
         ref={inputRef}
+        onFocus={handleInputFocus}
+        defaultValue={defaultValue}
         name={inputName}
         {...rest}
       />
@@ -56,4 +49,4 @@ const Input: React.FC<InputProps> = ({ name, inputName, containerStyle, classNam
   );
 };
 
-export default Input;
+export default InputMasked;
