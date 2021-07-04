@@ -62,6 +62,10 @@ class User {
     @Column({ nullable: true })
     profissao?: string;
 
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    recoveryCode?: string;
+
     @Field(() => Abrigo, { nullable: true })
     @ManyToOne(() => Abrigo, abrigo => abrigo.profissionais,  {
         eager: true,

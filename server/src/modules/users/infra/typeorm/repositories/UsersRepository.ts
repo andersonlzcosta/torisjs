@@ -71,9 +71,9 @@ class UsersRepository implements IUsersRepository {
 
   }
 
-  public async update(userId: number, { nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId }: IUpdateUserDTO): Promise<User | undefined> {
+  public async update(userId: number, { nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigoId, recoveryCode }: IUpdateUserDTO): Promise<User | undefined> {
 
-    await this.ormRepository.update(userId, { id: userId, nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId } });
+    await this.ormRepository.update(userId, { id: userId, nome, credencial, email, emailAlternativo, nascimento, cargo, telefone1, telefone2, profissao, password, abrigo: { id: abrigoId }, recoveryCode });
     const user = await this.ormRepository.findOne({ where: { id: userId }, relations: ["abrigo", "notificacoes"] });
     return user;
 
