@@ -13,6 +13,10 @@ import { container } from "tsyringe";
 import { CreateUserInput } from "./CreateUserInput";
 import { UpdateUserInput } from "./UpdateUserInput";
 
+import MailerTransporter from "@config/mailer";
+import RecoveryUserService from "@modules/users/services/RecoveryUserService";
+import LoginUserService from "@modules/users/services/LoginUserService";
+
 // Não identifiquei um similar desse user response
 @ObjectType()
 class UserResponse {  
@@ -25,7 +29,6 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-
     @Mutation(() => UserResponse)
     async registrar(
         @Arg("options") options: CreateUserInput
@@ -39,13 +42,12 @@ export class UserResolver {
  
     @Mutation(() => UserResponse)
     async login(
-        @Arg("email") email: string
+        @Arg("email") email: string,
+        @Arg("password") password : string
     ): Promise<UserResponse> {
-
-        const usersRepository = getCustomRepository(UsersRepository);
-        const user = await usersRepository.findByEmail(email);
+        const loginUser = container.resolve(LoginUserService);
+        const user = await loginUser.execute({email, password});
         return { user };
-
     }
 
     @Mutation(() => UserResponse)
@@ -57,6 +59,69 @@ export class UserResolver {
         const user = await updateUser.execute(options);
         return { user };
 
+    }
+
+    @Mutation(() => UserResponse)
+    async recoverPassword(
+        @Arg("email") email : string
+    ) : Promise<UserResponse> {
+        const usersRepository = getCustomRepository(UsersRepository);
+        const user = await usersRepository.findByEmail(email);
+
+        if (!user) {
+            throw new Error('User not found.');
+        }
+
+        let recoveryCode = "";
+        const recoveryCodeLength = 6;
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const charactersLength = characters.length;
+
+        for (let i = 0; i < recoveryCodeLength; i++) {
+            recoveryCode += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        const updateUser = new UpdateUserService();
+        const updatedUser = await updateUser.execute({
+            userId: user.id,
+            recoveryCode,
+        })
+
+        await MailerTransporter.sendMail({
+            to: 'viniciusch4@gmail.com',
+            subject: 'Código de recuperação - Rede Abrigo',
+            text: recoveryCode
+        })
+
+        return { user: updatedUser };
+    }
+
+    @Mutation(() => UserResponse)
+    async changePassword(
+        @Arg("recoveryCode") recoveryCode : string,
+        @Arg("email") email : string,
+        @Arg("password") password : string,
+    ) : Promise<UserResponse> {
+        const usersRepository = getCustomRepository(UsersRepository);
+        const user = await usersRepository.findByEmail(email);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (user.recoveryCode !== recoveryCode) {
+            throw new Error('Recovery code mismatch');
+        }
+
+        const updateUser = container.resolve(RecoveryUserService);
+        const updatedUser = await updateUser.execute({
+            userId: user.id,
+            password
+        })
+
+        return {
+            user: updatedUser
+        };
     }
 
     @Mutation(() => Boolean)

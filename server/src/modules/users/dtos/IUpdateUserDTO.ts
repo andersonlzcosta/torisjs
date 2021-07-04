@@ -13,4 +13,5 @@ export default interface IUpdateUserDTO {
     old_password?: string;
     password?: string;
     abrigoId?: number;
+    recoveryCode?: string;
 }
