@@ -33,11 +33,16 @@ export class UserResolver {
     async registrar(
         @Arg("options") options: CreateUserInput
       ): Promise<UserResponse> {
-
         const createUser = container.resolve(CreateUserService);
         const user = await createUser.execute(options);
+
+        await MailerTransporter.sendMail({
+            to: options.email,
+            subject: 'Conta criada com sucesso',
+            text: 'Lorem ipsum dolor'
+        });
+
         return { user };
- 
     }
  
     @Mutation(() => UserResponse)
@@ -54,11 +59,9 @@ export class UserResolver {
     async updateUsuario(
         @Arg("options") options: UpdateUserInput
     ): Promise<UserResponse> {
-
         const updateUser = new UpdateUserService();
         const user = await updateUser.execute(options);
         return { user };
-
     }
 
     @Mutation(() => UserResponse)
@@ -88,7 +91,7 @@ export class UserResolver {
         })
 
         await MailerTransporter.sendMail({
-            to: 'viniciusch4@gmail.com',
+            to: email,
             subject: 'Código de recuperação - Rede Abrigo',
             text: recoveryCode
         })
